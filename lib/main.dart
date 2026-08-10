@@ -1,8 +1,13 @@
-import 'package:blabla/loginpage/login.dart';
+import 'package:blabla/service/preference_handler.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_file.dart';
 
-void main() {
-  
+import 'views/loginpage/login_page_phintar.dart';
+
+void main() async {
+  // await initializeDateFormatting("id_ID", null);
+  WidgetsFlutterBinding.ensureInitialized();
+  await PreferenceHandler.init();
   runApp(const MyApp());
 }
 
@@ -14,6 +19,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -32,7 +38,12 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: .fromSeed(seedColor: Colors.deepPurple),
       ),
-      //  pemanggilan
+      // Push Named
+      // initialRoute: "/",
+      // routes: {
+      //   "/": (context) => LoginPage,
+      //   "/home": (context) => ,
+      // },
       home: LoginPagePhintar(),
     );
   }

@@ -34,8 +34,24 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
-  #Font
-  google_fonts: ^8.2.0
+  #shimmer animatiom_pub dev
+  shimmer_animation: ^2.2.2+1
+  #buat animasi gege
+  flutter_staggered_animations: ^1.1.1
+  #Font Google
+  google_fonts: ^8.2.1
+  #Bot Royyan
+  bottom_navigator: ^0.0.5
+  #date format
+  intl: ^0.20.3
+  #littie animations
+  lottie: ^3.5.1
+
+  shared_preferences: ^2.5.5
+  #bottom navy bar custom
+  bottom_navy_bar: ^6.1.0
+  sqflite: ^2.4.3
+  path: ^1.9.1
 
 dev_dependencies:
   flutter_test:
