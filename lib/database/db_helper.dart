@@ -24,7 +24,7 @@ class DBHelper {
     final dbPath = await getDatabasesPath();
     final path = join(
       dbPath,
-      'data pengguna',
+      'datapengguna.db ',
     ); // Nama file database lokal: ppkd.db
 
     return await openDatabase(
@@ -54,17 +54,17 @@ class DBHelper {
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             email TEXT UNIQUE,
             password TEXT,
-            nomor_hp TEXT
+            nama TEXT
           )
         ''');
-        // Membuat tabel 'siswa'.
-        await db.execute('''
-          CREATE TABLE siswa(
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            nama TEXT,
-            kelas TEXT
-          )
-        ''');
+        // // Membuat tabel 'siswa'.
+        // await db.execute('''
+        //   CREATE TABLE siswa(
+        //     id INTEGER PRIMARY KEY AUTOINCREMENT,
+        //     nama TEXT,
+        //     kelas TEXT
+        //   )
+        // ''');
       },
     );
   }
@@ -121,7 +121,7 @@ class DBHelper {
         'users',
         pengguna.toMap(),
         where: 'id = ?',
-        whereArgs: [pengguna.name],
+        whereArgs: [pengguna.nama],
       );
       return count >
           0; // Mengembalikan true jika ada minimal 1 baris yang berhasil di-update

@@ -34,7 +34,7 @@ class _RegisterScreenPhintarState extends State<RegisterScreenPhintar> {
       }
 
       // Membuat objek UserModelSQL dari input form.
-      final pengguna = UserModelSQL(email: user, password: pass, name: name);
+      final pengguna = UserModelSQL(email: user, password: pass, nama: name);
 
       // Menyimpan data pengguna ke database SQLite melalui DBHelper.
       bool success = await DBHelper().registerUser(pengguna);

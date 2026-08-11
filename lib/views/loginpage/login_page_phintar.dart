@@ -1,7 +1,8 @@
 import 'package:blabla/database/db_helper.dart';
 import 'package:blabla/extention/navigator.dart';
+import 'package:blabla/features/homepage/home_page.dart';
 import 'package:blabla/models/user_model_colour_palatte.dart';
-import 'package:blabla/views/homepage/home_page_phintar.dart';
+import 'package:blabla/views/homepage/bottom_nav_bar_phintar.dart';
 import 'package:blabla/views/register_page/resister_page.dart';
 import 'package:blabla/views/reset_password_pagr/reset_password_page.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +39,7 @@ class _LoginPagePhintarState extends State<LoginPagePhintar> {
 
       if (pengguna != null) {
         // Jika berhasil login, navigasi ke home page.
-        context.pushAndRemoveAll(const HomePagePhintar());
+        context.pushAndRemoveAll(const BottomNavBarPhintar());
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
