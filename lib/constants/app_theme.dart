@@ -1,0 +1,15 @@
+import 'package:flutter/material.dart';
+
+class AppTheme {
+  // Private constructor agar class ini tidak bisa di-instantiate
+  AppTheme._();
+  // Dark Theme
+  static const Color backgroundPrimary = Color(0xFF0F172A); // Backround Color
+  static const Color backgroundSecondary = Color(0xFF101B2B); // Backround Color
+  static const Color bottonColor = Color(0xFF3B82F6); // Botton Color
+  static const Color progressColor = Color(0xFF10B981); // Progress Color
+  static const Color textColor = Color(0xFF64748B); // Text Color
+  // neutral Colors
+  static const Color putih = Colors.white;
+  static const Color hytam = Colors.black;
+}

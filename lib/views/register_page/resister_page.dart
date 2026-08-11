@@ -1,6 +1,10 @@
+import 'package:blabla/constants/app_images.dart';
+import 'package:blabla/constants/app_typografy.dart';
 import 'package:blabla/database/db_helper.dart';
-import 'package:blabla/models/user_model_colour_palatte.dart';
+import 'package:blabla/constants/app_theme.dart';
+import 'package:blabla/extention/navigator.dart';
 import 'package:blabla/models/user_model_login.dart';
+import 'package:blabla/views/loginpage/login_page_phintar.dart';
 import 'package:flutter/material.dart';
 
 class RegisterScreenPhintar extends StatefulWidget {
@@ -16,6 +20,7 @@ class _RegisterScreenPhintarState extends State<RegisterScreenPhintar> {
     // Controller untuk menangani input email dan password dari TextField.
     final TextEditingController emailC = TextEditingController();
     final TextEditingController passwordC = TextEditingController();
+    final TextEditingController confirmpasswordC = TextEditingController();
     final TextEditingController nameC = TextEditingController();
     final _formKey = GlobalKey<FormState>();
 
@@ -54,76 +59,252 @@ class _RegisterScreenPhintarState extends State<RegisterScreenPhintar> {
     }
 
     return Scaffold(
-      backgroundColor: AppColors.backgroundPrimary,
+      backgroundColor: AppTheme.backgroundPrimary,
       appBar: AppBar(
-        title: Text("Daftar Akun", style: TextStyle(color: Colors.white)),
-        backgroundColor: AppColors.backgroundPrimary,
+        title: Text("Phintar", style: AppTextStyle.judul),
+        backgroundColor: AppTheme.backgroundPrimary,
+        shape: Border(bottom: BorderSide(color: AppTheme.textColor, width: 1)),
       ),
-      body: Form(
-        key: _formKey,
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Form(
+              key: _formKey,
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text("Daftar Akun Anda", style: AppTextStyle.judul),
+                    Text(
+                      "Mulai perjalanan sains anda.",
+                      style: AppTextStyle.subjudul,
+                    ),
+                    SizedBox(height: 10),
+                    Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Container(
+                          height: 600,
+                          width: 500,
+                          decoration: BoxDecoration(
+                            color: AppTheme.backgroundSecondary,
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(color: AppTheme.textColor),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(15.0),
+                            child: Column(
+                              children: [
+                                Container(
+                                  child: buildCustomTextField(
+                                    controller: nameC,
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return "Username tidak boleh kosong";
+                                      } else if (value.length < 3) {
+                                        return "Username harus menarik";
+                                      }
+                                      return null; // Input valid
+                                    },
+                                    hintText: "Anda ingin dikenal sebagai",
+                                    prefixIcon: Icons.person,
+                                  ),
+                                ),
+                                SizedBox(height: 10),
+                                buildCustomTextField(
+                                  controller: emailC,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return "Email tidak boleh kosong";
+                                    } else if (!value.contains('@')) {
+                                      return "Email tidak valid";
+                                    }
+                                    return null; // Input valid
+                                  },
+                                  hintText: "Daftarkan email anda",
+                                  prefixIcon: Icons.mail_outline,
+                                ),
+                                SizedBox(height: 10),
+                                buildCustomTextField(
+                                  controller: passwordC,
+                                  obscureText: true,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return "Kata sandi tidak boleh kosong";
+                                    } else if (value.length < 8) {
+                                      return "Kata sandi kurang dari 8 karakter";
+                                    }
+                                    return null; // Input valid
+                                  },
+                                  hintText: "Masukan kata sandi anda",
+                                  prefixIcon: Icons.lock_outline,
+                                ),
+                                SizedBox(height: 10),
+                                buildCustomTextField(
+                                  controller: confirmpasswordC,
+                                  obscureText: true,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return "Konfirmasi password tidak boleh kosong";
+                                    } else if (value != passwordC.text) {
+                                      return "Kata sandi tidak cocok";
+                                    }
+                                    return null; // Input valid
+                                  },
+                                  hintText: "Konfirmasi kata sandi anda",
+                                  prefixIcon: Icons.lock_outline,
+                                ),
+                                SizedBox(height: 10),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    if (_formKey.currentState!.validate()) {
+                                      register();
+                                    }
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    fixedSize: Size(168, 30),
+                                    backgroundColor: AppTheme.bottonColor,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    "Daftar",
+                                    style: AppTextStyle.botttonText,
+                                  ),
+                                ),
 
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              buildCustomTextField(
-                controller: emailC,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Email tidak boleh kosong";
-                  } else if (!value.contains('@')) {
-                    return "Email tidak valid";
-                  }
-                  return null; // Input valid
-                },
-                hintText: "Daftarkan email anda",
-                prefixIcon: Icons.mail_outline,
-              ),
-              buildCustomTextField(
-                controller: passwordC,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Kata sandi tidak boleh kosong";
-                  } else if (value.length < 8) {
-                    return "Kata sandi kurang dari 8 karakter";
-                  }
-                  return null; // Input valid
-                },
-                hintText: "Masukan kata sandi anda",
-                prefixIcon: Icons.lock_outline,
-              ),
-              buildCustomTextField(
-                controller: nameC,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Username tidak boleh kosong";
-                  } else if (value.length < 3) {
-                    return "Username harus menarik";
-                  }
-                  return null; // Input valid
-                },
-                hintText: "Anda ingin dikelan sebagai",
-                prefixIcon: Icons.person,
-              ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    register();
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  fixedSize: Size(168, 30),
-                  backgroundColor: AppColors.bottonColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5),
-                  ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    top: 20,
+                                    bottom: 20,
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: Divider(
+                                          color: Colors.grey,
+                                          thickness: 1,
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsetsGeometry.symmetric(
+                                          horizontal: 12,
+                                        ),
+                                        child: Text(
+                                          "Atau daftar dengan",
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: Divider(
+                                          color: Colors.grey,
+                                          thickness: 1,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Row(
+                                  children: [
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        if (_formKey.currentState!.validate()) {
+                                          register();
+                                        }
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        fixedSize: Size(168, 30),
+                                        backgroundColor: AppTheme.bottonColor,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            5,
+                                          ),
+                                        ),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Image.asset(
+                                            AppImages.googleIcon,
+                                            width:
+                                                18, // <-- TAMBAHKAN INI. Sesuaikan angkanya (misal 16-20)
+                                            height: 18,
+                                            fit: BoxFit.contain,
+                                          ),
+                                          SizedBox(width: 10),
+                                          Text(
+                                            "Google",
+                                            style: AppTextStyle.botttonText,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(width: 10),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        if (_formKey.currentState!.validate()) {
+                                          register();
+                                        }
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        fixedSize: Size(168, 30),
+                                        backgroundColor: AppTheme.bottonColor,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            5,
+                                          ),
+                                        ),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Image.asset(
+                                            AppImages.googleIcon,
+                                            width:
+                                                18, // <-- TAMBAHKAN INI. Sesuaikan angkanya (misal 16-20)
+                                            height: 18,
+                                            fit: BoxFit.contain,
+                                          ),
+                                          SizedBox(width: 10),
+                                          Text(
+                                            "Facebook",
+                                            style: AppTextStyle.botttonText,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Sudah Punya Akun?",
+                          style: AppTextStyle.bottomText,
+                        ),
+                        SizedBox(width: 10),
+                        InkWell(
+                          onTap: () {
+                            context.pushReplacement(LoginPagePhintar());
+                          },
+                          child: Text("Masuk", style: AppTextStyle.progresText),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-                child: Text("Daftar", style: TextStyle(color: Colors.white)),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -145,8 +326,8 @@ class _RegisterScreenPhintarState extends State<RegisterScreenPhintar> {
       style: TextStyle(color: Colors.white),
       decoration: InputDecoration(
         hintText: hintText,
-        hintStyle: TextStyle(color: AppColors.textColor),
-        prefixIcon: Icon(prefixIcon, color: AppColors.textColor),
+        hintStyle: TextStyle(color: AppTheme.textColor),
+        prefixIcon: Icon(prefixIcon, color: AppTheme.textColor),
       ),
     );
   }

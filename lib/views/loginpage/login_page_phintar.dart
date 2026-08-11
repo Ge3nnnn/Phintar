@@ -1,8 +1,9 @@
+import 'package:blabla/constants/app_typografy.dart';
 import 'package:blabla/database/db_helper.dart';
 import 'package:blabla/extention/navigator.dart';
-import 'package:blabla/features/homepage/home_page.dart';
-import 'package:blabla/models/user_model_colour_palatte.dart';
-import 'package:blabla/views/homepage/bottom_nav_bar_phintar.dart';
+
+import 'package:blabla/constants/app_theme.dart';
+import 'package:blabla/views/bottom_nav/bottom_nav_bar_phintar.dart';
 import 'package:blabla/views/register_page/resister_page.dart';
 import 'package:blabla/views/reset_password_pagr/reset_password_page.dart';
 import 'package:flutter/material.dart';
@@ -50,19 +51,19 @@ class _LoginPagePhintarState extends State<LoginPagePhintar> {
     }
 
     return Scaffold(
-      backgroundColor: AppColors.backgroundPrimary,
+      backgroundColor: AppTheme.backgroundPrimary,
       body: Center(
         child: Form(
           key: formKey,
           child: Padding(
-            padding: const EdgeInsets.all(15.0),
+            padding: const EdgeInsets.all(20.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
                   "Phintar",
                   style: TextStyle(
-                    fontSize: 40,
+                    fontSize: 50,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
@@ -85,7 +86,7 @@ class _LoginPagePhintarState extends State<LoginPagePhintar> {
                       color: Colors.white70,
                     ),
                     hintText: 'Masukan email anda',
-                    hintStyle: TextStyle(color: AppColors.textColor),
+                    hintStyle: TextStyle(color: AppTheme.textColor),
                   ),
                 ),
                 SizedBox(height: 20),
@@ -104,7 +105,7 @@ class _LoginPagePhintarState extends State<LoginPagePhintar> {
                   decoration: const InputDecoration(
                     prefixIcon: Icon(Icons.lock_outline, color: Colors.white70),
                     hintText: 'Password',
-                    hintStyle: TextStyle(color: AppColors.textColor),
+                    hintStyle: TextStyle(color: AppTheme.textColor),
                   ),
                 ),
                 SizedBox(height: 5),
@@ -123,7 +124,7 @@ class _LoginPagePhintarState extends State<LoginPagePhintar> {
                       },
                       child: Text(
                         "Lupa Kata Sandi?",
-                        style: TextStyle(color: AppColors.progressColor),
+                        style: TextStyle(color: AppTheme.progressColor),
                       ),
                     ),
                   ],
@@ -137,20 +138,20 @@ class _LoginPagePhintarState extends State<LoginPagePhintar> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    fixedSize: Size(168, 30),
-                    backgroundColor: AppColors.bottonColor,
+                    fixedSize: Size(168, 35),
+                    backgroundColor: AppTheme.bottonColor,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5),
                     ),
                   ),
-                  child: Text("Masuk", style: TextStyle(color: Colors.white)),
+                  child: Text("Masuk", style: AppTextStyle.botttonText),
                 ),
 
                 SizedBox(height: 20),
                 Row(
                   children: [
                     Expanded(
-                      child: Divider(color: AppColors.textColor, thickness: 1),
+                      child: Divider(color: AppTheme.textColor, thickness: 1),
                     ),
                     Padding(
                       padding: EdgeInsetsGeometry.symmetric(horizontal: 12),
@@ -158,37 +159,39 @@ class _LoginPagePhintarState extends State<LoginPagePhintar> {
                         "atau",
                         style: TextStyle(
                           fontSize: 12,
-                          color: AppColors.textColor,
+                          color: AppTheme.textColor,
                         ),
                       ),
                     ),
                     Expanded(
-                      child: Divider(color: AppColors.textColor, thickness: 1),
+                      child: Divider(color: AppTheme.textColor, thickness: 1),
                     ),
                   ],
                 ),
                 SizedBox(height: 10),
                 Container(
-                  height: 38,
-                  width: 254,
+                  height: 40,
+                  width: 250,
                   decoration: BoxDecoration(
                     border: Border.all(color: const Color(0xFFBFBFBF)),
                     borderRadius: BorderRadius.circular(5),
                   ),
-                  child: TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => RegisterScreenPhintar(),
+                  child: Center(
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const RegisterScreenPhintar(),
+                          ),
+                        );
+                      },
+                      child: Text(
+                        "Buat Akun Baru",
+                        style: TextStyle(
+                          color: AppTheme.textColor,
+                          fontSize: 20,
                         ),
-                      );
-                    },
-                    child: Text(
-                      "Buat Akun Baru",
-                      style: TextStyle(
-                        color: AppColors.textColor,
-                        fontSize: 16,
                       ),
                     ),
                   ),
