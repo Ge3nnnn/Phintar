@@ -2,91 +2,80 @@ import 'package:blabla/models/user_model_login.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
-// Class DBHelper menggunakan pola desain Singleton untuk mengelola koneksi dan operasi database SQLite (sqflite).
 class DBHelper {
-  // Menggunakan konstruktor privat (_internal) dan static instance untuk memastikan hanya ada 1 objek DBHelper di seluruh aplikasi.
   static final DBHelper _instance = DBHelper._internal();
   factory DBHelper() => _instance;
   DBHelper._internal();
 
   static Database? _database;
 
-  // Getter async untuk mendapatkan instance database.
-  // Jika database belum terbuka/dibuat, maka akan memanggil _initDB() terlebih dahulu.
   Future<Database> get database async {
     if (_database != null) return _database!;
     _database = await _initDB();
     return _database!;
   }
 
-  // Fungsi untuk menginisialisasi database SQLite di penyimpanan lokal perangkat.
   Future<Database> _initDB() async {
     final dbPath = await getDatabasesPath();
-    final path = join(
-      dbPath,
-      'datapengguna.db ',
-    ); // Nama file database lokal: ppkd.db
+    // 1. PERBAIKAN: Menghapus spasi di akhir nama file .db
+    final path = join(dbPath, 'datapengguna.db');
 
     return await openDatabase(
       path,
-      version: 3, // Versi skema database
-      // Callback yang dijalankan jika versi database dinaikkan (misalnya dari v1 ke v2 atau v3).
+      version: 3,
+      // 2. PERBAIKAN: Logika onUpgrade menggunakan oldVersion
       onUpgrade: (db, oldVersion, newVersion) async {
-        if (newVersion > 1) {
+        if (oldVersion < 2) {
           await db.execute('''
+            CREATE TABLE siswa(
+              id INTEGER PRIMARY KEY AUTOINCREMENT,
+              nama TEXT,
+              kelas TEXT
+            )
+          ''');
+        }
+        if (oldVersion < 3) {
+          await db.execute('ALTER TABLE users ADD COLUMN nomor_hp TEXT');
+        }
+      },
+      // 3. PERBAIKAN: onCreate harus mencerminkan struktur TERBARU (Versi 3)
+      onCreate: (db, version) async {
+        await db.execute('''
+          CREATE TABLE users(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            email TEXT UNIQUE,
+            password TEXT,
+            nama TEXT,
+            nomor_hp TEXT 
+          )
+        ''');
+
+        // Tabel siswa langsung dibuat saat instalasi baru
+        await db.execute('''
           CREATE TABLE siswa(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             nama TEXT,
             kelas TEXT
           )
         ''');
-        }
-        if (newVersion > 2) {
-          // Menambahkan kolom baru 'nomor_hp' ke tabel 'users' saat migrasi versi 3.
-          await db.execute('ALTER TABLE users ADD COLUMN nomor_hp TEXT');
-        }
-      },
-      // Callback yang dijalankan saat database pertama kali dibuat.
-      onCreate: (db, version) async {
-        // Membuat tabel 'users' untuk menyimpan data login pengguna.
-        await db.execute('''
-          CREATE TABLE users(
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            email TEXT UNIQUE,
-            password TEXT,
-            nama TEXT
-          )
-        ''');
-        // // Membuat tabel 'siswa'.
-        // await db.execute('''
-        //   CREATE TABLE siswa(
-        //     id INTEGER PRIMARY KEY AUTOINCREMENT,
-        //     nama TEXT,
-        //     kelas TEXT
-        //   )
-        // ''');
       },
     );
   }
 
-  // === OPERASI CRUD (CREATE, READ, UPDATE, DELETE) ===
+  // === OPERASI CRUD ===
 
-  // 1. CREATE: Mendaftarkan pengguna baru ke tabel 'users'.
   Future<bool> registerUser(UserModelSQL pengguna) async {
     final db = await database;
-
     try {
       await db.insert('users', pengguna.toMap());
-      return true; // Berhasil disimpan
+      return true;
     } catch (e) {
-      return false; // Gagal (misalnya karena email sudah terdaftar / constraint UNIQUE)
+      return false;
     }
   }
 
-  // 2. READ (AUTHENTICATION): Memeriksa login berdasarkan pencocokan email & password.
   Future<UserModelSQL?> loginUser(String email, String password) async {
     final db = await database;
-
     final List<Map<String, dynamic>> results = await db.query(
       'users',
       where: 'email = ? AND password = ?',
@@ -96,35 +85,58 @@ class DBHelper {
     if (results.isNotEmpty) {
       return UserModelSQL.fromMap(results.first);
     }
-    return null; // Pengguna tidak ditemukan / password salah
+    return null;
   }
 
-  // 3. READ ALL: Mengambil seluruh daftar pengguna dari tabel 'users'.
   Future<List<UserModelSQL>> getAllUsers() async {
     final db = await database;
     final List<Map<String, dynamic>> results = await db.query('users');
     return results.map((map) => UserModelSQL.fromMap(map)).toList();
   }
 
-  // 4. DELETE: Menghapus data pengguna dari tabel 'users' berdasarkan id.
   Future<void> deleteUser(int id) async {
     final db = await database;
     await db.delete('users', where: 'id = ?', whereArgs: [id]);
   }
 
-  // 5. UPDATE: Memperbarui data pengguna di tabel 'users' berdasarkan id.
   Future<bool> updateUser(UserModelSQL pengguna) async {
     final db = await database;
-
     try {
       int count = await db.update(
         'users',
         pengguna.toMap(),
         where: 'id = ?',
-        whereArgs: [pengguna.nama],
+        // 4. PERBAIKAN: Gunakan ID, bukan Nama.
+        // Pastikan di UserModelSQL kamu sudah menambahkan variabel 'id' (int?).
+        whereArgs: [pengguna.id],
       );
-      return count >
-          0; // Mengembalikan true jika ada minimal 1 baris yang berhasil di-update
+      return count > 0;
+    } catch (e) {
+      return false;
+    }
+  } // Tambahkan fungsi ini di db_helper.dart untuk mengecek keberadaan email
+
+  Future<bool> checkEmailExists(String email) async {
+    final db = await database;
+    final result = await db.query(
+      'users',
+      where: 'email = ?',
+      whereArgs: [email],
+    );
+    return result.isNotEmpty; // Mengembalikan true jika email ditemukan
+  }
+
+  // Fungsi untuk memperbarui password berdasarkan email
+  Future<bool> updatePassword(String email, String newPassword) async {
+    final db = await database;
+    try {
+      int count = await db.update(
+        'users',
+        {'password': newPassword},
+        where: 'email = ?',
+        whereArgs: [email],
+      );
+      return count > 0;
     } catch (e) {
       return false;
     }

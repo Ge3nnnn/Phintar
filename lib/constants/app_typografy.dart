@@ -8,9 +8,13 @@ class AppTextStyle {
     fontWeight: FontWeight.bold,
     color: AppTheme.putih,
   );
-  static const subjudul = TextStyle(fontSize: 20, color: AppTheme.putih);
   static const subsubjudul = TextStyle(
     fontSize: 25,
+    color: AppTheme.putih,
+    fontWeight: FontWeight.bold,
+  );
+  static const subjudul = TextStyle(
+    fontSize: 20,
     fontWeight: FontWeight.bold,
     color: AppTheme.textColor,
   );
@@ -23,7 +27,10 @@ class AppTextStyle {
     fontSize: 17,
     fontWeight: FontWeight.bold,
     color: AppTheme.textColor,
-  ); static const progresText = TextStyle(
+  );
+  static const normalText = TextStyle(fontSize: 15, color: AppTheme.putih);
+  static const warningText = TextStyle(fontSize: 15, color: AppTheme.merah);
+  static const progresText = TextStyle(
     fontSize: 17,
     fontWeight: FontWeight.bold,
     color: AppTheme.progressColor,

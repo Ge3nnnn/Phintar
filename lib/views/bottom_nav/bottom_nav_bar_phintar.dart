@@ -37,7 +37,7 @@ class _BottomNavBarPhintarState extends State<BottomNavBarPhintar> {
       extendBody: true,
       bottomNavigationBar: FloatingNavBottomBar(
         showLabels: true,
-        backgroundColor: Colors.blue,
+        backgroundColor: AppTheme.backgroundSecondary,
         items: navItems,
         currentIndex: _selectedBottom,
         onTap: (index) => setState(() => _selectedBottom = index),

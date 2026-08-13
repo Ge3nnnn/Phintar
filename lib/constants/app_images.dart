@@ -4,5 +4,6 @@ class AppImages {
   // penggunaan app images
 
   static const String googleIcon = "assets/images/icon/google.png";
+  static const String facebookIcon = "assets/images/icon/facebook.png";
   static const String iconPath = "assets/icons";
 }
