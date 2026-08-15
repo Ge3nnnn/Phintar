@@ -64,8 +64,9 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) =>
-                ResetPasswordPage2(email: user), // Ganti dengan nama halaman tahap 2-mu
+            builder: (context) => ResetPasswordPage2(
+              email: user,
+            ), // Ganti dengan nama halaman tahap 2-mu
           ),
         );
       } else {
@@ -105,125 +106,129 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     return Scaffold(
       appBar: const CustomAppBar(title: "Phintar"),
       backgroundColor: AppTheme.backgroundPrimary,
-      body: Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: Container(
-          decoration: BoxDecoration(
-            color: AppTheme.backgroundSecondary,
-            border: Border.all(color: AppTheme.textColor, width: 1),
-            borderRadius: BorderRadius.circular(9),
-          ),
-          margin: const EdgeInsets.all(9),
-          height: 500,
-          width: 500,
-          child: Padding(
-            padding: const EdgeInsets.all(30.0),
-            // Bungkus Column dengan Form
-            child: Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  Container(
-                    height: 80,
-                    width: 80,
-                    decoration: BoxDecoration(
-                      color: AppTheme.backgroundPrimary,
-
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-
-                    child: Center(
-                      child: Icon(
-                        Icons.lock_reset,
-                        size: 50,
-                        color: AppTheme.textColor,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Text("Lupa Kata Sandi?", style: AppTextStyle.subsubjudul),
-                  SizedBox(height: 10),
-                  Text(
-                    "Masukan email anda untuk mengubah sandi",
-                    style: AppTextStyle.bottomText,
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 10),
-                  Row(
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Container(
+            decoration: BoxDecoration(
+              color: AppTheme.backgroundSecondary,
+              border: Border.all(color: AppTheme.textColor, width: 1),
+              borderRadius: BorderRadius.circular(9),
+            ),
+            margin: const EdgeInsets.all(9),
+            height: 500,
+            width: 500,
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(30.0),
+                // Bungkus Column dengan Form
+                child: Form(
+                  key: _formKey,
+                  child: Column(
                     children: [
-                      Text("Alamat Email", style: AppTextStyle.normalText),
+                      Container(
+                        height: 80,
+                        width: 80,
+                        decoration: BoxDecoration(
+                          color: AppTheme.backgroundPrimary,
+
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+
+                        child: Center(
+                          child: Icon(
+                            Icons.lock_reset,
+                            size: 50,
+                            color: AppTheme.textColor,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      Text("Lupa Kata Sandi?", style: AppTextStyle.subsubjudul),
+                      SizedBox(height: 10),
+                      Text(
+                        "Masukan email anda untuk mengubah sandi",
+                        style: AppTextStyle.bottomText,
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(height: 10),
+                      Row(
+                        children: [
+                          Text("Alamat Email", style: AppTextStyle.normalText),
+                        ],
+                      ),
+                      SizedBox(height: 5),
+                      CustomTextFields(
+                        controller: emailC,
+                        errorText: emailError,
+                        onChanged: (value) {
+                          if (emailError != null) {
+                            setState(() {
+                              emailError = null;
+                            });
+                          }
+                        },
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'masukan email anda!';
+                          }
+                          return null;
+                        },
+                        hintText: "fisikawan@gmail.com",
+                        prefixIcon: Icons.email,
+                      ),
+                      SizedBox(height: 20), // Tambahan jarak
+                      ElevatedButton(
+                        // Saat loading, matikan tombol (set null) agar tidak dispam klik
+                        onPressed: isLoading ? null : verifyEmail,
+                        child: Center(
+                          child: isLoading
+                              ? SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    color: AppTheme.putih,
+                                    strokeWidth: 4,
+                                  ),
+                                )
+                              : Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text("Lanjut Ubah Kata Sandi"),
+                                    SizedBox(
+                                      width: 8,
+                                    ), // Jarak antara teks dan icon
+                                    Icon(Icons.arrow_forward_rounded),
+                                  ],
+                                ),
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      Divider(color: AppTheme.textColor),
+                      SizedBox(height: 10),
+                      InkWell(
+                        onTap: () {
+                          context.push(const LoginPagePhintar());
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.arrow_back_ios,
+                              color: AppTheme.putih,
+                              size: 15,
+                            ),
+                            const SizedBox(width: 5),
+                            Text(
+                              "Kembali ke halaman login",
+                              style: AppTextStyle.normalText,
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
-                  SizedBox(height: 5),
-                  CustomTextFields(
-                    controller: emailC,
-                    errorText: emailError,
-                    onChanged: (value) {
-                      if (emailError != null) {
-                        setState(() {
-                          emailError = null;
-                        });
-                      }
-                    },
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'masukan email anda!';
-                      }
-                      return null;
-                    },
-                    hintText: "fisikawan@gmail.com",
-                    prefixIcon: Icons.email,
-                  ),
-                  SizedBox(height: 20), // Tambahan jarak
-                  ElevatedButton(
-                    // Saat loading, matikan tombol (set null) agar tidak dispam klik
-                    onPressed: isLoading ? null : verifyEmail,
-                    child: Center(
-                      child: isLoading
-                          ? SizedBox(
-                              height: 20,
-                              width: 20,
-                              child: CircularProgressIndicator(
-                                color: AppTheme.putih,
-                                strokeWidth: 4,
-                              ),
-                            )
-                          : Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text("Lanjut Ubah Kata Sandi"),
-                                SizedBox(
-                                  width: 8,
-                                ), // Jarak antara teks dan icon
-                                Icon(Icons.arrow_forward_rounded),
-                              ],
-                            ),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Divider(color: AppTheme.textColor),
-                  SizedBox(height: 10),
-                  InkWell(
-                    onTap: () {
-                      context.push(const LoginPagePhintar());
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.arrow_back_ios,
-                          color: AppTheme.putih,
-                          size: 15,
-                        ),
-                        const SizedBox(width: 5),
-                        Text(
-                          "Kembali ke halaman login",
-                          style: AppTextStyle.normalText,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+                ),
               ),
             ),
           ),

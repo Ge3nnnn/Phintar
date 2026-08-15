@@ -161,7 +161,6 @@ class _RegisterScreenPhintarState extends State<RegisterScreenPhintar> {
                           }
                         },
                       ),
-
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 20),
                         child: Row(
@@ -202,6 +201,7 @@ class _RegisterScreenPhintarState extends State<RegisterScreenPhintar> {
                           Expanded(
                             child: CustomElevatedButton(
                               iconAsset: AppImages.facebookIcon,
+                              width: double.infinity,
                               text: "Facebook",
                               onPressed: () {},
                             ),

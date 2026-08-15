@@ -8,15 +8,15 @@ class AppTextStyle {
     fontWeight: FontWeight.bold,
     color: AppTheme.putih,
   );
-  static const subsubjudul = TextStyle(
-    fontSize: 25,
+  static const subjudul = TextStyle(
+    fontSize: 22,
     color: AppTheme.putih,
     fontWeight: FontWeight.bold,
   );
-  static const subjudul = TextStyle(
+  static const subsubjudul = TextStyle(
     fontSize: 20,
     fontWeight: FontWeight.bold,
-    color: AppTheme.textColor,
+    color: AppTheme.putih,
   );
   static const botttonText = TextStyle(
     fontSize: 20,
@@ -28,7 +28,8 @@ class AppTextStyle {
     fontWeight: FontWeight.bold,
     color: AppTheme.textColor,
   );
-  static const normalText = TextStyle(fontSize: 15, color: AppTheme.putih);
+  static const normalText = TextStyle(fontSize: 15, color: AppTheme.textColor);
+  static const normalText2 = TextStyle(fontSize: 15, color: AppTheme.putih);
   static const warningText = TextStyle(fontSize: 15, color: AppTheme.merah);
   static const progresText = TextStyle(
     fontSize: 17,

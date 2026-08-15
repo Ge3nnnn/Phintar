@@ -1,5 +1,7 @@
-import 'package:blabla/views/homepage/home_page.dart';
+import 'package:blabla/views/features/homepage/home_page.dart';
 import 'package:blabla/constants/app_theme.dart';
+import 'package:blabla/views/features/kuis_page/quiz_page.dart';
+import 'package:blabla/views/features/lab_page/lab_page.dart';
 import 'package:bottom_navigator/bottom_navigator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -22,11 +24,15 @@ class _BottomNavBarPhintarState extends State<BottomNavBarPhintar> {
   }
 
   // Daftar halaman/widget yang ditampilkan pada body sesuai indeks terpilih.
-  final List<Widget> _widgetOptions = [HomePagePhintar()];
+  final List<Widget> _widgetOptions = [
+    HomePagePhintar(),
+    LabPagePhintar(),
+    QuizPagePhintar(),
+  ];
   // Daftar item menu yang muncul di navigasi bawah.
   List<BottomNavItem> navItems = [
     BottomNavItem(icon: Icons.home, label: "Home"),
-    BottomNavItem(icon: Icons.school, label: "Laboratory"),
+    BottomNavItem(icon: Icons.school, label: "Laboratorium"),
     BottomNavItem(icon: Icons.quiz, label: "Quiz"),
     BottomNavItem(icon: Icons.person, label: "Profile"),
   ];
