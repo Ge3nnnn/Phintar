@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 import 'package:blabla/constants/app_theme.dart';
 import 'package:blabla/constants/app_typografy.dart';
@@ -11,51 +12,94 @@ class LaboOsilasi extends StatefulWidget {
   State<LaboOsilasi> createState() => _LaboOsilasiState();
 }
 
+// ── Data Tempat Percobaan (Gravitasi per Lokasi) ──────────────────────────────
+class _TempatPercobaan {
+  final String nama;
+  final String emoji;
+  final double gravitasi; // m/s²
+  final double b; // koefisien hambatan udara (kg/s); 0 = tanpa atmosfer
+  final String atmosfer; // deskripsi singkat atmosfer
+  const _TempatPercobaan(
+    this.nama,
+    this.emoji,
+    this.gravitasi,
+    this.b,
+    this.atmosfer,
+  );
+}
+
+// Referensi b (kg/s) = koefisien gesekan linear bandul di atmosfer setempat
+// Bumi: 0.5 (atmosfer standar) • Venus: ~2.5 (90× lebih padat dari Bumi)
+// Mars: ~0.04 (1% atmosfer Bumi) • Jupiter/Saturnus: sangat tebal
+const List<_TempatPercobaan> _daftarTempat = [
+  _TempatPercobaan('Bumi', '🌍', 9.81, 0.50, 'Atmosfer standar (N₂/O₂)'),
+  _TempatPercobaan('Bulan', '🌑', 1.62, 0.00, 'Tanpa atmosfer'),
+  _TempatPercobaan(
+    'Matahari',
+    '☀️',
+    274.0,
+    0.00,
+    'Plasma (bukan atmosfer biasa)',
+  ),
+  _TempatPercobaan('Merkurius', '🩺', 3.70, 0.001, 'Eksosfer sangat tipis'),
+  _TempatPercobaan('Venus', '🟡', 8.87, 2.50, 'Atmosfer sangat padat (CO₂)'),
+  _TempatPercobaan('Mars', '🔴', 3.72, 0.04, 'Atmosfer tipis (CO₂ 1%)'),
+  _TempatPercobaan('Jupiter', '🟠', 24.79, 3.20, 'Atmosfer tebal (H₂/He)'),
+  _TempatPercobaan('Saturnus', '🪐', 10.44, 1.80, 'Atmosfer tebal (H₂/He)'),
+  _TempatPercobaan('Uranus', '⚪', 8.69, 0.90, 'Atmosfer es & gas'),
+  _TempatPercobaan('Neptunus', '🔵', 11.15, 1.10, 'Atmosfer tebal & berangin'),
+  _TempatPercobaan('Pluto', '😒', 0.62, 0.001, 'Eksosfer N₂ sangat tipis'),
+];
+
 class _LaboOsilasiState extends State<LaboOsilasi>
     with TickerProviderStateMixin {
   // ── Parameter kontrol ──────────────────────────────────────────────────────
   double _sudut = 30; // derajat
   double _panjangTali = 1.0; // meter
   double _massaBandul = 1.0; // kg
-  double _skalaGrafik = 1.0; // amplitudo
+
+  // ── Hambatan Udara ──────────────────────────────────────────────────────
+  bool _hambatanUdara = false;
+  // b diambil dari planet aktif; 0 jika tidak ada atmosfer atau switch OFF
+  // γ = b/(2m) — koefisien redaman spesifik
+  double get _gamma =>
+      _hambatanUdara ? (_tempatPercobaan.b / (2 * _massaBandul)) : 0.0;
+  // Apakah lokasi ini punya atmosfer yang berarti?
+  bool get _adaAtmosfer => _tempatPercobaan.b > 0.0; // kg
+
+  // ── Tempat Percobaan & Gravitasi ──────────────────────────────────────────
+  _TempatPercobaan _tempatPercobaan = _daftarTempat[0]; // default: Bumi
+  double get _gravitasi => _tempatPercobaan.gravitasi;
 
   // ── State simulasi ─────────────────────────────────────────────────────────
   bool _isRunning = false;
   late AnimationController _animController;
   late Animation<double> _pendulumAnim;
 
-  // Osilogram — buffer titik gelombang sinus
-  final List<double> _waveBuffer = List.filled(120, 0.0);
+  // Sudut terakhir saat pause (agar bandul tidak kembali ke posisi awal)
+  double _pausedAngle = 0.0;
 
   // Controller kedua khusus osilogram — accumulate phase tiap frame
   late AnimationController _waveController;
-  double _phase = 0.0; // radian, terus bertambah
+
+  // ── Stopwatch ──────────────────────────────────────────────────────────────
+  final Stopwatch _stopwatch = Stopwatch();
+  Timer? _stopwatchTimer;
+  Duration _elapsed = Duration.zero;
 
   @override
   void initState() {
     super.initState();
-
-    // Bandul
     _animController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: (_periode * 1000).round()),
     );
     _updateAnimationConfig();
-
-    // Osilogram: controller cepat (16ms ≈ 60fps) yang berjalan repeat
-    _waveController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 16),
-    );
-    _waveController.addListener(_onWaveTick);
   }
 
   /// Hitung periode berdasarkan panjang tali (T = 2π√(L/g))
-  double get _periode => 2 * pi * sqrt(_panjangTali / 9.81);
+  double get _periode => 2 * pi * sqrt(_panjangTali / _gravitasi);
   double get _frekuensi => 1 / _periode;
-  double get _panjangGelombang => _frekuensi > 0 ? 1 / _frekuensi * 2 : 0;
-
-  /// Update konfigurasi animasi bandul
   void _updateAnimationConfig() {
     _animController.duration = Duration(
       milliseconds: (_periode * 1000).round(),
@@ -72,61 +116,56 @@ class _LaboOsilasiState extends State<LaboOsilasi>
     }
   }
 
-  /// Listener osilogram — dipanggil tiap kali _waveController tick
-  void _onWaveTick() {
-    // Setiap tick: tambah fase proporsional terhadap frekuensi
-    // dt ≈ 16ms = 0.016 detik
-    const dt = 0.016;
-    _phase += 2 * pi * _frekuensi * dt;
-
-    setState(() {
-      _waveBuffer.removeAt(0);
-      _waveBuffer.add(sin(_phase) * _skalaGrafik);
-    });
-  }
-
   void _toggleSimulasi() {
-    setState(() {
-      _isRunning = !_isRunning;
-    });
     if (_isRunning) {
-      _animController.repeat(reverse: true);
-      _waveController.repeat(); // mulai osilogram
-    } else {
+      // ── PAUSE ──
+      _pausedAngle = _pendulumAnim.value;
       _animController.stop();
-      _waveController.stop(); // pause osilogram
+      _stopwatch.stop();
+      _stopwatchTimer?.cancel();
+    } else {
+      // ── MULAI / RESUME ──
+      _animController.repeat(reverse: true);
+      _stopwatch.start();
+      _stopwatchTimer = Timer.periodic(
+        const Duration(milliseconds: 100),
+        (_) => setState(() => _elapsed = _stopwatch.elapsed),
+      );
     }
+    setState(() => _isRunning = !_isRunning);
   }
 
   void _reset() {
-    // Stop dulu di luar setState
     _animController.stop();
     _animController.reset();
-    _waveController.stop();
-    _waveController.reset();
+    _stopwatchTimer?.cancel();
+    _stopwatch.reset();
 
     setState(() {
       _isRunning = false;
-      _phase = 0.0;
-
-      // Kosongkan buffer
-      for (int i = 0; i < _waveBuffer.length; i++) {
-        _waveBuffer[i] = 0;
-      }
-
-      // Reset semua parameter ke nilai minimum
-      _sudut = 5;
-      _panjangTali = 0.1;
-      _massaBandul = 0.1;
-      _skalaGrafik = 1.0;
+      _pausedAngle = 0.0;
+      _elapsed = Duration.zero;
+      _tempatPercobaan = _daftarTempat[0];
+      _sudut = 30;
+      _panjangTali = 1.0;
+      _massaBandul = 1.0;
       _updateAnimationConfig();
     });
   }
 
+  /// Format Duration → mm:ss.d
+  String _formatElapsed(Duration d) {
+    final mm = d.inMinutes.remainder(60).toString().padLeft(2, '0');
+    final ss = d.inSeconds.remainder(60).toString().padLeft(2, '0');
+    final ds = (d.inMilliseconds.remainder(1000) ~/ 100).toString();
+    return '$mm:$ss.$ds';
+  }
+
   @override
   void dispose() {
+    _stopwatchTimer?.cancel();
+    _stopwatch.stop();
     _animController.dispose();
-    _waveController.dispose();
     super.dispose();
   }
 
@@ -136,7 +175,7 @@ class _LaboOsilasiState extends State<LaboOsilasi>
     return Scaffold(
       backgroundColor: AppTheme.backgroundPrimary,
       appBar: CustomAppBar2(
-        title: "Laboratorium: Gelombang & Osilasi",
+        title: "Laboratorium: Bandul Matematis",
         prefixIcon: Icons.arrow_back,
       ),
       body: SingleChildScrollView(
@@ -145,13 +184,13 @@ class _LaboOsilasiState extends State<LaboOsilasi>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            _buildPanduanCard(),
+            const SizedBox(height: 14),
             _buildVisualisasiCard(),
             const SizedBox(height: 14),
-            _buildMonitoringCard(),
+            _kondisiEksperimenCard(),
             const SizedBox(height: 14),
             _buildKontrolCard(),
-            const SizedBox(height: 14),
-            _buildPanduanCard(),
             const SizedBox(height: 20),
           ],
         ),
@@ -179,49 +218,38 @@ class _LaboOsilasiState extends State<LaboOsilasi>
                 'Visualisasi Osilasi Terintegrasi',
                 style: AppTextStyle.normalText.copyWith(
                   fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                  color: AppTheme.putih,
                 ),
               ),
             ],
           ),
           const SizedBox(height: 14),
 
-          // Label domain ruang
-          _labelDomain('DOMAIN RUANG (BANDUL)'),
-          const SizedBox(height: 8),
-
           // Visualisasi bandul
           _buildPendulumCanvas(),
-          const SizedBox(height: 14),
-
-          // Label domain waktu
-          _labelDomain('DOMAIN WAKTU (OSILOGRAM)'),
-          const SizedBox(height: 8),
-
-          // Visualisasi osilogram
-          _buildOsilogramCanvas(),
           const SizedBox(height: 16),
 
-          // Tombol Reset & Mulai
+          // Tombol Reset | Stopwatch | Mulai
           Row(
             children: [
+              // ── Tombol Reset ───────────────────────────────────────────────
               Expanded(
                 child: OutlinedButton.icon(
                   onPressed: _reset,
                   icon: const Icon(
                     Icons.refresh,
-                    color: Colors.white70,
+                    color: AppTheme.putih,
                     size: 16,
                   ),
                   label: const Text(
                     'RESET',
                     style: TextStyle(
-                      color: Colors.white70,
+                      color: AppTheme.putih,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   style: OutlinedButton.styleFrom(
-                    side: const BorderSide(color: Colors.white24),
+                    side: const BorderSide(color: AppTheme.textColor),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -229,7 +257,51 @@ class _LaboOsilasiState extends State<LaboOsilasi>
                   ),
                 ),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: 8),
+              // ── Stopwatch Display ──────────────────────────────────────────
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 11,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppTheme.backgroundPrimary,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(
+                      color: _isRunning
+                          ? AppTheme.progressColor.withValues(alpha: 0.5)
+                          : AppTheme.textColor,
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.timer_outlined,
+                        size: 14,
+                        color: _isRunning
+                            ? AppTheme.progressColor
+                            : AppTheme.textColor,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        _formatElapsed(_elapsed),
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: _isRunning
+                              ? AppTheme.progressColor
+                              : AppTheme.textColor,
+                          fontFeatures: const [FontFeature.tabularFigures()],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              // ── Tombol Mulai / Pause ───────────────────────────────────────
               Expanded(
                 child: ElevatedButton.icon(
                   onPressed: _toggleSimulasi,
@@ -257,18 +329,6 @@ class _LaboOsilasiState extends State<LaboOsilasi>
     );
   }
 
-  Widget _labelDomain(String text) {
-    return Text(
-      text,
-      style: const TextStyle(
-        fontSize: 10,
-        color: AppTheme.textColor,
-        fontWeight: FontWeight.w600,
-        letterSpacing: 1.2,
-      ),
-    );
-  }
-
   // ── Kanvas Bandul ─────────────────────────────────────────────────────────
   // Tinggi kanvas: 100px (L=0.1m) → 220px (L=3.0m), linear
   double get _canvasHeight {
@@ -283,7 +343,12 @@ class _LaboOsilasiState extends State<LaboOsilasi>
     return AnimatedBuilder(
       animation: _animController,
       builder: (_, _) {
-        final angle = _isRunning ? _pendulumAnim.value : -_sudut * pi / 180;
+        // Saat running: ikuti animasi
+        // Saat pause setelah pernah jalan: tetap di posisi terakhir (_pausedAngle)
+        // Saat belum pernah jalan: posisi awal berdasarkan sudut slider
+        final angle = _isRunning
+            ? _pendulumAnim.value
+            : (_animController.value > 0 ? _pausedAngle : -_sudut * pi / 180);
         return AnimatedContainer(
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeOut,
@@ -295,8 +360,8 @@ class _LaboOsilasiState extends State<LaboOsilasi>
           child: CustomPaint(
             painter: _PendulumPainter(
               angle: angle,
-              ropeLengthM: _panjangTali, // 0.1 – 3.0 m
-              massaKg: _massaBandul, // 0.1 – 5.0 kg
+              ropeLengthM: _panjangTali,
+              massaKg: _massaBandul,
             ),
             child: const SizedBox.expand(),
           ),
@@ -305,26 +370,8 @@ class _LaboOsilasiState extends State<LaboOsilasi>
     );
   }
 
-  // ── Kanvas Osilogram ──────────────────────────────────────────────────────
-  Widget _buildOsilogramCanvas() {
-    return Container(
-      height: 100,
-      decoration: BoxDecoration(
-        color: AppTheme.backgroundPrimary,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: CustomPaint(
-        painter: _OsilogramPainter(
-          waveData: List.from(_waveBuffer),
-          color: AppTheme.progressColor,
-        ),
-        child: const SizedBox.expand(),
-      ),
-    );
-  }
-
-  // ── Kartu Monitoring ──────────────────────────────────────────────────────
-  Widget _buildMonitoringCard() {
+  // ── Kartu Monitoring (Kondisi Eksperimen) ─────────────────────────────────
+  Widget _kondisiEksperimenCard() {
     return Container(
       decoration: BoxDecoration(
         color: AppTheme.backgroundSecondary,
@@ -334,20 +381,21 @@ class _LaboOsilasiState extends State<LaboOsilasi>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Header
           Row(
             children: [
               const Icon(
-                Icons.bar_chart_rounded,
+                Icons.science_outlined,
                 color: AppTheme.bottonColor,
                 size: 18,
               ),
               const SizedBox(width: 8),
               Text(
-                'MONITORING DATA',
+                'KONDISI EKSPERIMEN',
                 style: AppTextStyle.normalText.copyWith(
                   letterSpacing: 1.1,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                  color: AppTheme.putih,
                 ),
               ),
             ],
@@ -355,13 +403,158 @@ class _LaboOsilasiState extends State<LaboOsilasi>
           const SizedBox(height: 10),
           const Divider(color: AppTheme.textColor, height: 1),
           const SizedBox(height: 10),
-          _monitorRow('Periode (T)', '${_periode.toStringAsFixed(2)} s'),
-          _monitorRow('Frekuensi (f)', '${_frekuensi.toStringAsFixed(2)} Hz'),
-          _monitorRow(
-            'Panjang Gelombang (λ)',
-            '${_panjangGelombang.toStringAsFixed(2)} m',
+
+          // ── Dropdown Tempat Percobaan ──────────────────────────────────────
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('Tempat Percobaan', style: AppTextStyle.normalText),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
+                decoration: BoxDecoration(
+                  color: AppTheme.backgroundPrimary,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: AppTheme.progressColor.withValues(alpha: 0.4),
+                  ),
+                ),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<_TempatPercobaan>(
+                    value: _tempatPercobaan,
+                    dropdownColor: AppTheme.backgroundPrimary,
+                    isDense: true,
+                    icon: const Icon(
+                      Icons.keyboard_arrow_down_rounded,
+                      color: AppTheme.progressColor,
+                      size: 18,
+                    ),
+                    style: AppTextStyle.normalText.copyWith(
+                      color: AppTheme.progressColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    onChanged: _isRunning
+                        ? null // kunci saat sedang berjalan
+                        : (val) {
+                            if (val != null) {
+                              setState(() => _tempatPercobaan = val);
+                              _updateAnimationConfig();
+                            }
+                          },
+                    items: _daftarTempat.map((t) {
+                      return DropdownMenuItem<_TempatPercobaan>(
+                        value: t,
+                        child: Text(
+                          '${t.emoji}  ${t.nama}',
+                          style: AppTextStyle.normalText.copyWith(
+                            color: AppTheme.putih,
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ),
+            ],
           ),
-          _monitorRow('Gravitasi (g)', '9.81 m/s²'),
+
+          // // Nilai g aktual (kecil, di bawah dropdown)
+          // Padding(
+          //   padding: const EdgeInsets.only(top: 2, bottom: 6),
+          //   child: Align(
+          //     alignment: Alignment.centerRight,
+          //     child: Text(
+          //       'g = ${_gravitasi.toStringAsFixed(2)} m/s²',
+          //       style: AppTextStyle.normalText.copyWith(
+          //         fontSize: 10,
+          //         color: AppTheme.textColor,
+          //       ),
+          //     ),
+          //   ),
+          // ),
+          const SizedBox(height: 6),
+          const Divider(color: AppTheme.textColor, height: 1, thickness: 0.3),
+          const SizedBox(height: 6),
+
+          _monitorRow(
+            'Panjang Tali (L)',
+            '${_panjangTali.toStringAsFixed(2)} m',
+          ),
+          _monitorRow(
+            'Massa Bandul (m)',
+            '${_massaBandul.toStringAsFixed(2)} kg',
+          ),
+          _monitorRow('Sudut Simpangan (θ)', '${_sudut.toStringAsFixed(1)}°'),
+          // ── Switch Hambatan Udara ──────────────────────────────────────────
+          const Divider(color: AppTheme.textColor, height: 1, thickness: 0.3),
+          const SizedBox(height: 5),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          _adaAtmosfer
+                              ? Icons.air_outlined
+                              : Icons.do_not_disturb_alt_outlined,
+                          size: 16,
+                          color: _adaAtmosfer
+                              ? AppTheme.bottonColor
+                              : AppTheme.merah,
+                        ),
+                        const SizedBox(width: 6),
+                        Text('Hambatan Udara', style: AppTextStyle.normalText),
+                      ],
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      _tempatPercobaan.atmosfer,
+                      style: AppTextStyle.normalText.copyWith(
+                        fontSize: 10,
+                        color: AppTheme.textColor,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                    if (_hambatanUdara && _adaAtmosfer)
+                      Text(
+                        'b = ${_tempatPercobaan.b} kg/s  •  γ = ${_gamma.toStringAsFixed(3)} s⁻¹',
+                        style: AppTextStyle.normalText.copyWith(
+                          fontSize: 10,
+                          color: AppTheme.progressColor,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      )
+                    else if (_hambatanUdara && !_adaAtmosfer)
+                      Text(
+                        'Tidak berpengaruh — tidak ada atmosfer',
+                        style: AppTextStyle.normalText.copyWith(
+                          fontSize: 10,
+                          color: AppTheme.merah,
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              Switch(
+                value: _hambatanUdara,
+                onChanged: (v) => setState(() => _hambatanUdara = v),
+                activeColor: _adaAtmosfer
+                    ? AppTheme.progressColor
+                    : AppTheme.merah,
+                activeTrackColor:
+                    (_adaAtmosfer ? AppTheme.progressColor : AppTheme.merah)
+                        .withValues(alpha: 0.3),
+                inactiveThumbColor: AppTheme.textColor,
+                inactiveTrackColor: AppTheme.textColor.withValues(alpha: 0.2),
+              ),
+            ],
+          ),
         ],
       ),
     );
@@ -403,10 +596,10 @@ class _LaboOsilasiState extends State<LaboOsilasi>
               const SizedBox(width: 8),
               Text(
                 'KONTROL PARAMETER',
-                style: AppTextStyle.normalText.copyWith(
+                style: AppTextStyle.normalText2.copyWith(
                   letterSpacing: 1.1,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                  color: AppTheme.putih,
                 ),
               ),
             ],
@@ -415,8 +608,8 @@ class _LaboOsilasiState extends State<LaboOsilasi>
           _buildSlider(
             label: 'Sudut Simpangan (θ)',
             value: _sudut,
-            min: 5,
-            max: 60,
+            min: 0,
+            max: 90,
             unit: '°',
             onChanged: (v) {
               setState(() => _sudut = v);
@@ -442,14 +635,7 @@ class _LaboOsilasiState extends State<LaboOsilasi>
             unit: ' kg',
             onChanged: (v) => setState(() => _massaBandul = v),
           ),
-          _buildSlider(
-            label: 'Skala Grafik (Amplitudo)',
-            value: _skalaGrafik,
-            min: 0.1,
-            max: 3.0,
-            unit: 'x',
-            onChanged: (v) => setState(() => _skalaGrafik = v),
-          ),
+          const SizedBox(height: 10),
         ],
       ),
     );
@@ -506,7 +692,7 @@ class _LaboOsilasiState extends State<LaboOsilasi>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Panduan Eksperimen Terpadu',
+            'Panduan Eksperimen',
             style: AppTextStyle.subjudul.copyWith(fontSize: 20),
           ),
           const SizedBox(height: 10),
@@ -517,7 +703,7 @@ class _LaboOsilasiState extends State<LaboOsilasi>
             'dihasilkan. Dalam kondisi ideal, perhatikan bahwa Massa (m) tidak '
             'mengubah periode sistem.',
             style: AppTextStyle.normalText.copyWith(
-              color: Colors.white70,
+              color: AppTheme.putih,
               height: 1.6,
             ),
           ),
@@ -620,7 +806,7 @@ class _PendulumPainter extends CustomPainter {
 
     // ── Garis keseimbangan (vertikal putus-putus) ───────────────────────────
     final dashPaint = Paint()
-      ..color = Colors.white12
+      ..color = AppTheme.textColor
       ..strokeWidth = 1;
     double y = pivotY;
     while (y < pivotY + ropeLength + bobRadius) {
@@ -630,7 +816,7 @@ class _PendulumPainter extends CustomPainter {
 
     // ── Garis tali ──────────────────────────────────────────────────────────
     final ropePaint = Paint()
-      ..color = Colors.white38
+      ..color = AppTheme.putih
       ..strokeWidth = 2
       ..style = PaintingStyle.stroke;
     canvas.drawLine(Offset(pivotX, pivotY), Offset(bobX, bobY), ropePaint);
@@ -640,15 +826,15 @@ class _PendulumPainter extends CustomPainter {
       canvas,
       '${ropeLengthM.toStringAsFixed(1)} m',
       Offset(pivotX + 6, pivotY + ropeLength / 2 - 6),
-      const TextStyle(
-        color: Colors.white38,
+      TextStyle(
+        color: AppTheme.textColor,
         fontSize: 9,
         fontWeight: FontWeight.w500,
       ),
     );
 
     // ── Titik pivot ─────────────────────────────────────────────────────────
-    final pivotPaint = Paint()..color = Colors.white54;
+    final pivotPaint = Paint()..color = AppTheme.textColor;
     canvas.drawCircle(Offset(pivotX, pivotY), 4, pivotPaint);
 
     // ── Glow bola ───────────────────────────────────────────────────────────
@@ -662,7 +848,7 @@ class _PendulumPainter extends CustomPainter {
       ..shader =
           RadialGradient(
             center: const Alignment(-0.3, -0.3),
-            colors: [const Color(0xFFBAE6FD), const Color(0xFF1D4ED8)],
+            colors: [AppTheme.putih, AppTheme.ballColor],
           ).createShader(
             Rect.fromCircle(center: Offset(bobX, bobY), radius: bobRadius),
           );
@@ -674,8 +860,8 @@ class _PendulumPainter extends CustomPainter {
         canvas,
         '${massaKg.toStringAsFixed(1)}kg',
         Offset(bobX - bobRadius * 0.6, bobY - 5),
-        const TextStyle(
-          color: Colors.white70,
+        TextStyle(
+          color: AppTheme.putih,
           fontSize: 8,
           fontWeight: FontWeight.bold,
         ),
@@ -697,60 +883,4 @@ class _PendulumPainter extends CustomPainter {
       old.angle != angle ||
       old.ropeLengthM != ropeLengthM ||
       old.massaKg != massaKg;
-}
-
-// ═══════════════════════════════════════════════════════════════════════════════
-// CustomPainter: Osilogram (gelombang sinus)
-// ═══════════════════════════════════════════════════════════════════════════════
-class _OsilogramPainter extends CustomPainter {
-  final List<double> waveData;
-  final Color color;
-
-  _OsilogramPainter({required this.waveData, required this.color});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    if (waveData.isEmpty) return;
-
-    final midY = size.height / 2;
-    final amplitude = size.height * 0.38;
-    final stepX = size.width / (waveData.length - 1);
-
-    // Grid garis tengah
-    final gridPaint = Paint()
-      ..color = Colors.white10
-      ..strokeWidth = 1;
-    canvas.drawLine(Offset(0, midY), Offset(size.width, midY), gridPaint);
-
-    // Kurva gelombang
-    final wavePaint = Paint()
-      ..color = color
-      ..strokeWidth = 2
-      ..style = PaintingStyle.stroke
-      ..strokeCap = StrokeCap.round
-      ..strokeJoin = StrokeJoin.round;
-
-    final path = Path();
-    for (int i = 0; i < waveData.length; i++) {
-      final x = i * stepX;
-      final y = midY - waveData[i] * amplitude;
-      if (i == 0) {
-        path.moveTo(x, y);
-      } else {
-        path.lineTo(x, y);
-      }
-    }
-    canvas.drawPath(path, wavePaint);
-
-    // Glow effect
-    final glowPaint = Paint()
-      ..color = color.withValues(alpha: 0.15)
-      ..strokeWidth = 6
-      ..style = PaintingStyle.stroke
-      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4);
-    canvas.drawPath(path, glowPaint);
-  }
-
-  @override
-  bool shouldRepaint(_OsilogramPainter old) => old.waveData != waveData;
 }

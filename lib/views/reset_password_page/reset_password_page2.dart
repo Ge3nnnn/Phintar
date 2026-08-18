@@ -8,6 +8,7 @@ import 'package:blabla/extention/navigator.dart';
 import 'package:blabla/views/loginpage/login_page_phintar.dart';
 
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 
 class ResetPasswordPage2 extends StatefulWidget {
   final String email;
@@ -78,15 +79,30 @@ class _ResetPasswordPage2State extends State<ResetPasswordPage2> {
 
       // Menampilkan notifikasi SnackBar sesuai hasil pendaftaran.
       if (success) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Kata sandi berhasil diubah!"),
-            backgroundColor: Colors.green,
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            backgroundColor: AppTheme.backgroundSecondary,
+            title: Text(
+              "Kata Sandi Berhasil Diubah!!",
+              textAlign: TextAlign.center,
+              style: TextStyle(color: AppTheme.putih),
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Lottie.asset("assets/Animations/succeed_change_pass.json"),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  context.pushReplacement(const LoginPagePhintar());
+                },
+                child: Text("Kembali", style: TextStyle(color: AppTheme.putih)),
+              ),
+            ],
           ),
-        );
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const LoginPagePhintar()),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(

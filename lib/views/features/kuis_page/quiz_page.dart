@@ -28,7 +28,7 @@ class _QuizPagePhintarState extends State<QuizPagePhintar> {
   // Daftar semua kuis
   late final List<_KuisItem> _allKuis = [
     _KuisItem(
-      title: 'Gelombang dan Osilasi',
+      title: 'Osilasi',
       subtitle: '15 Soal | 20 Menit',
       onTap: () {
         Navigator.of(

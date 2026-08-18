@@ -9,6 +9,7 @@ import 'package:blabla/extention/navigator.dart';
 import 'package:blabla/models/user_model_login.dart';
 import 'package:blabla/views/loginpage/login_page_phintar.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 
 class RegisterScreenPhintar extends StatefulWidget {
   const RegisterScreenPhintar({super.key});
@@ -47,15 +48,47 @@ class _RegisterScreenPhintarState extends State<RegisterScreenPhintar> {
     if (!mounted) return;
 
     if (success) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Akun berhasil dibuat')));
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          backgroundColor: AppTheme.backgroundSecondary,
+          title: Text(
+            "YEEAAYYY, ${nameC.text} berhasil mendaftar!!🎉🎉🎉🎉",
+            textAlign: TextAlign.center,
+            style: TextStyle(color: AppTheme.putih),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Lottie.asset("assets/Animations/congraturation.json"),
+              Text(
+                "ayo mulai perjalanan sains ${nameC.text}!!",
+                style: TextStyle(color: AppTheme.putih),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                context.pushReplacement(const LoginPagePhintar());
+              },
+              child: Text(
+                "Mulai Sekarang",
+                style: TextStyle(color: AppTheme.putih),
+              ),
+            ),
+          ],
+        ),
+      );
       // Opsional: Langsung arahkan ke halaman login setelah sukses
       // context.pushReplacement(const LoginPagePhintar());
     } else {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Email sudah terdaftar!')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Email sudah terdaftar!'),
+          backgroundColor: AppTheme.merah,
+        ),
+      );
     }
   }
 

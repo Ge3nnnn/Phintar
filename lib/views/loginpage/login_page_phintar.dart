@@ -3,6 +3,7 @@ import 'package:blabla/constants/app_typografy.dart';
 import 'package:blabla/database/db_helper.dart';
 import 'package:blabla/extention/navigator.dart';
 import 'package:blabla/constants/app_theme.dart';
+import 'package:blabla/models/preference_handler.dart';
 import 'package:blabla/views/bottom_nav/bottom_nav_bar_phintar.dart';
 import 'package:blabla/views/register_page/resister_page.dart';
 import 'package:blabla/views/reset_password_page/reset_password_page.dart';
@@ -40,6 +41,11 @@ class _LoginPagePhintarState extends State<LoginPagePhintar> {
     if (!mounted) return;
 
     if (pengguna != null) {
+      // Simpan status login dan data pengguna
+      await PreferenceHandler.setLogin(true);
+      await PreferenceHandler.setUserName(pengguna.nama);
+      await PreferenceHandler.setUserEmail(pengguna.email);
+      if (!mounted) return;
       // Jika berhasil login, navigasi ke home page.
       context.pushAndRemoveAll(const BottomNavBarPhintar());
     } else {
@@ -61,19 +67,19 @@ class _LoginPagePhintarState extends State<LoginPagePhintar> {
           child: Form(
             key: _formKey,
             child: Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: EdgeInsets.all(20.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
+                  Text(
                     "Phintar",
                     style: TextStyle(
                       fontSize: 50,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: AppTheme.putih,
                     ),
                   ),
-                  const SizedBox(height: 40),
+                  SizedBox(height: 40),
 
                   // 5. MENGGUNAKAN FUNGSI BANTUAN AGAR DESAIN KONSISTEN
                   CustomTextFields(
@@ -136,7 +142,7 @@ class _LoginPagePhintarState extends State<LoginPagePhintar> {
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      fixedSize: const Size(
+                      fixedSize: Size(
                         168,
                         45,
                       ), // Ditinggikan sedikit agar lebih nyaman ditekan
@@ -177,7 +183,7 @@ class _LoginPagePhintarState extends State<LoginPagePhintar> {
                     height: 45, // Disamakan tingginya dengan tombol login
                     width: 250,
                     decoration: BoxDecoration(
-                      border: Border.all(color: const Color(0xFFBFBFBF)),
+                      border: Border.all(color: AppTheme.textColor),
                       borderRadius: BorderRadius.circular(5),
                     ),
                     child: TextButton(

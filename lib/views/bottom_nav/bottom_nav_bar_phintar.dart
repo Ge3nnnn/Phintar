@@ -1,4 +1,5 @@
-import 'package:blabla/views/features/homepage/home_page.dart';
+import 'package:blabla/views/features/Profile_page/Profile_page.dart';
+import 'package:blabla/views/features/home_page/home_page.dart';
 import 'package:blabla/constants/app_theme.dart';
 import 'package:blabla/views/features/kuis_page/quiz_page.dart';
 import 'package:blabla/views/features/lab_page/lab_page.dart';
@@ -19,7 +20,6 @@ class _BottomNavBarPhintarState extends State<BottomNavBarPhintar> {
   // Fungsi untuk mengubah item navigasi aktif.
   void changeBottom(int index) {
     _selectedBottom = index;
-    print("Ini adalah value dari $_selectedBottom");
     setState(() {});
   }
 
@@ -28,11 +28,12 @@ class _BottomNavBarPhintarState extends State<BottomNavBarPhintar> {
     HomePagePhintar(),
     LabPagePhintar(),
     QuizPagePhintar(),
+    ProfilePagePhintar(),
   ];
   // Daftar item menu yang muncul di navigasi bawah.
   List<BottomNavItem> navItems = [
     BottomNavItem(icon: Icons.home, label: "Home"),
-    BottomNavItem(icon: Icons.school, label: "Laboratorium"),
+    BottomNavItem(icon: Icons.science, label: "Laboratorium"),
     BottomNavItem(icon: Icons.quiz, label: "Quiz"),
     BottomNavItem(icon: Icons.person, label: "Profile"),
   ];

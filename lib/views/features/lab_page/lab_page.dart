@@ -4,8 +4,9 @@ import 'package:blabla/constants/app_theme.dart';
 import 'package:blabla/constants/app_typografy.dart';
 import 'package:blabla/constants/appbar.dart';
 import 'package:blabla/extention/navigator.dart';
-import 'package:blabla/views/features/homepage/home_page.dart';
-import 'package:blabla/views/features/lab_page/labo/labo_osilasi.dart';
+import 'package:blabla/views/features/home_page/home_page.dart';
+import 'package:blabla/views/features/lab_page/labo/labo_bandul_matematis.dart';
+import 'package:blabla/views/features/lab_page/labo/labo_konstanta_pegas.dart';
 import 'package:flutter/material.dart';
 
 // Model sederhana untuk data laboratorium
@@ -30,12 +31,21 @@ class _LabPagePhintaarState extends State<LabPagePhintar> {
   // Daftar semua laboratorium
   late final List<_LabItem> _allLabs = [
     _LabItem(
-      title: 'Gelombang dan Osilasi',
+      title: 'Bandul Matematis',
       subtitle: 'Visualisasi Gerak Harmonik\nSederhana',
       onTap: () {
         Navigator.of(
           context,
         ).push(MaterialPageRoute(builder: (context) => const LaboOsilasi()));
+      },
+    ),
+    _LabItem(
+      title: 'Konstanta Pegas',
+      subtitle: 'Visualisasi Hukum Hooke',
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => const LaboKonstantaPegas()),
+        );
       },
     ),
     // Tambahkan lab lain di sini
@@ -78,7 +88,6 @@ class _LabPagePhintaarState extends State<LabPagePhintar> {
                 },
               ),
               const SizedBox(height: 20),
-
               // Tampilkan hasil atau pesan kosong
               if (results.isEmpty)
                 Padding(

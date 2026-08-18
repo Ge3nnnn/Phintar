@@ -3,6 +3,9 @@ import 'package:blabla/constants/app_textfield.dart';
 import 'package:blabla/constants/app_theme.dart';
 import 'package:blabla/constants/app_typografy.dart';
 import 'package:blabla/constants/appbar.dart';
+import 'package:blabla/extention/navigator.dart';
+import 'package:blabla/models/preference_handler.dart';
+import 'package:blabla/views/zmateri/Gelombang_dan_materi/1_gelombang_dan_osilasi.dart';
 import 'package:flutter/material.dart';
 
 // Model sederhana untuk data modul
@@ -19,7 +22,8 @@ class _ModulItem {
 }
 
 class HomePagePhintar extends StatefulWidget {
-  const HomePagePhintar({super.key});
+  const HomePagePhintar({super.key, this.username});
+  final String? username;
 
   @override
   State<HomePagePhintar> createState() => _HomePagePhintarState();
@@ -28,12 +32,14 @@ class HomePagePhintar extends StatefulWidget {
 class _HomePagePhintarState extends State<HomePagePhintar> {
   String _searchQuery = '';
 
-  // Daftar semua modul
+  // Daftar modul (masukan agar search bisa bekerja)
   late final List<_ModulItem> _allModuls = [
     _ModulItem(
       title: 'Gelombang dan Osilasi',
       subtitle: 'Modul Fisika Dasar',
-      onTap: () {},
+      onTap: () {
+        context.push(Materi1());
+      },
     ),
     // Tambahkan modul lain di sini
   ];
@@ -54,10 +60,11 @@ class _HomePagePhintarState extends State<HomePagePhintar> {
   @override
   Widget build(BuildContext context) {
     final results = _filteredModuls;
+    final displayName = widget.username ?? PreferenceHandler.userName;
 
     return Scaffold(
       backgroundColor: AppTheme.backgroundPrimary,
-      appBar: CustomAppBar(title: 'Selamat datang,'),
+      appBar: CustomAppBar(title: 'Selamat datang, $displayName'),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Padding(

@@ -9,6 +9,9 @@ class AppTheme {
   static const Color bottonColor = Color(0xFF00A8E8); // Botton Color
   static const Color progressColor = Color(0xFF34D399); // Progress Color
   static const Color textColor = Color(0xFF64748B); // Text Color
+  static const Color borderColor = Color(0xFF64748B); // Border Colo r
+  static const Color ballColor = Color.fromARGB(255, 7, 92, 240); // Warna bola
+
   // neutral Colors
   static const Color putih = Colors.white;
   static const Color hytam = Colors.black;
