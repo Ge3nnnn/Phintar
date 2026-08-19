@@ -16,4 +16,6 @@ class AppTheme {
   static const Color putih = Colors.white;
   static const Color hytam = Colors.black;
   static const Color merah = Colors.red;
+  static const Color kuning = Colors.yellow;
+  static const Color hijau = Colors.green;
 }

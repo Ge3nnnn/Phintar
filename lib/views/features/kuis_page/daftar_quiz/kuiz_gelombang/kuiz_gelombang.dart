@@ -1,6 +1,7 @@
 import 'package:blabla/constants/app_theme.dart';
 import 'package:blabla/constants/app_typografy.dart';
 import 'package:blabla/constants/appbar.dart';
+import 'package:blabla/database/db_quiz.dart';
 import 'package:flutter/material.dart';
 
 // ─── Model ────────────────────────────────────────────────────────────────────
@@ -255,6 +256,11 @@ class _QuizGelombangPhintarState extends State<QuizGelombangPhintar> {
         _answered = false;
       });
     } else {
+      final percentage = (_score / _questions.length * 100).roundToDouble();
+      DatabaseHelperQuiz.instance.insertHistory({
+        'quiz_id': 1,
+        'score': percentage,
+      });
       setState(() {
         _finished = true;
       });

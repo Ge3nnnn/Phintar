@@ -609,7 +609,7 @@ class _LaboOsilasiState extends State<LaboOsilasi>
             label: 'Sudut Simpangan (θ)',
             value: _sudut,
             min: 0,
-            max: 90,
+            max: 80,
             unit: '°',
             onChanged: (v) {
               setState(() => _sudut = v);

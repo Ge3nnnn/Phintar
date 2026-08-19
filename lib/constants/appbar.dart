@@ -6,12 +6,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final IconData? prefixIcon;
   final VoidCallback? onPrefixIconTap;
+  final Color? prefixIconColor;
 
   const CustomAppBar({
     super.key,
     required this.title,
     this.prefixIcon,
     this.onPrefixIconTap,
+    this.prefixIconColor,
   });
 
   @override
