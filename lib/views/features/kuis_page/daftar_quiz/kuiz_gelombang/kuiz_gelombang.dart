@@ -1,6 +1,7 @@
 import 'package:blabla/constants/app_theme.dart';
 import 'package:blabla/constants/app_typografy.dart';
 import 'package:blabla/widgets/app_bar.dart';
+import 'package:blabla/widgets/app_button.dart';
 import 'package:blabla/database/db_quiz.dart';
 import 'package:flutter/material.dart';
 
@@ -285,7 +286,7 @@ class _QuizGelombangPhintarState extends State<QuizGelombangPhintar> {
         title: "Kuis: Gelombang dan Osilasi",
         prefixIcon: Icons.arrow_back,
       ),
-      body: _finished ? _buildResultPage() : _buildQuizPage(),
+      body: SafeArea(child: _finished ? _buildResultPage() : _buildQuizPage()),
     );
   }
 
@@ -310,7 +311,7 @@ class _QuizGelombangPhintarState extends State<QuizGelombangPhintar> {
               height: 120,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: scoreColor.withOpacity(0.15),
+                color: scoreColor.withValues(alpha: 0.15),
                 border: Border.all(color: scoreColor, width: 3),
               ),
               child: Center(
@@ -361,31 +362,15 @@ class _QuizGelombangPhintarState extends State<QuizGelombangPhintar> {
 
   Widget _buildActionButton({
     required String label,
-    required IconData icon,
+    required IconData icon, // Will not be used here directly since CustomElevatedButton takes asset, but we'll use standard text for now or modify
     required Color color,
     required VoidCallback onTap,
   }) {
-    return SizedBox(
+    return CustomElevatedButton(
+      onPressed: onTap,
+      text: label,
+      backgroundColor: color,
       width: double.infinity,
-      child: ElevatedButton.icon(
-        onPressed: onTap,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: color,
-          padding: const EdgeInsets.symmetric(vertical: 14),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-        ),
-        icon: Icon(icon, color: AppTheme.putih),
-        label: Text(
-          label,
-          style: const TextStyle(
-            color: AppTheme.putih,
-            fontSize: 15,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ),
     );
   }
 
@@ -494,39 +479,12 @@ class _QuizGelombangPhintarState extends State<QuizGelombangPhintar> {
               const SizedBox(height: 20),
 
               // ── Tombol Lanjut ──
-              SizedBox(
+              CustomElevatedButton(
+                onPressed: _nextQuestion,
                 width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _nextQuestion,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.bottonColor,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        _currentIndex < _questions.length - 1
-                            ? 'Lanjut ke Pertanyaan ${_currentIndex + 2}'
-                            : 'Lihat Hasil',
-                        style: const TextStyle(
-                          color: AppTheme.putih,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(width: 6),
-                      const Icon(
-                        Icons.arrow_forward_rounded,
-                        color: AppTheme.putih,
-                        size: 18,
-                      ),
-                    ],
-                  ),
-                ),
+                text: _currentIndex < _questions.length - 1
+                    ? 'Lanjut ke Pertanyaan ${_currentIndex + 2}'
+                    : 'Lihat Hasil',
               ),
             ],
             const SizedBox(height: 30),
@@ -552,9 +510,9 @@ class _TopicChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-        color: AppTheme.bottonColor.withOpacity(0.15),
+        color: AppTheme.bottonColor.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppTheme.bottonColor.withOpacity(0.5)),
+        border: Border.all(color: AppTheme.bottonColor.withValues(alpha: 0.5)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -606,7 +564,7 @@ class _AnswerOption extends StatelessWidget {
     switch (state) {
       case _OptionState.correct:
         borderColor = AppTheme.progressColor;
-        bgColor = AppTheme.progressColor.withOpacity(0.1);
+        bgColor = AppTheme.progressColor.withValues(alpha: 0.1);
         labelBg = AppTheme.progressColor;
         labelFg = AppTheme.hytam;
         textColor = AppTheme.putih;
@@ -618,7 +576,7 @@ class _AnswerOption extends StatelessWidget {
         break;
       case _OptionState.wrong:
         borderColor = AppTheme.merah;
-        bgColor = AppTheme.merah.withOpacity(0.1);
+        bgColor = AppTheme.merah.withValues(alpha: 0.1);
         labelBg = AppTheme.merah;
         labelFg = AppTheme.putih;
         textColor = AppTheme.putih;
@@ -641,13 +599,13 @@ class _AnswerOption extends StatelessWidget {
         );
         break;
       case _OptionState.idle:
-      default:
         borderColor = const Color(0xFF334155);
         bgColor = AppTheme.backgroundSecondary;
         labelBg = AppTheme.backgroundPrimary;
         labelFg = AppTheme.bottonColor;
         textColor = AppTheme.putih;
         trailingIcon = null;
+        break;
     }
 
     return GestureDetector(

@@ -38,7 +38,7 @@ class _HomePagePhintarState extends State<HomePagePhintar> {
       title: 'Gelombang dan Osilasi',
       subtitle: 'Modul Fisika Dasar',
       onTap: () {
-        context.push(Materi1());
+        context.push(Materi1Gelombag());
       },
     ),
     // Tambahkan modul lain di sini

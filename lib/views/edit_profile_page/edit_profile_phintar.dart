@@ -1,3 +1,4 @@
+import 'package:blabla/widgets/app_button.dart';
 import 'package:blabla/widgets/app_textfield.dart';
 import 'package:blabla/constants/app_theme.dart';
 import 'package:blabla/constants/app_typografy.dart';
@@ -64,7 +65,7 @@ class _EditProfilePhintarState extends State<EditProfilePhintar> {
     setState(() {
       _isLoading = false;
     });
-    context.pop(BottomNavBarPhintar(initialIndex: 3));
+    context.pop();
   }
 
   @override
@@ -153,11 +154,11 @@ class _EditProfilePhintarState extends State<EditProfilePhintar> {
                         horizontal: 14,
                       ),
                       decoration: BoxDecoration(
-                        color: AppTheme.backgroundSecondary,
-                        borderRadius: BorderRadius.circular(8),
+                        color: AppTheme.glassBackground,
+                        borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: AppTheme.textColor.withValues(alpha: 0.4),
-                          width: 1,
+                          color: AppTheme.glassBorder,
+                          width: 1.5,
                         ),
                       ),
                       child: Row(
@@ -186,35 +187,11 @@ class _EditProfilePhintarState extends State<EditProfilePhintar> {
                 ),
                 SizedBox(height: 30),
                 // Simpan Button
-                SizedBox(
+                CustomElevatedButton(
+                  onPressed: _isLoading ? () {} : _saveProfile,
+                  backgroundColor: AppTheme.hijau,
                   width: double.infinity,
-                  height: 46,
-                  child: ElevatedButton(
-                    onPressed: _isLoading ? null : _saveProfile,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppTheme.hijau,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                    child: _isLoading
-                        ? SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
-                              strokeWidth: 2,
-                            ),
-                          )
-                        : Text(
-                            "Simpan Perubahan",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                  ),
+                  text: "Simpan Perubahan",
                 ),
               ],
             ),

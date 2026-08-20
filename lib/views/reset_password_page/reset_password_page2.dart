@@ -1,3 +1,4 @@
+import 'package:blabla/widgets/app_button.dart';
 import 'package:blabla/widgets/app_textfield.dart';
 import 'package:blabla/constants/app_theme.dart';
 import 'package:blabla/constants/app_typografy.dart';
@@ -79,9 +80,10 @@ class _ResetPasswordPage2State extends State<ResetPasswordPage2> {
 
       // Menampilkan notifikasi SnackBar sesuai hasil pendaftaran.
       if (success) {
+        final pageNavigator = Navigator.of(context);
         showDialog(
           context: context,
-          builder: (context) => AlertDialog(
+          builder: (dialogContext) => AlertDialog(
             backgroundColor: AppTheme.backgroundSecondary,
             title: Text(
               "Kata Sandi Berhasil Diubah!!",
@@ -97,7 +99,13 @@ class _ResetPasswordPage2State extends State<ResetPasswordPage2> {
             actions: [
               TextButton(
                 onPressed: () {
-                  context.pushReplacement(const LoginPagePhintar());
+                  Navigator.pop(dialogContext);
+                  pageNavigator.pushAndRemoveUntil(
+                    MaterialPageRoute(
+                      builder: (_) => const LoginPagePhintar(),
+                    ),
+                    (route) => false,
+                  );
                 },
                 child: Text("Kembali", style: TextStyle(color: AppTheme.putih)),
               ),
@@ -139,19 +147,19 @@ class _ResetPasswordPage2State extends State<ResetPasswordPage2> {
     return Scaffold(
       appBar: CustomAppBar(title: "Phintar"),
       backgroundColor: AppTheme.backgroundPrimary,
-      body: SingleChildScrollView(
-        child: Padding(
+      body: SafeArea(
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Padding(
           padding: const EdgeInsets.all(15.0),
-          child: SingleChildScrollView(
-            child: Container(
-              decoration: BoxDecoration(
-                color: AppTheme.backgroundSecondary,
-                border: Border.all(color: AppTheme.textColor, width: 1),
-                borderRadius: BorderRadius.circular(9),
-              ),
-              margin: const EdgeInsets.all(9),
-              height: 600,
-              width: 500,
+            child: SingleChildScrollView(
+              child: Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: AppTheme.glassBackground,
+                  borderRadius: BorderRadius.circular(24),
+                  border: Border.all(color: AppTheme.glassBorder, width: 1.5),
+                ),
               child: SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.all(30.0),
@@ -251,37 +259,17 @@ class _ResetPasswordPage2State extends State<ResetPasswordPage2> {
                           },
                         ),
                         SizedBox(height: 20), // Tambahan jarak
-                        ElevatedButton(
-                          // Saat loading, matikan tombol (set null) agar tidak dispam klik
-                          onPressed: isLoading ? null : resetPassword,
-                          child: Center(
-                            child: isLoading
-                                ? SizedBox(
-                                    height: 20,
-                                    width: 20,
-                                    child: CircularProgressIndicator(
-                                      color: AppTheme.putih,
-                                      strokeWidth: 4,
-                                    ),
-                                  )
-                                : Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text("Ubah Kata Sandi"),
-                                      SizedBox(
-                                        width: 8,
-                                      ), // Jarak antara teks dan icon
-                                      Icon(Icons.arrow_forward_rounded),
-                                    ],
-                                  ),
-                          ),
+                        CustomElevatedButton(
+                          onPressed: isLoading ? () {} : resetPassword,
+                          width: double.infinity,
+                          text: "Ubah Kata Sandi",
                         ),
                         SizedBox(height: 10),
                         Divider(color: AppTheme.textColor),
                         SizedBox(height: 10),
                         InkWell(
                           onTap: () {
-                            context.push(const LoginPagePhintar());
+                            context.pushAndRemoveAll(const LoginPagePhintar());
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -306,6 +294,7 @@ class _ResetPasswordPage2State extends State<ResetPasswordPage2> {
               ),
             ),
           ),
+        ),
         ),
       ),
     );

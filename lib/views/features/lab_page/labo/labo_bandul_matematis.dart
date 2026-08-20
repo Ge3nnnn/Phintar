@@ -79,8 +79,6 @@ class _LaboOsilasiState extends State<LaboOsilasi>
   // Sudut terakhir saat pause (agar bandul tidak kembali ke posisi awal)
   double _pausedAngle = 0.0;
 
-  // Controller kedua khusus osilogram — accumulate phase tiap frame
-  late AnimationController _waveController;
 
   // ── Stopwatch ──────────────────────────────────────────────────────────────
   final Stopwatch _stopwatch = Stopwatch();
@@ -99,7 +97,7 @@ class _LaboOsilasiState extends State<LaboOsilasi>
 
   /// Hitung periode berdasarkan panjang tali (T = 2π√(L/g))
   double get _periode => 2 * pi * sqrt(_panjangTali / _gravitasi);
-  double get _frekuensi => 1 / _periode;
+
   void _updateAnimationConfig() {
     _animController.duration = Duration(
       milliseconds: (_periode * 1000).round(),
@@ -342,7 +340,7 @@ class _LaboOsilasiState extends State<LaboOsilasi>
   Widget _buildPendulumCanvas() {
     return AnimatedBuilder(
       animation: _animController,
-      builder: (_, _) {
+      builder: (context, child) {
         // Saat running: ikuti animasi
         // Saat pause setelah pernah jalan: tetap di posisi terakhir (_pausedAngle)
         // Saat belum pernah jalan: posisi awal berdasarkan sudut slider
@@ -544,7 +542,7 @@ class _LaboOsilasiState extends State<LaboOsilasi>
               Switch(
                 value: _hambatanUdara,
                 onChanged: (v) => setState(() => _hambatanUdara = v),
-                activeColor: _adaAtmosfer
+                activeThumbColor: _adaAtmosfer
                     ? AppTheme.progressColor
                     : AppTheme.merah,
                 activeTrackColor:

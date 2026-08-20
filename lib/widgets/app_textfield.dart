@@ -40,37 +40,27 @@ class CustomTextFields extends StatelessWidget {
         prefixIcon: Icon(prefixIcon, color: AppTheme.textColor),
         // 1. Padding di dalam TextField agar luas dan tidak mepet
         contentPadding: const EdgeInsets.symmetric(
-          vertical: 16,
-          horizontal: 12,
+          vertical: 18, // Slightly more vertical padding for breathing room
+          horizontal: 16,
         ),
-        // 2. Border saat kondisi normal (belum diklik)
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(
-            8,
-          ), // Sesuaikan lengkungan ujung kotak
-          borderSide: BorderSide(color: AppTheme.textColor, width: 1),
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: AppTheme.borderColor, width: 1.5),
         ),
-        // 3. Border saat TextField diklik (sedang mengetik)
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: AppTheme.putih, width: 1.5),
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: AppTheme.bottonColor, width: 2), // Botton color highlight on focus
         ),
-
-        // 4. Border MERAH saat validasi gagal (error)
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: AppTheme.merah, width: 1),
-        ),
-
-        // 5. Border MERAH saat error dan sedang diklik
-        focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(12),
           borderSide: const BorderSide(color: AppTheme.merah, width: 1.5),
         ),
-
-        // Memastikan background transparan atau bisa kamu sesuaikan
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: AppTheme.merah, width: 2),
+        ),
         filled: true,
-        fillColor: Colors.transparent,
+        fillColor: AppTheme.backgroundTertiary.withValues(alpha: 0.3), // Subtle translucent background
       ),
     );
   }

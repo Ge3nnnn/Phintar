@@ -15,8 +15,8 @@ class CustomElevatedButton extends StatelessWidget {
     required this.text,
     required this.onPressed,
     this.iconAsset,
-    this.width = 168, // Default width sesuai kodemu
-    this.height = 30, // Default height sesuai kodemu
+    this.width = double.infinity, // Expand by default in modern forms
+    this.height = 48, // Touch target minimum height
     this.backgroundColor,
   });
 
@@ -26,20 +26,20 @@ class CustomElevatedButton extends StatelessWidget {
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
         fixedSize: Size(width, height),
-        // Gunakan warna yang dipassing, jika null gunakan warna dari AppTheme kamu
         backgroundColor: backgroundColor ?? AppTheme.bottonColor,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+        elevation: 2, // Subtle shadow for depth
+        shadowColor: (backgroundColor ?? AppTheme.bottonColor).withValues(alpha: 0.5),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12), // Softer, more modern corners
+        ),
       ),
       child: Row(
-        mainAxisAlignment:
-            MainAxisAlignment.center, // Agar posisi ikon & teks di tengah
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Jika iconAsset diisi, tampilkan Image
           if (iconAsset != null) ...[
-            Image.asset(iconAsset!, width: 18, height: 18, fit: BoxFit.contain),
-            const SizedBox(width: 10),
+            Image.asset(iconAsset!, width: 22, height: 22, fit: BoxFit.contain),
+            const SizedBox(width: 12),
           ],
-          // Teks Tombol
           Text(text, style: AppTextStyle.botttonText),
         ],
       ),

@@ -51,5 +51,7 @@ class PreferenceHandler {
   // Fungsi untuk logout. Menghapus key status login dan data pengguna dari SharedPreferences.
   static Future<void> logOut() async {
     await _prefs.remove(_keyIsLogin);
+    await _prefs.remove(_keyUserName);
+    await _prefs.remove(_keyUserEmail);
   }
 }

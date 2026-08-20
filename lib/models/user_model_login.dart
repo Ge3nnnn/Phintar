@@ -14,12 +14,15 @@ class UserModelSQL {
   });
 
   Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'id': id,
+    final map = <String, dynamic>{
       'email': email,
       'password': password,
       'nama': nama,
     };
+    if (id != null) {
+      map['id'] = id;
+    }
+    return map;
   }
 
   factory UserModelSQL.fromMap(Map<String, dynamic> map) {

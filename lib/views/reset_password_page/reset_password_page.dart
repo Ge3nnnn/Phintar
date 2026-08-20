@@ -1,10 +1,9 @@
+import 'package:blabla/widgets/app_button.dart';
 import 'package:blabla/widgets/app_textfield.dart';
 import 'package:blabla/constants/app_typografy.dart';
 import 'package:blabla/widgets/app_bar.dart';
 import 'package:blabla/constants/app_theme.dart';
 import 'package:blabla/database/db_helper.dart';
-import 'package:blabla/extention/navigator.dart';
-import 'package:blabla/views/loginpage/login_page_phintar.dart';
 import 'package:blabla/views/reset_password_page/reset_password_page2.dart';
 import 'package:flutter/material.dart';
 // Jika kamu menggunakan Firebase, import firebase auth/firestore di sini
@@ -106,18 +105,18 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     return Scaffold(
       appBar: const CustomAppBar(title: "Phintar"),
       backgroundColor: AppTheme.backgroundPrimary,
-      body: SingleChildScrollView(
-        child: Padding(
+      body: SafeArea(
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Padding(
           padding: const EdgeInsets.all(15.0),
-          child: Container(
-            decoration: BoxDecoration(
-              color: AppTheme.backgroundSecondary,
-              border: Border.all(color: AppTheme.textColor, width: 1),
-              borderRadius: BorderRadius.circular(9),
-            ),
-            margin: const EdgeInsets.all(9),
-            height: 500,
-            width: 500,
+            child: Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: AppTheme.glassBackground, // Glassmorphic effect
+                borderRadius: BorderRadius.circular(24),
+                border: Border.all(color: AppTheme.glassBorder, width: 1.5),
+              ),
             child: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(30.0),
@@ -178,37 +177,17 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                         prefixIcon: Icons.email,
                       ),
                       SizedBox(height: 20), // Tambahan jarak
-                      ElevatedButton(
-                        // Saat loading, matikan tombol (set null) agar tidak dispam klik
-                        onPressed: isLoading ? null : verifyEmail,
-                        child: Center(
-                          child: isLoading
-                              ? SizedBox(
-                                  height: 20,
-                                  width: 20,
-                                  child: CircularProgressIndicator(
-                                    color: AppTheme.putih,
-                                    strokeWidth: 4,
-                                  ),
-                                )
-                              : Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text("Lanjut Ubah Kata Sandi"),
-                                    SizedBox(
-                                      width: 8,
-                                    ), // Jarak antara teks dan icon
-                                    Icon(Icons.arrow_forward_rounded),
-                                  ],
-                                ),
-                        ),
+                      CustomElevatedButton(
+                        onPressed: isLoading ? () {} : verifyEmail, // Handle disabled state in verifyEmail or just empty func
+                        width: double.infinity,
+                        text: "Lanjut Ubah Kata Sandi",
                       ),
                       SizedBox(height: 10),
                       Divider(color: AppTheme.textColor),
                       SizedBox(height: 10),
                       InkWell(
                         onTap: () {
-                          context.push(const LoginPagePhintar());
+                          Navigator.of(context).pop();
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -232,6 +211,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
               ),
             ),
           ),
+        ),
         ),
       ),
     );

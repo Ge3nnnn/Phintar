@@ -48,9 +48,10 @@ class _RegisterScreenPhintarState extends State<RegisterScreenPhintar> {
     if (!mounted) return;
 
     if (success) {
+      final pageNavigator = Navigator.of(context);
       showDialog(
         context: context,
-        builder: (context) => AlertDialog(
+        builder: (dialogContext) => AlertDialog(
           backgroundColor: AppTheme.backgroundSecondary,
           title: Text(
             "YEEAAYYY, ${nameC.text} berhasil mendaftar!!🎉🎉🎉🎉",
@@ -70,7 +71,12 @@ class _RegisterScreenPhintarState extends State<RegisterScreenPhintar> {
           actions: [
             TextButton(
               onPressed: () {
-                context.pushReplacement(const LoginPagePhintar());
+                Navigator.pop(dialogContext);
+                pageNavigator.pushReplacement(
+                  MaterialPageRoute(
+                    builder: (_) => const LoginPagePhintar(),
+                  ),
+                );
               },
               child: Text(
                 "Mulai Sekarang",
@@ -97,9 +103,10 @@ class _RegisterScreenPhintarState extends State<RegisterScreenPhintar> {
     return Scaffold(
       appBar: const CustomAppBar(title: "Phintar"),
       backgroundColor: AppTheme.backgroundPrimary,
-      body: SingleChildScrollView(
-        // Agar tidak error overflow saat keyboard muncul
-        child: Padding(
+      body: SafeArea(
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Padding(
           padding: const EdgeInsets.all(15.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -114,11 +121,11 @@ class _RegisterScreenPhintarState extends State<RegisterScreenPhintar> {
 
               // 4. HAPUS HEIGHT: 600 PADA CONTAINER AGAR FLEKSIBEL
               Container(
-                width: double.infinity, // Ambil lebar maksimal yang tersedia
+                width: double.infinity,
                 decoration: BoxDecoration(
-                  color: AppTheme.backgroundSecondary,
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: AppTheme.textColor),
+                  color: AppTheme.glassBackground, // Glassmorphic effect
+                  borderRadius: BorderRadius.circular(24),
+                  border: Border.all(color: AppTheme.glassBorder, width: 1.5),
                 ),
                 padding: const EdgeInsets.all(20.0), // Ganti padding di dalam
                 child: Form(
@@ -262,49 +269,7 @@ class _RegisterScreenPhintarState extends State<RegisterScreenPhintar> {
               const SizedBox(height: 20),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  // 6. UPDATE CUSTOM TEXT FIELD DENGAN OUTLINE BORDER (Lebih Rapi)
-  Widget buildCustomTextField({
-    required TextEditingController controller,
-    required String? Function(String?) validator,
-    required String hintText,
-    required IconData prefixIcon,
-    bool obscureText = false,
-    TextInputType? keyboardType,
-  }) {
-    return TextFormField(
-      controller: controller,
-      validator: validator,
-      obscureText: obscureText,
-      keyboardType: keyboardType,
-      style: const TextStyle(color: Colors.white),
-      decoration: InputDecoration(
-        hintText: hintText,
-        hintStyle: TextStyle(color: AppTheme.textColor),
-        prefixIcon: Icon(prefixIcon, color: AppTheme.textColor),
-        contentPadding: const EdgeInsets.symmetric(
-          vertical: 16,
-          horizontal: 12,
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: AppTheme.textColor, width: 1),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: Colors.white, width: 1.5),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: Colors.red, width: 1),
-        ),
-        focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: Colors.red, width: 1.5),
+          ),
         ),
       ),
     );

@@ -1,49 +1,80 @@
 import 'package:blabla/constants/app_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AppTextStyle {
   AppTextStyle._();
-  static const judul = TextStyle(
-    fontSize: 30,
+
+  // Headings
+  static final judul = GoogleFonts.outfit(
+    fontSize: 28,
     fontWeight: FontWeight.bold,
-    color: AppTheme.putih,
+    color: AppTheme.textLight,
+    letterSpacing: -0.5,
   );
-  static const subjudul = TextStyle(
+  
+  static final subjudul = GoogleFonts.outfit(
     fontSize: 22,
-    color: AppTheme.putih,
-    fontWeight: FontWeight.bold,
+    fontWeight: FontWeight.w700,
+    color: AppTheme.textLight,
+    letterSpacing: -0.3,
   );
-  static const subsubjudul = TextStyle(
-    fontSize: 20,
-    fontWeight: FontWeight.bold,
-    color: AppTheme.putih,
+  
+  static final subsubjudul = GoogleFonts.outfit(
+    fontSize: 18,
+    fontWeight: FontWeight.w600,
+    color: AppTheme.textLight,
   );
-  static const botttonText = TextStyle(
-    fontSize: 20,
-    fontWeight: FontWeight.bold,
+
+  // Buttons & Interactions
+  static final botttonText = GoogleFonts.outfit(
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
     color: AppTheme.putih,
+    letterSpacing: 0.2,
   );
-  static const bottomText = TextStyle(
-    fontSize: 17,
-    fontWeight: FontWeight.bold,
+  
+  static final bottomText = GoogleFonts.outfit(
+    fontSize: 15,
+    fontWeight: FontWeight.w500,
     color: AppTheme.textColor,
   );
-  static const normalText = TextStyle(fontSize: 15, color: AppTheme.textColor);
-  static const normalTextBold = TextStyle(
-    fontSize: 15,
-    fontWeight: FontWeight.bold,
+
+  // Body Texts
+  static final normalText = GoogleFonts.outfit(
+    fontSize: 15, 
+    fontWeight: FontWeight.w400,
     color: AppTheme.textColor,
   );
-  static const normalText2 = TextStyle(fontSize: 15, color: AppTheme.putih);
-  static const normalText2Bold = TextStyle(
+  
+  static final normalTextBold = GoogleFonts.outfit(
     fontSize: 15,
-    fontWeight: FontWeight.bold,
-    color: AppTheme.putih,
+    fontWeight: FontWeight.w600,
+    color: AppTheme.textColor,
   );
-  static const warningText = TextStyle(fontSize: 15, color: AppTheme.merah);
-  static const progresText = TextStyle(
-    fontSize: 17,
-    fontWeight: FontWeight.bold,
-    color: AppTheme.progressColor,
+  
+  static final normalText2 = GoogleFonts.outfit(
+    fontSize: 15, 
+    fontWeight: FontWeight.w400,
+    color: AppTheme.textLight,
+  );
+  
+  static final normalText2Bold = GoogleFonts.outfit(
+    fontSize: 15,
+    fontWeight: FontWeight.w600,
+    color: AppTheme.textLight,
+  );
+
+  // States
+  static final warningText = GoogleFonts.outfit(
+    fontSize: 14, 
+    fontWeight: FontWeight.w500,
+    color: AppTheme.merah,
+  );
+  
+  static final progresText = GoogleFonts.outfit(
+    fontSize: 15,
+    fontWeight: FontWeight.w600,
+    color: AppTheme.bottonColor, // Use modern bottonColor instead of old progressColor
   );
 }

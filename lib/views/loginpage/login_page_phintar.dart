@@ -1,3 +1,4 @@
+import 'package:blabla/widgets/app_button.dart';
 import 'package:blabla/widgets/app_textfield.dart';
 import 'package:blabla/constants/app_typografy.dart';
 import 'package:blabla/database/db_helper.dart';
@@ -62,8 +63,10 @@ class _LoginPagePhintarState extends State<LoginPagePhintar> {
     return Scaffold(
       backgroundColor: AppTheme.backgroundPrimary,
       // 4. BUNGKUS DENGAN SingleChildScrollView AGAR TIDAK OVERFLOW SAAT KEYBOARD MUNCUL
-      body: Center(
-        child: SingleChildScrollView(
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
           child: Form(
             key: _formKey,
             child: Padding(
@@ -73,11 +76,7 @@ class _LoginPagePhintarState extends State<LoginPagePhintar> {
                 children: [
                   Text(
                     "Phintar",
-                    style: TextStyle(
-                      fontSize: 50,
-                      fontWeight: FontWeight.bold,
-                      color: AppTheme.putih,
-                    ),
+                    style: AppTextStyle.judul.copyWith(fontSize: 48),
                   ),
                   SizedBox(height: 40),
 
@@ -125,9 +124,11 @@ class _LoginPagePhintarState extends State<LoginPagePhintar> {
                             ),
                           );
                         },
-                        child: const Text(
+                        child: Text(
                           "Lupa Kata Sandi?",
-                          style: TextStyle(color: AppTheme.progressColor),
+                          style: AppTextStyle.bottomText.copyWith(
+                            color: AppTheme.bottonColor,
+                          ),
                         ),
                       ),
                     ],
@@ -135,23 +136,14 @@ class _LoginPagePhintarState extends State<LoginPagePhintar> {
                   const SizedBox(height: 30),
 
                   // Tombol Login
-                  ElevatedButton(
+                  CustomElevatedButton(
+                    text: "Masuk",
+                    width: double.infinity,
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         login();
                       }
                     },
-                    style: ElevatedButton.styleFrom(
-                      fixedSize: Size(
-                        168,
-                        45,
-                      ), // Ditinggikan sedikit agar lebih nyaman ditekan
-                      backgroundColor: AppTheme.bottonColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                    ),
-                    child: Text("Masuk", style: AppTextStyle.botttonText),
                   ),
                   const SizedBox(height: 30),
 
@@ -179,14 +171,16 @@ class _LoginPagePhintarState extends State<LoginPagePhintar> {
                   const SizedBox(height: 20),
 
                   // Tombol Buat Akun Baru
-                  Container(
-                    height: 45, // Disamakan tingginya dengan tombol login
-                    width: 250,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: AppTheme.textColor),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: TextButton(
+                  SizedBox(
+                    height: 48,
+                    width: double.infinity,
+                    child: OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        side: BorderSide(color: AppTheme.borderColor, width: 1.5),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
                       onPressed: () {
                         Navigator.pushReplacement(
                           context,
@@ -195,19 +189,16 @@ class _LoginPagePhintarState extends State<LoginPagePhintar> {
                           ),
                         );
                       },
-                      child: const Text(
+                      child: Text(
                         "Buat Akun Baru",
-                        style: TextStyle(
-                          color: AppTheme.textColor,
-                          fontSize:
-                              16, // Disesuaikan agar proporsional di dalam kotak
-                        ),
+                        style: AppTextStyle.botttonText.copyWith(color: AppTheme.textColor),
                       ),
                     ),
                   ),
                 ],
               ),
             ),
+          ),
           ),
         ),
       ),

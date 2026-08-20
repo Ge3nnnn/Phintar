@@ -1,7 +1,7 @@
 import 'package:blabla/constants/app_theme.dart';
 import 'package:blabla/constants/app_typografy.dart';
 import 'package:blabla/database/db_quiz.dart';
-import 'package:blabla/views/bottom_nav/bottom_nav_bar_phintar.dart';
+import 'package:blabla/widgets/bottom_nav/bottom_nav_bar_phintar.dart';
 import 'package:blabla/views/features/kuis_page/daftar_quiz/kuiz_gelombang/kuiz_gelombang.dart';
 import 'package:flutter/material.dart';
 
@@ -211,7 +211,7 @@ class RiwayatKuisSectionState extends State<RiwayatKuisSection> {
                       size: 22,
                     ),
                     const SizedBox(width: 8),
-                    const Text('Riwayat Kuis', style: AppTextStyle.subjudul),
+                    Text('Riwayat Kuis', style: AppTextStyle.subjudul),
                     const SizedBox(width: 8),
                     Container(
                       padding: const EdgeInsets.symmetric(
@@ -354,6 +354,7 @@ class RiwayatKuisSectionState extends State<RiwayatKuisSection> {
                         // Informasi Kuis
                         Expanded(
                           child: Column(
+                            mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(

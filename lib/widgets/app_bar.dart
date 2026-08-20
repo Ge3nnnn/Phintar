@@ -43,7 +43,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           : null, // Jika null, Flutter akan otomatis memberikan tombol back bawaan jika ada halaman sebelumnya
       // menambahkan warna atau styling default lainnya di bawah ini
       backgroundColor: AppTheme.backgroundPrimary,
-      shape: Border(bottom: BorderSide(color: AppTheme.textColor, width: 1)),
+      elevation: 0,
+      surfaceTintColor: Colors.transparent,
     );
   }
 
@@ -89,7 +90,8 @@ class CustomAppBar2 extends StatelessWidget implements PreferredSizeWidget {
           : null, // Jika null, Flutter akan otomatis memberikan tombol back bawaan jika ada halaman sebelumnya
       // menambahkan warna atau styling default lainnya di bawah ini
       backgroundColor: AppTheme.backgroundPrimary,
-      shape: Border(bottom: BorderSide(color: AppTheme.textColor, width: 1)),
+      elevation: 0,
+      surfaceTintColor: Colors.transparent,
     );
   }
 
@@ -138,7 +140,8 @@ class CustomAppBarMateri extends StatelessWidget
           : null, // Jika null, Flutter akan otomatis memberikan tombol back bawaan jika ada halaman sebelumnya
       // menambahkan warna atau styling default lainnya di bawah ini
       backgroundColor: AppTheme.backgroundPrimary,
-      shape: Border(bottom: BorderSide(color: AppTheme.textColor, width: 1)),
+      elevation: 0,
+      surfaceTintColor: Colors.transparent,
     );
   }
 
