@@ -1,6 +1,6 @@
 import 'package:blabla/constants/app_theme.dart';
 import 'package:blabla/constants/app_typografy.dart';
-import 'package:blabla/constants/appbar.dart';
+import 'package:blabla/widgets/app_bar.dart';
 import 'package:blabla/database/db_quiz.dart';
 import 'package:blabla/extention/navigator.dart';
 import 'package:blabla/models/preference_handler.dart';

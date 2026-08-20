@@ -1,6 +1,6 @@
-import 'package:blabla/constants/app_textfield.dart';
-import 'package:blabla/constants/appbar.dart';
-import 'package:blabla/constants/app_button.dart';
+import 'package:blabla/widgets/app_textfield.dart';
+import 'package:blabla/widgets/app_bar.dart';
+import 'package:blabla/widgets/app_button.dart';
 import 'package:blabla/constants/app_images.dart';
 import 'package:blabla/constants/app_typografy.dart';
 import 'package:blabla/database/db_helper.dart';

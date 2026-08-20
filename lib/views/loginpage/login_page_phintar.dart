@@ -1,10 +1,10 @@
-import 'package:blabla/constants/app_textfield.dart';
+import 'package:blabla/widgets/app_textfield.dart';
 import 'package:blabla/constants/app_typografy.dart';
 import 'package:blabla/database/db_helper.dart';
 import 'package:blabla/extention/navigator.dart';
 import 'package:blabla/constants/app_theme.dart';
 import 'package:blabla/models/preference_handler.dart';
-import 'package:blabla/views/bottom_nav/bottom_nav_bar_phintar.dart';
+import 'package:blabla/widgets/bottom_nav/bottom_nav_bar_phintar.dart';
 import 'package:blabla/views/register_page/resister_page.dart';
 import 'package:blabla/views/reset_password_page/reset_password_page.dart';
 import 'package:flutter/material.dart';
