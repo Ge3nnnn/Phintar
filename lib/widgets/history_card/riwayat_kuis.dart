@@ -64,7 +64,7 @@ class RiwayatKuisSectionState extends State<RiwayatKuisSection> {
     widget.onDataChanged?.call();
   }
 
-  // ─── 1. ULANGI KUIS: Navigasi ke Halaman Kuis ───
+  // ─── 1. ULANGI KUIS: Navigasi langsung ke Halaman Kuis ───
   void _retryQuiz(int quizId) async {
     Widget targetQuizPage;
     switch (quizId) {
@@ -87,7 +87,7 @@ class RiwayatKuisSectionState extends State<RiwayatKuisSection> {
     refreshHistories();
   }
 
-  // ─── 3. DELETE: Hapus Riwayat Tertentu ───
+  // ─── 2. DELETE: Hapus Riwayat Tertentu ───
   void _showDeleteConfirmDialog(int id, String quizName) {
     showDialog(
       context: context,
@@ -272,13 +272,14 @@ class RiwayatKuisSectionState extends State<RiwayatKuisSection> {
                     ),
                     const SizedBox(height: 14),
                     ElevatedButton.icon(
-                      onPressed: () {
-                        Navigator.of(context).push(
+                      onPressed: () async {
+                        await Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) =>
                                 const BottomNavBarPhintar(initialIndex: 2),
                           ),
                         );
+                        refreshHistories();
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppTheme.bottonColor,

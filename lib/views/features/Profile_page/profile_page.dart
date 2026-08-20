@@ -24,12 +24,12 @@ class _ProfilePagePhintarState extends State<ProfilePagePhintar> {
     return Scaffold(
       backgroundColor: AppTheme.backgroundPrimary,
       appBar: CustomAppBar(title: "Profile"),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          padding: EdgeInsets.all(16),
+      body: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
+        padding: EdgeInsets.all(16),
+        child: Center(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               // ─── 1. User Profile Card ───
               Container(

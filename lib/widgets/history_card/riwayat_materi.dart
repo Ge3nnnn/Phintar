@@ -49,9 +49,7 @@ Color getDurationColor(int seconds) {
   return AppTheme.merah; // < 3 menit (sebentar)
 }
 
-// ============================================================================
 // WIDGET RIWAYAT MATERI (EMBEDDABLE PADA PROFILE PAGE)
-// ============================================================================
 class RiwayatMateriSection extends StatefulWidget {
   final VoidCallback? onDataChanged;
 

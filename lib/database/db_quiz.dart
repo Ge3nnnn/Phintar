@@ -3,7 +3,6 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DatabaseHelperQuiz {
-  // Singleton pattern
   static final DatabaseHelperQuiz instance = DatabaseHelperQuiz._init();
   static Database? _database;
 
@@ -37,9 +36,7 @@ class DatabaseHelperQuiz {
     ''');
   }
 
-  // ==========================================
-  // OPERASI CRUD SEDERHANA
-  // ==========================================
+  // OPERASI CRUD
 
   // 1. CREATE: Menyimpan skor dan waktu kuis
   Future<int> insertHistory(Map<String, dynamic> row) async {
@@ -80,7 +77,7 @@ class DatabaseHelperQuiz {
     );
   }
 
-  // 4. DELETE: Menghapus histori tertentu
+  // 4. DELETE: Menghapus histori
   Future<int> deleteHistory(int id) async {
     final db = await instance.database;
     return await db.delete(
@@ -90,34 +87,28 @@ class DatabaseHelperQuiz {
     );
   }
 
-  // DELETE: Menghapus semua riwayat kuis
-  Future<int> deleteAllHistories() async {
-    final db = await instance.database;
-    return await db.delete(tableQuizHistories);
-  }
-
   // Ringkasan statistik (jumlah kuis & rata-rata nilai)
-  Future<Map<String, dynamic>> getSummaryStats() async {
-    final db = await instance.database;
-    final result = await db.rawQuery('''
-      SELECT 
-        COUNT(*) as total,
-        AVG(score) as average_score,
-        MAX(score) as max_score
-      FROM $tableQuizHistories
-    ''');
-    if (result.isNotEmpty) {
-      final total = (result.first['total'] as num?)?.toInt() ?? 0;
-      final avg = (result.first['average_score'] as num?)?.toDouble() ?? 0.0;
-      final max = (result.first['max_score'] as num?)?.toDouble() ?? 0.0;
-      return {
-        'total': total,
-        'averageScore': avg,
-        'maxScore': max,
-      };
-    }
-    return {'total': 0, 'averageScore': 0.0, 'maxScore': 0.0};
-  }
+  // Future<Map<String, dynamic>> getSummaryStats() async {
+  //   final db = await instance.database;
+  //   final result = await db.rawQuery('''
+  //     SELECT
+  //       COUNT(*) as total,
+  //       AVG(score) as average_score,
+  //       MAX(score) as max_score
+  //     FROM $tableQuizHistories
+  //   ''');
+  //   if (result.isNotEmpty) {
+  //     final total = (result.first['total'] as num?)?.toInt() ?? 0;
+  //     final avg = (result.first['average_score'] as num?)?.toDouble() ?? 0.0;
+  //     final max = (result.first['max_score'] as num?)?.toDouble() ?? 0.0;
+  //     return {
+  //       'total': total,
+  //       'averageScore': avg,
+  //       'maxScore': max,
+  //     };
+  //   }
+  //   return {'total': 0, 'averageScore': 0.0, 'maxScore': 0.0};
+  // }
 
   Future close() async {
     final db = await instance.database;
