@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:blabla/models/quiz_history_model.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -42,26 +43,43 @@ class DatabaseHelperQuiz {
   Future<int> insertHistory(Map<String, dynamic> row) async {
     final db = await instance.database;
 
-    int quizId = row['quiz_id'];
+    int quizId = (row['quiz_id'] as num).toInt();
     final existing = await getHistoriesByQuiz(quizId);
-    
+
     if (existing.isNotEmpty) {
-      final updatedRow = Map<String, dynamic>.from(row);
-      updatedRow['id'] = existing.first['id'];
-      updatedRow['created_at'] = DateTime.now().toIso8601String();
-      return await updateHistory(updatedRow);
+      final updatedModel = QuizHistoryModel(
+        id: (existing.first['id'] as num?)?.toInt(),
+        quizId: quizId,
+        score: (row['score'] as num).toDouble(),
+        createdAt: DateTime.now().toIso8601String(),
+      );
+      return await updateHistory(updatedModel.toMap());
     }
 
-    final newRow = Map<String, dynamic>.from(row);
-    newRow['created_at'] = DateTime.now().toIso8601String();
+    final newModel = QuizHistoryModel(
+      quizId: quizId,
+      score: (row['score'] as num).toDouble(),
+      createdAt: DateTime.now().toIso8601String(),
+    );
 
-    return await db.insert(tableQuizHistories, newRow);
+    return await db.insert(tableQuizHistories, newModel.toMap());
+  }
+
+  // CREATE or UPDATE menggunakan Model langsung
+  Future<int> insertHistoryModel(QuizHistoryModel history) async {
+    return await insertHistory(history.toMap());
   }
 
   // 2. READ: Mengambil semua histori (diurutkan dari yang terbaru)
   Future<List<Map<String, dynamic>>> getAllHistories() async {
     final db = await instance.database;
     return await db.query(tableQuizHistories, orderBy: 'created_at DESC');
+  }
+
+  // READ: Mengambil semua histori dalam bentuk Model
+  Future<List<QuizHistoryModel>> getAllHistoryModels() async {
+    final list = await getAllHistories();
+    return list.map((map) => QuizHistoryModel.fromMap(map)).toList();
   }
 
   // READ: Mengambil histori untuk kuis tertentu saja
@@ -85,6 +103,12 @@ class DatabaseHelperQuiz {
       where: 'id = ?',
       whereArgs: [id],
     );
+  }
+
+  // UPDATE menggunakan Model
+  Future<int> updateHistoryModel(QuizHistoryModel history) async {
+    if (history.id == null) return 0;
+    return await updateHistory(history.toMap());
   }
 
   // 4. DELETE: Menghapus histori
