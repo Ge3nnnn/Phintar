@@ -56,7 +56,7 @@ class _RegisterScreenPhintarState extends State<RegisterScreenPhintar> {
           title: Text(
             "YEEAAYYY, ${nameC.text} berhasil mendaftar!!🎉🎉🎉🎉",
             textAlign: TextAlign.center,
-            style: TextStyle(color: AppTheme.putih),
+            style: AppTextStyle.normalText2,
           ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
@@ -64,7 +64,7 @@ class _RegisterScreenPhintarState extends State<RegisterScreenPhintar> {
               Lottie.asset("assets/Animations/congraturation.json"),
               Text(
                 "ayo mulai perjalanan sains ${nameC.text}!!",
-                style: TextStyle(color: AppTheme.putih),
+                style: AppTextStyle.normalText2,
               ),
             ],
           ),
@@ -80,7 +80,7 @@ class _RegisterScreenPhintarState extends State<RegisterScreenPhintar> {
               },
               child: Text(
                 "Mulai Sekarang",
-                style: TextStyle(color: AppTheme.putih),
+                style: AppTextStyle.normalText2,
               ),
             ),
           ],

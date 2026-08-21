@@ -41,14 +41,24 @@ class DatabaseHelperQuiz {
   // OPERASI CRUD SEDERHANA
   // ==========================================
 
-  // 1. CREATE: Menyimpan skor dan waktu kuis
+  // 1. CREATE or UPDATE: Menyimpan skor dan waktu kuis
   Future<int> insertHistory(Map<String, dynamic> row) async {
     final db = await instance.database;
 
-    // Otomatis menambahkan waktu saat ini jika belum ada
-    row['created_at'] = DateTime.now().toIso8601String();
+    int quizId = row['quiz_id'];
+    final existing = await getHistoriesByQuiz(quizId);
+    
+    if (existing.isNotEmpty) {
+      final updatedRow = Map<String, dynamic>.from(row);
+      updatedRow['id'] = existing.first['id'];
+      updatedRow['created_at'] = DateTime.now().toIso8601String();
+      return await updateHistory(updatedRow);
+    }
 
-    return await db.insert(tableQuizHistories, row);
+    final newRow = Map<String, dynamic>.from(row);
+    newRow['created_at'] = DateTime.now().toIso8601String();
+
+    return await db.insert(tableQuizHistories, newRow);
   }
 
   // 2. READ: Mengambil semua histori (diurutkan dari yang terbaru)

@@ -239,12 +239,9 @@ class _LaboOsilasiState extends State<LaboOsilasi>
                     color: AppTheme.putih,
                     size: 16,
                   ),
-                  label: const Text(
+                  label: Text(
                     'RESET',
-                    style: TextStyle(
-                      color: AppTheme.putih,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: AppTextStyle.botttonText,
                   ),
                   style: OutlinedButton.styleFrom(
                     side: const BorderSide(color: AppTheme.textColor),

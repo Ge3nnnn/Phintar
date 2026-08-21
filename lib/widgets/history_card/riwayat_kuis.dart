@@ -99,29 +99,25 @@ class RiwayatKuisSectionState extends State<RiwayatKuisSection> {
             side: const BorderSide(color: Color(0xFF334155)),
           ),
           title: Row(
-            children: const [
+            children: [
               Icon(Icons.delete_outline_rounded, color: AppTheme.merah),
               SizedBox(width: 10),
               Text(
                 'Hapus Riwayat',
-                style: TextStyle(
-                  color: AppTheme.putih,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: AppTextStyle.dialogTitle,
               ),
             ],
           ),
           content: Text(
             'Apakah kamu yakin ingin menghapus riwayat "$quizName"? Data ini tidak dapat dikembalikan.',
-            style: const TextStyle(color: AppTheme.textColor, fontSize: 14),
+            style: AppTextStyle.dialogText,
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(dialogContext),
-              child: const Text(
+              child: Text(
                 'Batal',
-                style: TextStyle(color: AppTheme.textColor),
+                style: AppTextStyle.normalText,
               ),
             ),
             ElevatedButton(
@@ -148,12 +144,9 @@ class RiwayatKuisSectionState extends State<RiwayatKuisSection> {
                   );
                 }
               },
-              child: const Text(
+              child: Text(
                 'Hapus',
-                style: TextStyle(
-                  color: AppTheme.putih,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: AppTextStyle.botttonText,
               ),
             ),
           ],
@@ -188,7 +181,7 @@ class RiwayatKuisSectionState extends State<RiwayatKuisSection> {
             ),
             child: Text(
               'Gagal memuat riwayat: ${snapshot.error}',
-              style: const TextStyle(color: AppTheme.merah),
+              style: AppTextStyle.warningText,
             ),
           );
         }
@@ -256,19 +249,15 @@ class RiwayatKuisSectionState extends State<RiwayatKuisSection> {
                       color: AppTheme.textColor.withValues(alpha: 0.5),
                     ),
                     const SizedBox(height: 12),
-                    const Text(
+                    Text(
                       'Anda belum mengerjakan kuis',
-                      style: TextStyle(
-                        color: AppTheme.putih,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                      ),
+                      style: AppTextStyle.normalText2Bold,
                     ),
                     const SizedBox(height: 4),
-                    const Text(
+                    Text(
                       'Mulai kerjakan kuis untuk melihat riwayat dan progres belajarmu.',
                       textAlign: TextAlign.center,
-                      style: TextStyle(color: AppTheme.textColor, fontSize: 13),
+                      style: AppTextStyle.smallText,
                     ),
                     const SizedBox(height: 14),
                     ElevatedButton.icon(
@@ -295,13 +284,9 @@ class RiwayatKuisSectionState extends State<RiwayatKuisSection> {
                         size: 20,
                         color: AppTheme.putih,
                       ),
-                      label: const Text(
+                      label: Text(
                         'Mulai Mengerjakan Kuis',
-                        style: TextStyle(
-                          color: AppTheme.putih,
-                          fontSize: 13,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: AppTextStyle.smallTextBold,
                       ),
                     ),
                   ],
@@ -359,11 +344,7 @@ class RiwayatKuisSectionState extends State<RiwayatKuisSection> {
                             children: [
                               Text(
                                 quizName,
-                                style: const TextStyle(
-                                  color: AppTheme.putih,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                style: AppTextStyle.cardTitle,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -379,10 +360,7 @@ class RiwayatKuisSectionState extends State<RiwayatKuisSection> {
                                   Expanded(
                                     child: Text(
                                       formatQuizDate(dateString),
-                                      style: const TextStyle(
-                                        color: AppTheme.textColor,
-                                        fontSize: 11,
-                                      ),
+                                      style: AppTextStyle.cardSubtitle,
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
@@ -443,7 +421,7 @@ class RiwayatKuisSectionState extends State<RiwayatKuisSection> {
                             PopupMenuItem(
                               value: 'retry',
                               child: Row(
-                                children: const [
+                                children: [
                                   Icon(
                                     Icons.replay_rounded,
                                     color: AppTheme.bottonColor,
@@ -452,7 +430,7 @@ class RiwayatKuisSectionState extends State<RiwayatKuisSection> {
                                   SizedBox(width: 8),
                                   Text(
                                     'Ulangi Kuis',
-                                    style: TextStyle(color: AppTheme.putih),
+                                    style: AppTextStyle.normalText2,
                                   ),
                                 ],
                               ),
@@ -460,7 +438,7 @@ class RiwayatKuisSectionState extends State<RiwayatKuisSection> {
                             PopupMenuItem(
                               value: 'delete',
                               child: Row(
-                                children: const [
+                                children: [
                                   Icon(
                                     Icons.delete_outline_rounded,
                                     color: AppTheme.merah,
@@ -469,7 +447,7 @@ class RiwayatKuisSectionState extends State<RiwayatKuisSection> {
                                   SizedBox(width: 8),
                                   Text(
                                     'Hapus',
-                                    style: TextStyle(color: AppTheme.merah),
+                                    style: AppTextStyle.warningText,
                                   ),
                                 ],
                               ),

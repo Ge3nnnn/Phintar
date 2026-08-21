@@ -1,5 +1,6 @@
 import 'package:blabla/constants/app_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:blabla/constants/app_typografy.dart';
 
 class CustomTextFields extends StatelessWidget {
   final TextEditingController controller;
@@ -34,9 +35,9 @@ class CustomTextFields extends StatelessWidget {
       style: const TextStyle(color: Colors.white), // Warna teks inputan
       decoration: InputDecoration(
         errorText: errorText,
-        errorStyle: const TextStyle(color: AppTheme.merah),
+        errorStyle: AppTextStyle.warningText,
         hintText: hintText,
-        hintStyle: TextStyle(color: AppTheme.textColor),
+        hintStyle: AppTextStyle.normalText,
         prefixIcon: Icon(prefixIcon, color: AppTheme.textColor),
         // 1. Padding di dalam TextField agar luas dan tidak mepet
         contentPadding: const EdgeInsets.symmetric(
@@ -133,7 +134,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
         textInputAction: TextInputAction.search,
         decoration: InputDecoration(
           hintText: widget.hintText,
-          hintStyle: TextStyle(color: AppTheme.textColor),
+          hintStyle: AppTextStyle.normalText,
           border: InputBorder.none,
           prefixIcon: Icon(Icons.search, color: AppTheme.textColor),
           // Suffix icon (Tombol silang) hanya muncul jika ada teks

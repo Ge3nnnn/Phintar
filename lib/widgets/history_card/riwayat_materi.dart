@@ -2,6 +2,7 @@ import 'package:blabla/constants/app_theme.dart';
 import 'package:blabla/constants/app_typografy.dart';
 import 'package:blabla/database/db_materi.dart';
 import 'package:blabla/widgets/bottom_nav/bottom_nav_bar_phintar.dart';
+import 'package:blabla/views/zmateri/Gelombang_dan_materi/1_gelombang_dan_osilasi.dart';
 import 'package:flutter/material.dart';
 
 // Helper daftar materi yang tersedia
@@ -77,6 +78,23 @@ class RiwayatMateriSectionState extends State<RiwayatMateriSection> {
     widget.onDataChanged?.call();
   }
 
+  // ─── LANJUTKAN MATERI: Navigasi ke Halaman Materi ───
+  void _continueMateri(int materiId) async {
+    Widget targetMateriPage;
+    switch (materiId) {
+      case 1:
+      default:
+        targetMateriPage = const Materi1Gelombag();
+        break;
+    }
+
+    await Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (context) => targetMateriPage));
+
+    refreshHistories();
+  }
+
   // ─── DELETE: Hapus Riwayat Tertentu ───
   void _showDeleteConfirmDialog(int id, String materiName) {
     showDialog(
@@ -89,30 +107,20 @@ class RiwayatMateriSectionState extends State<RiwayatMateriSection> {
             side: const BorderSide(color: Color(0xFF334155)),
           ),
           title: Row(
-            children: const [
+            children: [
               Icon(Icons.delete_outline_rounded, color: AppTheme.merah),
               SizedBox(width: 10),
-              Text(
-                'Hapus Riwayat',
-                style: TextStyle(
-                  color: AppTheme.putih,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+              Text('Hapus Riwayat', style: AppTextStyle.dialogTitle),
             ],
           ),
           content: Text(
             'Apakah kamu yakin ingin menghapus riwayat "$materiName"? Data ini tidak dapat dikembalikan.',
-            style: const TextStyle(color: AppTheme.textColor, fontSize: 14),
+            style: AppTextStyle.dialogText,
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(dialogContext),
-              child: const Text(
-                'Batal',
-                style: TextStyle(color: AppTheme.textColor),
-              ),
+              child: Text('Batal', style: AppTextStyle.normalText),
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
@@ -138,13 +146,7 @@ class RiwayatMateriSectionState extends State<RiwayatMateriSection> {
                   );
                 }
               },
-              child: const Text(
-                'Hapus',
-                style: TextStyle(
-                  color: AppTheme.putih,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+              child: Text('Hapus', style: AppTextStyle.botttonText),
             ),
           ],
         );
@@ -178,7 +180,7 @@ class RiwayatMateriSectionState extends State<RiwayatMateriSection> {
             ),
             child: Text(
               'Gagal memuat riwayat: ${snapshot.error}',
-              style: const TextStyle(color: AppTheme.merah),
+              style: AppTextStyle.warningText,
             ),
           );
         }
@@ -246,19 +248,15 @@ class RiwayatMateriSectionState extends State<RiwayatMateriSection> {
                       color: AppTheme.textColor.withValues(alpha: 0.5),
                     ),
                     const SizedBox(height: 12),
-                    const Text(
+                    Text(
                       'Belum ada riwayat belajar',
-                      style: TextStyle(
-                        color: AppTheme.putih,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                      ),
+                      style: AppTextStyle.normalText2Bold,
                     ),
                     const SizedBox(height: 4),
-                    const Text(
+                    Text(
                       'Mulai pelajari materi untuk melihat riwayat dan durasi belajarmu.',
                       textAlign: TextAlign.center,
-                      style: TextStyle(color: AppTheme.textColor, fontSize: 13),
+                      style: AppTextStyle.smallText,
                     ),
                     const SizedBox(height: 14),
                     ElevatedButton.icon(
@@ -285,13 +283,9 @@ class RiwayatMateriSectionState extends State<RiwayatMateriSection> {
                         size: 20,
                         color: AppTheme.putih,
                       ),
-                      label: const Text(
+                      label: Text(
                         'Mulai Belajar Materi',
-                        style: TextStyle(
-                          color: AppTheme.putih,
-                          fontSize: 13,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: AppTextStyle.smallTextBold,
                       ),
                     ),
                   ],
@@ -308,6 +302,7 @@ class RiwayatMateriSectionState extends State<RiwayatMateriSection> {
                 itemBuilder: (context, index) {
                   final item = data[index];
                   final id = item['id'] as int;
+                  final materiId = item['materi_id'] as int;
                   final materiName = item['materi_name'] as String;
                   final durationSeconds = (item['duration_seconds'] as num)
                       .toInt();
@@ -349,11 +344,7 @@ class RiwayatMateriSectionState extends State<RiwayatMateriSection> {
                             children: [
                               Text(
                                 materiName,
-                                style: const TextStyle(
-                                  color: AppTheme.putih,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                style: AppTextStyle.cardTitle,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -369,10 +360,7 @@ class RiwayatMateriSectionState extends State<RiwayatMateriSection> {
                                   Expanded(
                                     child: Text(
                                       formatMateriDate(dateString),
-                                      style: const TextStyle(
-                                        color: AppTheme.textColor,
-                                        fontSize: 11,
-                                      ),
+                                      style: AppTextStyle.cardSubtitle,
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
@@ -411,7 +399,7 @@ class RiwayatMateriSectionState extends State<RiwayatMateriSection> {
                         ),
                         const SizedBox(width: 4),
 
-                        // Popup Menu Aksi (Hapus)
+                        // Popup Menu Aksi (Lanjutkan & Hapus)
                         PopupMenuButton<String>(
                           icon: const Icon(
                             Icons.more_vert,
@@ -424,15 +412,34 @@ class RiwayatMateriSectionState extends State<RiwayatMateriSection> {
                             side: const BorderSide(color: Color(0xFF334155)),
                           ),
                           onSelected: (value) {
-                            if (value == 'delete') {
+                            if (value == 'continue') {
+                              _continueMateri(materiId);
+                            } else if (value == 'delete') {
                               _showDeleteConfirmDialog(id, materiName);
                             }
                           },
                           itemBuilder: (context) => [
                             PopupMenuItem(
+                              value: 'continue',
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.play_arrow_rounded,
+                                    color: AppTheme.bottonColor,
+                                    size: 18,
+                                  ),
+                                  SizedBox(width: 8),
+                                  Text(
+                                    'Lanjutkan',
+                                    style: AppTextStyle.normalText2,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            PopupMenuItem(
                               value: 'delete',
                               child: Row(
-                                children: const [
+                                children: [
                                   Icon(
                                     Icons.delete_outline_rounded,
                                     color: AppTheme.merah,
@@ -441,7 +448,7 @@ class RiwayatMateriSectionState extends State<RiwayatMateriSection> {
                                   SizedBox(width: 8),
                                   Text(
                                     'Hapus',
-                                    style: TextStyle(color: AppTheme.merah),
+                                    style: AppTextStyle.warningText,
                                   ),
                                 ],
                               ),

@@ -88,7 +88,7 @@ class _ResetPasswordPage2State extends State<ResetPasswordPage2> {
             title: Text(
               "Kata Sandi Berhasil Diubah!!",
               textAlign: TextAlign.center,
-              style: TextStyle(color: AppTheme.putih),
+              style: AppTextStyle.normalText2,
             ),
             content: Column(
               mainAxisSize: MainAxisSize.min,
@@ -107,7 +107,7 @@ class _ResetPasswordPage2State extends State<ResetPasswordPage2> {
                     (route) => false,
                   );
                 },
-                child: Text("Kembali", style: TextStyle(color: AppTheme.putih)),
+                child: Text("Kembali", style: AppTextStyle.normalText2),
               ),
             ],
           ),

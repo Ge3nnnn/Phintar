@@ -77,4 +77,43 @@ class AppTextStyle {
     fontWeight: FontWeight.w600,
     color: AppTheme.bottonColor, // Use modern bottonColor instead of old progressColor
   );
+
+  // Card Texts
+  static final cardTitle = GoogleFonts.outfit(
+    fontSize: 14,
+    fontWeight: FontWeight.bold,
+    color: AppTheme.putih,
+  );
+
+  static final cardSubtitle = GoogleFonts.outfit(
+    fontSize: 11,
+    fontWeight: FontWeight.w400,
+    color: AppTheme.textColor,
+  );
+
+  // Small Elements
+  static final smallText = GoogleFonts.outfit(
+    fontSize: 13,
+    fontWeight: FontWeight.w400,
+    color: AppTheme.textColor,
+  );
+
+  static final smallTextBold = GoogleFonts.outfit(
+    fontSize: 13,
+    fontWeight: FontWeight.bold,
+    color: AppTheme.putih,
+  );
+
+  // Dialog Texts
+  static final dialogTitle = GoogleFonts.outfit(
+    fontSize: 18,
+    fontWeight: FontWeight.bold,
+    color: AppTheme.putih,
+  );
+
+  static final dialogText = GoogleFonts.outfit(
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+    color: AppTheme.textColor,
+  );
 }
