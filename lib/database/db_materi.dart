@@ -47,14 +47,17 @@ class DatabaseHelperMateri {
     required int durationSeconds,
   }) async {
     final db = await instance.database;
-
+    // update data
     final existing = await getHistoriesByMateri(materiId);
     if (existing.isNotEmpty) {
       final row = {
         'id': existing.first['id'],
         'materi_id': materiId,
         'materi_name': materiName,
-        'duration_seconds': durationSeconds + ((existing.first['duration_seconds'] as num?)?.toInt() ?? 0), // Akumulasi durasi belajar
+        'duration_seconds':
+            durationSeconds +
+            ((existing.first['duration_seconds'] as num?)?.toInt() ??
+                0), // Akumulasi durasi belajar
         'created_at': DateTime.now().toIso8601String(),
       };
       return await updateHistory(row);

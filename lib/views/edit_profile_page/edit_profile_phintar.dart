@@ -4,7 +4,7 @@ import 'package:blabla/constants/app_theme.dart';
 import 'package:blabla/constants/app_typografy.dart';
 import 'package:blabla/widgets/app_bar.dart';
 import 'package:blabla/database/db_helper.dart';
-import 'package:blabla/extention/navigator.dart';
+import 'package:blabla/widgets/extention/navigator.dart';
 import 'package:blabla/models/preference_handler.dart';
 import 'package:blabla/widgets/bottom_nav/bottom_nav_bar_phintar.dart';
 import 'package:flutter/material.dart';

@@ -262,7 +262,6 @@ class _QuizGelombangPhintarState extends State<QuizGelombangPhintar> {
       });
     }
   }
-
   Future<void> _saveQuizHistory() async {
     final double percentage =
         (_score / _questions.length * 100).roundToDouble();

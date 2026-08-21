@@ -1,8 +1,8 @@
 import 'package:blabla/constants/app_theme.dart';
 import 'package:blabla/constants/app_typografy.dart';
 import 'package:blabla/widgets/app_bar.dart';
-import 'package:blabla/extention/navigator.dart';
 import 'package:blabla/models/preference_handler.dart';
+import 'package:blabla/widgets/extention/navigator.dart';
 import 'package:blabla/widgets/history_card/riwayat_kuis.dart';
 import 'package:blabla/widgets/history_card/riwayat_materi.dart';
 import 'package:blabla/views/edit_profile_page/edit_profile_phintar.dart';

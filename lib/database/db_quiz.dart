@@ -37,14 +37,13 @@ class DatabaseHelperQuiz {
   }
 
   // OPERASI CRUD
-
   // 1. CREATE or UPDATE: Menyimpan skor dan waktu kuis
   Future<int> insertHistory(Map<String, dynamic> row) async {
     final db = await instance.database;
 
     int quizId = row['quiz_id'];
     final existing = await getHistoriesByQuiz(quizId);
-    
+
     if (existing.isNotEmpty) {
       final updatedRow = Map<String, dynamic>.from(row);
       updatedRow['id'] = existing.first['id'];
