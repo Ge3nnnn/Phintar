@@ -6,7 +6,7 @@ import 'package:blabla/widgets/app_bar.dart';
 import 'package:blabla/database/db_helper.dart';
 import 'package:blabla/widgets/extention/navigator.dart';
 
-import 'package:blabla/views/loginpage/login_page_phintar.dart';
+import 'package:blabla/views/1_loginpage/login_page_phintar.dart';
 
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';

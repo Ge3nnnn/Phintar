@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:blabla/models/materi_history_model.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -50,33 +51,47 @@ class DatabaseHelperMateri {
     // update data
     final existing = await getHistoriesByMateri(materiId);
     if (existing.isNotEmpty) {
-      final row = {
-        'id': existing.first['id'],
-        'materi_id': materiId,
-        'materi_name': materiName,
-        'duration_seconds':
-            durationSeconds +
-            ((existing.first['duration_seconds'] as num?)?.toInt() ??
-                0), // Akumulasi durasi belajar
-        'created_at': DateTime.now().toIso8601String(),
-      };
-      return await updateHistory(row);
+      final existingSeconds =
+          (existing.first['duration_seconds'] as num?)?.toInt() ?? 0;
+      final historyModel = MateriHistoryModel(
+        id: (existing.first['id'] as num?)?.toInt(),
+        materiId: materiId,
+        materiName: materiName,
+        durationSeconds: durationSeconds + existingSeconds,
+        createdAt: DateTime.now().toIso8601String(),
+      );
+      return await updateHistory(historyModel.toMap());
     }
 
-    final row = {
-      'materi_id': materiId,
-      'materi_name': materiName,
-      'duration_seconds': durationSeconds,
-      'created_at': DateTime.now().toIso8601String(),
-    };
+    final historyModel = MateriHistoryModel(
+      materiId: materiId,
+      materiName: materiName,
+      durationSeconds: durationSeconds,
+      createdAt: DateTime.now().toIso8601String(),
+    );
 
-    return await db.insert(tableMateriHistories, row);
+    return await db.insert(tableMateriHistories, historyModel.toMap());
+  }
+
+  // CREATE or UPDATE menggunakan Model langsung
+  Future<int> insertHistoryModel(MateriHistoryModel history) async {
+    return await insertHistory(
+      materiId: history.materiId,
+      materiName: history.materiName,
+      durationSeconds: history.durationSeconds,
+    );
   }
 
   // 2. READ: Mengambil semua histori (diurutkan dari yang terbaru)
   Future<List<Map<String, dynamic>>> getAllHistories() async {
     final db = await instance.database;
     return await db.query(tableMateriHistories, orderBy: 'created_at DESC');
+  }
+
+  // READ: Mengambil semua histori dalam bentuk Model
+  Future<List<MateriHistoryModel>> getAllHistoryModels() async {
+    final list = await getAllHistories();
+    return list.map((map) => MateriHistoryModel.fromMap(map)).toList();
   }
 
   // READ: Mengambil histori untuk materi tertentu saja
@@ -100,6 +115,12 @@ class DatabaseHelperMateri {
       where: 'id = ?',
       whereArgs: [id],
     );
+  }
+
+  // UPDATE menggunakan Model
+  Future<int> updateHistoryModel(MateriHistoryModel history) async {
+    if (history.id == null) return 0;
+    return await updateHistory(history.toMap());
   }
 
   // 4. DELETE: Menghapus histori tertentu

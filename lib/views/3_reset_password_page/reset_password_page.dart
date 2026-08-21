@@ -4,7 +4,7 @@ import 'package:blabla/constants/app_typografy.dart';
 import 'package:blabla/widgets/app_bar.dart';
 import 'package:blabla/constants/app_theme.dart';
 import 'package:blabla/database/db_helper.dart';
-import 'package:blabla/views/reset_password_page/reset_password_page2.dart';
+import 'package:blabla/views/3_reset_password_page/reset_password_page2.dart';
 import 'package:flutter/material.dart';
 // Jika kamu menggunakan Firebase, import firebase auth/firestore di sini
 

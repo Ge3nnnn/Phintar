@@ -2,7 +2,7 @@ import 'package:blabla/constants/app_theme.dart';
 import 'package:blabla/constants/app_typografy.dart';
 import 'package:blabla/database/db_materi.dart';
 import 'package:blabla/widgets/bottom_nav/bottom_nav_bar_phintar.dart';
-import 'package:blabla/views/zmateri/Gelombang_dan_materi/1_gelombang_dan_osilasi.dart';
+import 'package:blabla/views/6_materi/Gelombang_dan_materi/1_gelombang_dan_osilasi.dart';
 import 'package:flutter/material.dart';
 
 // Helper daftar materi yang tersedia

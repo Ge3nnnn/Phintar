@@ -2,7 +2,7 @@ import 'package:blabla/constants/app_theme.dart';
 import 'package:blabla/constants/app_typografy.dart';
 import 'package:blabla/database/db_quiz.dart';
 import 'package:blabla/widgets/bottom_nav/bottom_nav_bar_phintar.dart';
-import 'package:blabla/views/features/kuis_page/daftar_quiz/kuiz_gelombang/kuiz_gelombang.dart';
+import 'package:blabla/views/5_features/kuis_page/daftar_quiz/kuiz_gelombang/kuiz_gelombang.dart';
 import 'package:flutter/material.dart';
 
 // Helper daftar kuis yang tersedia

@@ -1,64 +1,65 @@
-import 'package:blabla/widgets/app_banner.dart';
-import 'package:blabla/widgets/app_textfield.dart';
 import 'package:blabla/constants/app_theme.dart';
 import 'package:blabla/constants/app_typografy.dart';
+import 'package:blabla/views/5_features/lab_page/labo/labo_bandul_matematis.dart';
+import 'package:blabla/widgets/app_banner.dart';
 import 'package:blabla/widgets/app_bar.dart';
-import 'package:blabla/views/features/kuis_page/daftar_quiz/kuiz_gelombang/kuiz_gelombang.dart';
+import 'package:blabla/widgets/app_textfield.dart';
 import 'package:flutter/material.dart';
 
-// Model sederhana untuk data kuis
-class _KuisItem {
+// Model sederhana untuk data laboratorium
+class _LabItem {
   final String title;
   final String subtitle;
   final VoidCallback onTap;
 
-  _KuisItem({required this.title, required this.subtitle, required this.onTap});
+  _LabItem({required this.title, required this.subtitle, required this.onTap});
 }
 
-class QuizPagePhintar extends StatefulWidget {
-  const QuizPagePhintar({super.key});
+class LabPagePhintar extends StatefulWidget {
+  const LabPagePhintar({super.key});
 
   @override
-  State<QuizPagePhintar> createState() => _QuizPagePhintarState();
+  State<LabPagePhintar> createState() => _LabPagePhintaarState();
 }
 
-class _QuizPagePhintarState extends State<QuizPagePhintar> {
+class _LabPagePhintaarState extends State<LabPagePhintar> {
   String _searchQuery = '';
 
-  // Daftar semua kuis
-  late final List<_KuisItem> _allKuis = [
-    _KuisItem(
-      title: 'Gelombang dan Osilasi',
-      subtitle: '15 Soal | 20 Menit',
+  // Daftar semua laboratorium
+  late final List<_LabItem> _allLabs = [
+    _LabItem(
+      title: 'Bandul Matematis',
+      subtitle: 'Visualisasi Gerak Harmonik\nSederhana',
       onTap: () {
         Navigator.of(
           context,
-        ).push(MaterialPageRoute(builder: (context) => QuizGelombangPhintar()));
+        ).push(MaterialPageRoute(builder: (context) => const LaboOsilasi()));
       },
     ),
-    // Tambahkan kuis lain di sini
+
+    // Tambahkan lab lain di sini
   ];
 
   // Hasil filter berdasarkan query
-  List<_KuisItem> get _filteredKuis {
-    if (_searchQuery.isEmpty) return _allKuis;
+  List<_LabItem> get _filteredLabs {
+    if (_searchQuery.isEmpty) return _allLabs;
     final query = _searchQuery.toLowerCase();
-    return _allKuis
+    return _allLabs
         .where(
-          (k) =>
-              k.title.toLowerCase().contains(query) ||
-              k.subtitle.toLowerCase().contains(query),
+          (l) =>
+              l.title.toLowerCase().contains(query) ||
+              l.subtitle.toLowerCase().contains(query),
         )
         .toList();
   }
 
   @override
   Widget build(BuildContext context) {
-    final results = _filteredKuis;
+    final results = _filteredLabs;
 
     return Scaffold(
       backgroundColor: AppTheme.backgroundPrimary,
-      appBar: CustomAppBar(title: "Kuis"),
+      appBar: CustomAppBar(title: "Laboratorium"),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Padding(
@@ -66,30 +67,23 @@ class _QuizPagePhintarState extends State<QuizPagePhintar> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Daftar Kuis", style: AppTextStyle.subjudul),
+              Text("Daftar Laboratorium", style: AppTextStyle.subjudul),
               const SizedBox(height: 10),
-              Text(
-                "Uji pemahamanmu tentang materi yang telah kamu pelajari!",
-                style: AppTextStyle.normalText2,
-              ),
-              const SizedBox(height: 15),
-
               // Search Bar — terhubung ke filter
               CustomSearchBar(
-                hintText: 'Cari kuis...',
+                hintText: 'Cari laboratorium...',
                 onChanged: (value) {
                   setState(() => _searchQuery = value);
                 },
               ),
               const SizedBox(height: 20),
-
               // Tampilkan hasil atau pesan kosong
               if (results.isEmpty)
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 40),
                   child: Center(
                     child: Text(
-                      'Kuis "$_searchQuery" tidak ditemukan.',
+                      'Laboratorium "$_searchQuery" tidak ditemukan.',
                       style: AppTextStyle.normalText,
                       textAlign: TextAlign.center,
                     ),
@@ -97,12 +91,12 @@ class _QuizPagePhintarState extends State<QuizPagePhintar> {
                 )
               else
                 ...results.map(
-                  (k) => Padding(
+                  (l) => Padding(
                     padding: const EdgeInsets.only(bottom: 10),
                     child: EnterCourse(
-                      title: k.title,
-                      subtitle: k.subtitle,
-                      onTap: k.onTap,
+                      title: l.title,
+                      subtitle: l.subtitle,
+                      onTap: l.onTap,
                     ),
                   ),
                 ),

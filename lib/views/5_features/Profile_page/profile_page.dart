@@ -5,8 +5,8 @@ import 'package:blabla/models/preference_handler.dart';
 import 'package:blabla/widgets/extention/navigator.dart';
 import 'package:blabla/widgets/history_card/riwayat_kuis.dart';
 import 'package:blabla/widgets/history_card/riwayat_materi.dart';
-import 'package:blabla/views/edit_profile_page/edit_profile_phintar.dart';
-import 'package:blabla/views/loginpage/login_page_phintar.dart';
+import 'package:blabla/views/4_edit_profile_page/edit_profile_phintar.dart';
+import 'package:blabla/views/1_loginpage/login_page_phintar.dart';
 import 'package:flutter/material.dart';
 
 class ProfilePagePhintar extends StatefulWidget {
