@@ -41,18 +41,18 @@ const List<_TempatPercobaan> _daftarTempat = [
     0.00,
     'Plasma (bukan atmosfer biasa)',
   ),
-  _TempatPercobaan('Merkurius', '🩺', 3.70, 0.001, 'Eksosfer sangat tipis'),
+  _TempatPercobaan('Merkurius', '🩶', 3.70, 0.001, 'Eksosfer sangat tipis'),
   _TempatPercobaan('Venus', '🟡', 8.87, 2.50, 'Atmosfer sangat padat (CO₂)'),
   _TempatPercobaan('Mars', '🔴', 3.72, 0.04, 'Atmosfer tipis (CO₂ 1%)'),
   _TempatPercobaan('Jupiter', '🟠', 24.79, 3.20, 'Atmosfer tebal (H₂/He)'),
   _TempatPercobaan('Saturnus', '🪐', 10.44, 1.80, 'Atmosfer tebal (H₂/He)'),
   _TempatPercobaan('Uranus', '⚪', 8.69, 0.90, 'Atmosfer es & gas'),
   _TempatPercobaan('Neptunus', '🔵', 11.15, 1.10, 'Atmosfer tebal & berangin'),
-  _TempatPercobaan('Pluto', '😒', 0.62, 0.001, 'Eksosfer N₂ sangat tipis'),
+  _TempatPercobaan('Pluto', '❄️', 0.62, 0.001, 'Eksosfer N₂ sangat tipis'),
 ];
 
 class _LaboOsilasiState extends State<LaboOsilasi>
-    with TickerProviderStateMixin {
+    with SingleTickerProviderStateMixin {
   // ── Parameter kontrol ──────────────────────────────────────────────────────
   double _sudut = 30; // derajat
   double _panjangTali = 1.0; // meter
@@ -74,25 +74,29 @@ class _LaboOsilasiState extends State<LaboOsilasi>
   // ── State simulasi ─────────────────────────────────────────────────────────
   bool _isRunning = false;
   late AnimationController _animController;
-  late Animation<double> _pendulumAnim;
-
-  // Sudut terakhir saat pause (agar bandul tidak kembali ke posisi awal)
-  double _pausedAngle = 0.0;
-
 
   // ── Stopwatch ──────────────────────────────────────────────────────────────
   final Stopwatch _stopwatch = Stopwatch();
   Timer? _stopwatchTimer;
-  Duration _elapsed = Duration.zero;
+  final ValueNotifier<Duration> _elapsedNotifier = ValueNotifier<Duration>(
+    Duration.zero,
+  );
 
   @override
   void initState() {
     super.initState();
     _animController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: (_periode * 1000).round()),
+      duration: Duration(microseconds: ((_periode / 2) * 1000000).round()),
     );
-    _updateAnimationConfig();
+    _animController.addStatusListener((status) {
+      if (!_isRunning) return;
+      if (status == AnimationStatus.completed) {
+        _animController.reverse();
+      } else if (status == AnimationStatus.dismissed) {
+        _animController.forward();
+      }
+    });
   }
 
   /// Hitung periode berdasarkan panjang tali (T = 2π√(L/g))
@@ -100,35 +104,28 @@ class _LaboOsilasiState extends State<LaboOsilasi>
 
   void _updateAnimationConfig() {
     _animController.duration = Duration(
-      milliseconds: (_periode * 1000).round(),
+      microseconds: ((_periode / 2) * 1000000).round(),
     );
-    _pendulumAnim =
-        Tween<double>(
-          begin: -_sudut * pi / 180,
-          end: _sudut * pi / 180,
-        ).animate(
-          CurvedAnimation(parent: _animController, curve: Curves.easeInOut),
-        );
-    if (_isRunning) {
-      _animController.repeat(reverse: true);
-    }
   }
 
   void _toggleSimulasi() {
     if (_isRunning) {
       // ── PAUSE ──
-      _pausedAngle = _pendulumAnim.value;
       _animController.stop();
       _stopwatch.stop();
       _stopwatchTimer?.cancel();
     } else {
       // ── MULAI / RESUME ──
-      _animController.repeat(reverse: true);
       _stopwatch.start();
       _stopwatchTimer = Timer.periodic(
         const Duration(milliseconds: 100),
-        (_) => setState(() => _elapsed = _stopwatch.elapsed),
+        (_) => _elapsedNotifier.value = _stopwatch.elapsed,
       );
+      if (_animController.status == AnimationStatus.reverse) {
+        _animController.reverse();
+      } else {
+        _animController.forward();
+      }
     }
     setState(() => _isRunning = !_isRunning);
   }
@@ -138,11 +135,11 @@ class _LaboOsilasiState extends State<LaboOsilasi>
     _animController.reset();
     _stopwatchTimer?.cancel();
     _stopwatch.reset();
+    _elapsedNotifier.value = Duration.zero;
 
     setState(() {
       _isRunning = false;
-      _pausedAngle = 0.0;
-      _elapsed = Duration.zero;
+      _hambatanUdara = false;
       _tempatPercobaan = _daftarTempat[0];
       _sudut = 30;
       _panjangTali = 1.0;
@@ -164,6 +161,7 @@ class _LaboOsilasiState extends State<LaboOsilasi>
     _stopwatchTimer?.cancel();
     _stopwatch.stop();
     _animController.dispose();
+    _elapsedNotifier.dispose();
     super.dispose();
   }
 
@@ -253,7 +251,7 @@ class _LaboOsilasiState extends State<LaboOsilasi>
                 ),
               ),
               const SizedBox(width: 8),
-              // ── Stopwatch Display ──────────────────────────────────────────
+              // ── Stopwatch Display (Localized Rebuild) ──────────────────────────────
               Expanded(
                 child: Container(
                   padding: const EdgeInsets.symmetric(
@@ -269,29 +267,36 @@ class _LaboOsilasiState extends State<LaboOsilasi>
                           : AppTheme.textColor,
                     ),
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.timer_outlined,
-                        size: 14,
-                        color: _isRunning
-                            ? AppTheme.progressColor
-                            : AppTheme.textColor,
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        _formatElapsed(_elapsed),
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                          color: _isRunning
-                              ? AppTheme.progressColor
-                              : AppTheme.textColor,
-                          fontFeatures: const [FontFeature.tabularFigures()],
-                        ),
-                      ),
-                    ],
+                  child: ValueListenableBuilder<Duration>(
+                    valueListenable: _elapsedNotifier,
+                    builder: (context, elapsed, _) {
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.timer_outlined,
+                            size: 14,
+                            color: _isRunning
+                                ? AppTheme.progressColor
+                                : AppTheme.textColor,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            _formatElapsed(elapsed),
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: _isRunning
+                                  ? AppTheme.progressColor
+                                  : AppTheme.textColor,
+                              fontFeatures: const [
+                                FontFeature.tabularFigures(),
+                              ],
+                            ),
+                          ),
+                        ],
+                      );
+                    },
                   ),
                 ),
               ),
@@ -336,14 +341,14 @@ class _LaboOsilasiState extends State<LaboOsilasi>
 
   Widget _buildPendulumCanvas() {
     return AnimatedBuilder(
-      animation: _animController,
-      builder: (context, child) {
-        // Saat running: ikuti animasi
-        // Saat pause setelah pernah jalan: tetap di posisi terakhir (_pausedAngle)
-        // Saat belum pernah jalan: posisi awal berdasarkan sudut slider
-        final angle = _isRunning
-            ? _pendulumAnim.value
-            : (_animController.value > 0 ? _pausedAngle : -_sudut * pi / 180);
+      animation: Listenable.merge([_animController, _elapsedNotifier]),
+      builder: (context, _) {
+        final u = _animController.value;
+        final t = _stopwatch.elapsed.inMilliseconds / 1000.0;
+        final damping = _hambatanUdara && _adaAtmosfer ? exp(-_gamma * t) : 1.0;
+        final maxAngleDeg = _sudut * damping;
+        final angleRad = -maxAngleDeg * cos(pi * u) * pi / 180;
+
         return AnimatedContainer(
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeOut,
@@ -354,7 +359,7 @@ class _LaboOsilasiState extends State<LaboOsilasi>
           ),
           child: CustomPaint(
             painter: _PendulumPainter(
-              angle: angle,
+              angle: angleRad,
               ropeLengthM: _panjangTali,
               massaKg: _massaBandul,
             ),
@@ -454,25 +459,14 @@ class _LaboOsilasiState extends State<LaboOsilasi>
               ),
             ],
           ),
-
-          // // Nilai g aktual (kecil, di bawah dropdown)
-          // Padding(
-          //   padding: const EdgeInsets.only(top: 2, bottom: 6),
-          //   child: Align(
-          //     alignment: Alignment.centerRight,
-          //     child: Text(
-          //       'g = ${_gravitasi.toStringAsFixed(2)} m/s²',
-          //       style: AppTextStyle.normalText.copyWith(
-          //         fontSize: 10,
-          //         color: AppTheme.textColor,
-          //       ),
-          //     ),
-          //   ),
-          // ),
           const SizedBox(height: 6),
           const Divider(color: AppTheme.textColor, height: 1, thickness: 0.3),
           const SizedBox(height: 6),
 
+          _monitorRow(
+            'Percepatan Gravitasi (g)',
+            '${_gravitasi.toStringAsFixed(2)} m/s²',
+          ),
           _monitorRow(
             'Panjang Tali (L)',
             '${_panjangTali.toStringAsFixed(2)} m',
@@ -604,7 +598,7 @@ class _LaboOsilasiState extends State<LaboOsilasi>
             label: 'Sudut Simpangan (θ)',
             value: _sudut,
             min: 0,
-            max: 80,
+            max: 90,
             unit: '°',
             onChanged: (v) {
               setState(() => _sudut = v);
@@ -705,7 +699,15 @@ class _LaboOsilasiState extends State<LaboOsilasi>
           const SizedBox(height: 16),
           // Tombol unduh template
           InkWell(
-            onTap: () {},
+            onTap: () {
+              ScaffoldMessenger.of(context).clearSnackBars();
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Template Data_Lab.pdf siap diunduh!'),
+                  duration: Duration(seconds: 2),
+                ),
+              );
+            },
             borderRadius: BorderRadius.circular(8),
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
@@ -774,6 +776,17 @@ class _PendulumPainter extends CustomPainter {
     this.massaKg = 1.0,
   });
 
+  static final Paint _dashPaint = Paint()
+    ..color = AppTheme.textColor
+    ..strokeWidth = 1;
+
+  static final Paint _ropePaint = Paint()
+    ..color = AppTheme.putih
+    ..strokeWidth = 2
+    ..style = PaintingStyle.stroke;
+
+  static final Paint _pivotPaint = Paint()..color = AppTheme.textColor;
+
   @override
   void paint(Canvas canvas, Size size) {
     final pivotX = size.width / 2;
@@ -800,28 +813,22 @@ class _PendulumPainter extends CustomPainter {
     final bobY = pivotY + ropeLength * cos(angle);
 
     // ── Garis keseimbangan (vertikal putus-putus) ───────────────────────────
-    final dashPaint = Paint()
-      ..color = AppTheme.textColor
-      ..strokeWidth = 1;
     double y = pivotY;
-    while (y < pivotY + ropeLength + bobRadius) {
-      canvas.drawLine(Offset(pivotX, y), Offset(pivotX, y + 5), dashPaint);
+    final maxY = pivotY + ropeLength + bobRadius;
+    while (y < maxY) {
+      canvas.drawLine(Offset(pivotX, y), Offset(pivotX, y + 5), _dashPaint);
       y += 10;
     }
 
     // ── Garis tali ──────────────────────────────────────────────────────────
-    final ropePaint = Paint()
-      ..color = AppTheme.putih
-      ..strokeWidth = 2
-      ..style = PaintingStyle.stroke;
-    canvas.drawLine(Offset(pivotX, pivotY), Offset(bobX, bobY), ropePaint);
+    canvas.drawLine(Offset(pivotX, pivotY), Offset(bobX, bobY), _ropePaint);
 
     // ── Label panjang tali ───────────────────────────────────────────────────
     _drawText(
       canvas,
       '${ropeLengthM.toStringAsFixed(1)} m',
       Offset(pivotX + 6, pivotY + ropeLength / 2 - 6),
-      TextStyle(
+      const TextStyle(
         color: AppTheme.textColor,
         fontSize: 9,
         fontWeight: FontWeight.w500,
@@ -829,8 +836,7 @@ class _PendulumPainter extends CustomPainter {
     );
 
     // ── Titik pivot ─────────────────────────────────────────────────────────
-    final pivotPaint = Paint()..color = AppTheme.textColor;
-    canvas.drawCircle(Offset(pivotX, pivotY), 4, pivotPaint);
+    canvas.drawCircle(Offset(pivotX, pivotY), 4, _pivotPaint);
 
     // ── Glow bola ───────────────────────────────────────────────────────────
     final glowPaint = Paint()
@@ -843,7 +849,7 @@ class _PendulumPainter extends CustomPainter {
       ..shader =
           RadialGradient(
             center: const Alignment(-0.3, -0.3),
-            colors: [AppTheme.putih, AppTheme.ballColor],
+            colors: const [AppTheme.putih, AppTheme.ballColor],
           ).createShader(
             Rect.fromCircle(center: Offset(bobX, bobY), radius: bobRadius),
           );
@@ -855,7 +861,7 @@ class _PendulumPainter extends CustomPainter {
         canvas,
         '${massaKg.toStringAsFixed(1)}kg',
         Offset(bobX - bobRadius * 0.6, bobY - 5),
-        TextStyle(
+        const TextStyle(
           color: AppTheme.putih,
           fontSize: 8,
           fontWeight: FontWeight.bold,

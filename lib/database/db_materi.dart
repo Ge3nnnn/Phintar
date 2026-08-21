@@ -38,9 +38,7 @@ class DatabaseHelperMateri {
     ''');
   }
 
-  // ==========================================
   // OPERASI CRUD
-  // ==========================================
 
   // 1. CREATE or UPDATE: Menyimpan riwayat belajar materi (kapan & berapa lama)
   Future<int> insertHistory({
@@ -111,36 +109,30 @@ class DatabaseHelperMateri {
     );
   }
 
-  // DELETE: Menghapus semua riwayat materi
-  Future<int> deleteAllHistories() async {
-    final db = await instance.database;
-    return await db.delete(tableMateriHistories);
-  }
-
   // Ringkasan statistik (jumlah materi dipelajari & total waktu belajar)
-  Future<Map<String, dynamic>> getSummaryStats() async {
-    final db = await instance.database;
-    final result = await db.rawQuery('''
-      SELECT 
-        COUNT(*) as total,
-        SUM(duration_seconds) as total_duration,
-        AVG(duration_seconds) as avg_duration
-      FROM $tableMateriHistories
-    ''');
-    if (result.isNotEmpty) {
-      final total = (result.first['total'] as num?)?.toInt() ?? 0;
-      final totalDuration =
-          (result.first['total_duration'] as num?)?.toInt() ?? 0;
-      final avgDuration =
-          (result.first['avg_duration'] as num?)?.toDouble() ?? 0.0;
-      return {
-        'total': total,
-        'totalDuration': totalDuration,
-        'avgDuration': avgDuration,
-      };
-    }
-    return {'total': 0, 'totalDuration': 0, 'avgDuration': 0.0};
-  }
+  // Future<Map<String, dynamic>> getSummaryStats() async {
+  //   final db = await instance.database;
+  //   final result = await db.rawQuery('''
+  //     SELECT
+  //       COUNT(*) as total,
+  //       SUM(duration_seconds) as total_duration,
+  //       AVG(duration_seconds) as avg_duration
+  //     FROM $tableMateriHistories
+  //   ''');
+  //   if (result.isNotEmpty) {
+  //     final total = (result.first['total'] as num?)?.toInt() ?? 0;
+  //     final totalDuration =
+  //         (result.first['total_duration'] as num?)?.toInt() ?? 0;
+  //     final avgDuration =
+  //         (result.first['avg_duration'] as num?)?.toDouble() ?? 0.0;
+  //     return {
+  //       'total': total,
+  //       'totalDuration': totalDuration,
+  //       'avgDuration': avgDuration,
+  //     };
+  //   }
+  //   return {'total': 0, 'totalDuration': 0, 'avgDuration': 0.0};
+  // }
 
   Future close() async {
     final db = await instance.database;
