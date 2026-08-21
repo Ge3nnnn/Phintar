@@ -3,7 +3,7 @@ import 'package:blabla/widgets/app_textfield.dart';
 import 'package:blabla/constants/app_theme.dart';
 import 'package:blabla/constants/app_typografy.dart';
 import 'package:blabla/widgets/app_bar.dart';
-import 'package:blabla/extention/navigator.dart';
+import 'package:blabla/widgets/extention/navigator.dart';
 import 'package:blabla/models/preference_handler.dart';
 import 'package:blabla/views/zmateri/Gelombang_dan_materi/1_gelombang_dan_osilasi.dart';
 import 'package:flutter/material.dart';
