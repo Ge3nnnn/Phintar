@@ -1,8 +1,7 @@
 import 'package:blabla/constants/app_theme.dart';
 import 'package:blabla/constants/app_typografy.dart';
-import 'package:blabla/widgets/app_bar.dart';
-import 'package:blabla/widgets/app_button.dart';
 import 'package:blabla/database/db_quiz.dart';
+import 'package:blabla/widgets/app_bar.dart';
 import 'package:flutter/material.dart';
 
 // ─── Model ────────────────────────────────────────────────────────────────────
@@ -257,15 +256,20 @@ class _QuizGelombangPhintarState extends State<QuizGelombangPhintar> {
         _answered = false;
       });
     } else {
-      final percentage = (_score / _questions.length * 100).roundToDouble();
-      DatabaseHelperQuiz.instance.insertHistory({
-        'quiz_id': 1,
-        'score': percentage,
-      });
+      _saveQuizHistory();
       setState(() {
         _finished = true;
       });
     }
+  }
+
+  Future<void> _saveQuizHistory() async {
+    final double percentage =
+        (_score / _questions.length * 100).roundToDouble();
+    await DatabaseHelperQuiz.instance.insertHistory({
+      'quiz_id': 1,
+      'score': percentage,
+    });
   }
 
   void _restart() {
@@ -286,7 +290,7 @@ class _QuizGelombangPhintarState extends State<QuizGelombangPhintar> {
         title: "Kuis: Gelombang dan Osilasi",
         prefixIcon: Icons.arrow_back,
       ),
-      body: SafeArea(child: _finished ? _buildResultPage() : _buildQuizPage()),
+      body: _finished ? _buildResultPage() : _buildQuizPage(),
     );
   }
 
@@ -362,15 +366,31 @@ class _QuizGelombangPhintarState extends State<QuizGelombangPhintar> {
 
   Widget _buildActionButton({
     required String label,
-    required IconData icon, // Will not be used here directly since CustomElevatedButton takes asset, but we'll use standard text for now or modify
+    required IconData icon,
     required Color color,
     required VoidCallback onTap,
   }) {
-    return CustomElevatedButton(
-      onPressed: onTap,
-      text: label,
-      backgroundColor: color,
+    return SizedBox(
       width: double.infinity,
+      child: ElevatedButton.icon(
+        onPressed: onTap,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: color,
+          padding: const EdgeInsets.symmetric(vertical: 14),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+        icon: Icon(icon, color: AppTheme.putih),
+        label: Text(
+          label,
+          style: const TextStyle(
+            color: AppTheme.putih,
+            fontSize: 15,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
     );
   }
 
@@ -479,12 +499,39 @@ class _QuizGelombangPhintarState extends State<QuizGelombangPhintar> {
               const SizedBox(height: 20),
 
               // ── Tombol Lanjut ──
-              CustomElevatedButton(
-                onPressed: _nextQuestion,
+              SizedBox(
                 width: double.infinity,
-                text: _currentIndex < _questions.length - 1
-                    ? 'Lanjut ke Pertanyaan ${_currentIndex + 2}'
-                    : 'Lihat Hasil',
+                child: ElevatedButton(
+                  onPressed: _nextQuestion,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppTheme.bottonColor,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        _currentIndex < _questions.length - 1
+                            ? 'Lanjut ke Pertanyaan ${_currentIndex + 2}'
+                            : 'Lihat Hasil',
+                        style: const TextStyle(
+                          color: AppTheme.putih,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(width: 6),
+                      const Icon(
+                        Icons.arrow_forward_rounded,
+                        color: AppTheme.putih,
+                        size: 18,
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ],
             const SizedBox(height: 30),
@@ -605,7 +652,6 @@ class _AnswerOption extends StatelessWidget {
         labelFg = AppTheme.bottonColor;
         textColor = AppTheme.putih;
         trailingIcon = null;
-        break;
     }
 
     return GestureDetector(

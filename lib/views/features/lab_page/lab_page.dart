@@ -1,10 +1,9 @@
-import 'package:blabla/widgets/app_banner.dart';
-import 'package:blabla/widgets/app_textfield.dart';
 import 'package:blabla/constants/app_theme.dart';
 import 'package:blabla/constants/app_typografy.dart';
-import 'package:blabla/widgets/app_bar.dart';
 import 'package:blabla/views/features/lab_page/labo/labo_bandul_matematis.dart';
-import 'package:blabla/views/features/lab_page/labo/labo_konstanta_pegas.dart';
+import 'package:blabla/widgets/app_banner.dart';
+import 'package:blabla/widgets/app_bar.dart';
+import 'package:blabla/widgets/app_textfield.dart';
 import 'package:flutter/material.dart';
 
 // Model sederhana untuk data laboratorium
@@ -37,15 +36,7 @@ class _LabPagePhintaarState extends State<LabPagePhintar> {
         ).push(MaterialPageRoute(builder: (context) => const LaboOsilasi()));
       },
     ),
-    _LabItem(
-      title: 'Konstanta Pegas',
-      subtitle: 'Visualisasi Hukum Hooke',
-      onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => const LaboKonstantaPegas()),
-        );
-      },
-    ),
+
     // Tambahkan lab lain di sini
   ];
 
