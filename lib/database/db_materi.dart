@@ -51,7 +51,8 @@ class DatabaseHelperMateri {
 
     final existing = await getHistoriesByMateri(materiId);
     if (existing.isNotEmpty) {
-      final existingSeconds = (existing.first['duration_seconds'] as num?)?.toInt() ?? 0;
+      final existingSeconds =
+          (existing.first['duration_seconds'] as num?)?.toInt() ?? 0;
       final historyModel = MateriHistoryModel(
         id: (existing.first['id'] as num?)?.toInt(),
         materiId: materiId,
