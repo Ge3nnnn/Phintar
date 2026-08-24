@@ -1,5 +1,5 @@
 import 'package:blabla/widgets/app_banner.dart';
-import 'package:blabla/widgets/app_textfield.dart';
+import 'package:blabla/widgets/app_search_bar.dart';
 import 'package:blabla/constants/app_theme.dart';
 import 'package:blabla/constants/app_typografy.dart';
 import 'package:blabla/widgets/app_bar.dart';

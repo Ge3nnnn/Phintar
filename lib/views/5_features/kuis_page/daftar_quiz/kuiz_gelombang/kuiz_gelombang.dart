@@ -271,6 +271,15 @@ class _QuizGelombangPhintarState extends State<QuizGelombangPhintar> {
     });
   }
 
+  Future<void> _saveQuizHistory() async {
+    final double percentage =
+        (_score / _questions.length * 100).roundToDouble();
+    await DatabaseHelperQuiz.instance.insertHistory({
+      'quiz_id': 1,
+      'score': percentage,
+    });
+  }
+
   void _restart() {
     setState(() {
       _currentIndex = 0;

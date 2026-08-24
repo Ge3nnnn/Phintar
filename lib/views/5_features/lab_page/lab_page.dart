@@ -3,7 +3,7 @@ import 'package:blabla/constants/app_typografy.dart';
 import 'package:blabla/views/5_features/lab_page/labo/labo_bandul_matematis.dart';
 import 'package:blabla/widgets/app_banner.dart';
 import 'package:blabla/widgets/app_bar.dart';
-import 'package:blabla/widgets/app_textfield.dart';
+import 'package:blabla/widgets/app_search_bar.dart';
 import 'package:flutter/material.dart';
 
 // Model sederhana untuk data laboratorium
