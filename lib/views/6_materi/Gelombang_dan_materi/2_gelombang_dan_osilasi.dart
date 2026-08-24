@@ -2,6 +2,8 @@ import 'package:blabla/constants/app_theme.dart';
 import 'package:blabla/constants/app_typografy.dart';
 import 'package:blabla/database/db_materi.dart';
 import 'package:blabla/widgets/app_button.dart';
+import 'package:blabla/widgets/bottom_nav/bottom_nav_bar_phintar.dart';
+import 'package:blabla/widgets/extention/navigator.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
@@ -254,8 +256,9 @@ class _Materi2GelombagState extends State<Materi2Gelombag> {
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.pop(dialogCtx);
-              Navigator.pop(context);
+              context.pushReplacement(
+                const BottomNavBarPhintar(initialIndex: 0),
+              );
             },
             child: Text(
               'Kembali ke Menu',
