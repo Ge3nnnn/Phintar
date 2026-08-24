@@ -1,9 +1,11 @@
 import 'package:blabla/constants/app_theme.dart';
 import 'package:blabla/constants/app_typografy.dart';
-import 'package:blabla/database/db_materi.dart';
 import 'package:blabla/widgets/bottom_nav/bottom_nav_bar_phintar.dart';
-import 'package:blabla/views/6_materi/Gelombang_dan_materi/1_gelombang_dan_osilasi.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../providers/materi_provider.dart';
+import '../../views/materi/materi_detail_screen.dart';
+import 'package:blabla/database/db_materi.dart';
 
 // Helper daftar materi yang tersedia
 final Map<int, String> kAvailableMateri = {
@@ -76,21 +78,21 @@ class RiwayatMateriSectionState extends State<RiwayatMateriSection> {
     widget.onDataChanged?.call();
   }
 
-  // ─── LANJUTKAN MATERI: Navigasi ke Halaman Materi ───
-  void _continueMateri(int materiId) async {
-    Widget targetMateriPage;
-    switch (materiId) {
-      case 1:
-      default:
-        targetMateriPage = const Materi1Gelombag();
-        break;
+  void _continueMateri(int materiId) {
+    final provider = Provider.of<MateriProvider>(context, listen: false);
+    final materi = provider.getMateriById(materiId);
+    if (materi != null) {
+      Navigator.of(context).push(
+        MaterialPageRoute(builder: (_) => MateriDetailScreen(materi: materi)),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Materi tidak ditemukan'),
+          backgroundColor: AppTheme.merah,
+        ),
+      );
     }
-
-    await Navigator.of(
-      context,
-    ).push(MaterialPageRoute(builder: (context) => targetMateriPage));
-
-    refreshHistories();
   }
 
   // ─── DELETE: Hapus Riwayat Tertentu ───

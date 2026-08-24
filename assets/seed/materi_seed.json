@@ -1,0 +1,44 @@
+[
+  {
+    "id": 1,
+    "category": "Gelombang",
+    "title": "Pengantar Gelombang dan Osilasi",
+    "description": "Mempelajari dasar-dasar osilasi dengan sistem pendulum dan pegas",
+    "banner_url": "",
+    "lottie_url": "",
+    "sort_order": 1,
+    "content_blocks": [
+      {
+        "type": "subtitle",
+        "content": "1.1 Pengantar Gelombang dan Osilasi"
+      },
+      {
+        "type": "text",
+        "content": "Kita mulai mempelajari osilasi dengan sistem sederhana pendulum dan pegas. Meskipun sistem ini mungkin terlihat sangat mendasar, konsep yang terlibat memiliki banyak aplikasi dalam kehidupan nyata.\n\nSebagai contoh, Gedung Comcast di Philadelphia, Pennsylvania, berdiri setinggi sekitar 305 meter (1000 kaki). Karena gedung dibangun semakin tinggi, gedung tersebut dapat bertindak sebagai pendulum fisik terbalik, dengan lantai atas berosilasi karena aktivitas seismik dan angin yang berfluktuasi.\n\nDi Gedung Comcast, peredam massa tertala digunakan untuk mengurangi osilasi. Dipasang di puncak gedung adalah peredam massa kolom cairan tertala, yang terdiri dari reservoir air berkapasitas 300.000 galon. Tangki berbentuk U ini memungkinkan air berosilasi bebas pada frekuensi yang cocok dengan frekuensi alami gedung. Peredaman disediakan dengan menyetel tingkat turbulensi dalam air yang bergerak menggunakan sekat."
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "category": "Gelombang",
+    "title": "Visualisasi Gelombang Harmonik",
+    "description": "Dalam modul ini, kita akan mengeksplorasi bagaimana fungsi trigonometri membentuk dasar dari deskripsi fisik gelombang.",
+    "banner_url": "",
+    "lottie_url": "",
+    "sort_order": 2,
+    "content_blocks": [
+      {
+        "type": "subtitle",
+        "content": "1.2 Visualisasi Gelombang Harmonik"
+      },
+      {
+        "type": "youtube",
+        "content": "qRv4oJzK240"
+      },
+      {
+        "type": "text",
+        "content": "Dalam modul ini, kita akan mengeksplorasi bagaimana fungsi trigonometri membentuk dasar dari deskripsi fisik gelombang. Perambatan gelombang harmonik bukan sekadar gerakan naik-turun, melainkan transfer energi melalui medium tanpa perpindahan massa permanen. Perhatikan bagaimana amplitudo dan frekuensi saling berinteraksi dalam simulasi video di atas."
+      }
+    ]
+  }
+]

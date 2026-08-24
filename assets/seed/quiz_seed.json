@@ -1,0 +1,282 @@
+[
+  {
+    "id": 1,
+    "title": "Gelombang dan Osilasi",
+    "category": "Gelombang",
+    "description": "Uji pemahamanmu tentang gelombang dan osilasi",
+    "time_limit_minutes": 20,
+    "sort_order": 1,
+    "questions": [
+      {
+        "topic": "Osilasi",
+        "question": "Sebuah benda berosilasi harmonik sederhana dengan persamaan simpangan x = 5 sin(2πt) cm. Berapakah amplitudo dan frekuensi getaran tersebut?",
+        "options": [
+          "A = 5 cm, f = 1 Hz",
+          "A = 5 cm, f = 2 Hz",
+          "A = 10 cm, f = 1 Hz",
+          "A = 2 cm, f = 5 Hz"
+        ],
+        "correct_index": 0,
+        "explanation": "Dari persamaan x = A sin(ωt), didapat A = 5 cm. Karena ω = 2πf = 2π, maka f = 1 Hz.",
+        "sort_order": 1
+      },
+      {
+        "topic": "Osilasi",
+        "question": "Sebuah pegas dengan konstanta k = 400 N/m digantungi massa m = 1 kg. Berapakah periode osilasi sistem tersebut?",
+        "options": [
+          "T = π/20 s",
+          "T = π/10 s",
+          "T = 0,2 s",
+          "T = 2π s"
+        ],
+        "correct_index": 1,
+        "explanation": "Periode pegas: T = 2π√(m/k) = 2π√(1/400) = 2π/20 = π/10 ≈ 0,314 s.",
+        "sort_order": 2
+      },
+      {
+        "topic": "Osilasi",
+        "question": "Pada gerak harmonik sederhana, pada posisi manakah kecepatan benda mencapai nilai maksimum?",
+        "options": [
+          "Pada titik amplitudo (ujung simpangan)",
+          "Pada titik setimbang (x = 0)",
+          "Pada setengah amplitudo",
+          "Kecepatan selalu konstan"
+        ],
+        "correct_index": 1,
+        "explanation": "Kecepatan maksimum terjadi saat benda melewati titik keseimbangan (x = 0) karena seluruh energi potensial telah berubah menjadi energi kinetik.",
+        "sort_order": 3
+      },
+      {
+        "topic": "Gelombang Mekanik",
+        "question": "Gelombang transversal merambat pada tali dengan kecepatan 20 m/s dan frekuensi 5 Hz. Berapakah panjang gelombangnya?",
+        "options": [
+          "2 m",
+          "4 m",
+          "100 m",
+          "0,25 m"
+        ],
+        "correct_index": 1,
+        "explanation": "λ = v/f = 20/5 = 4 m. Hubungan kecepatan, frekuensi, dan panjang gelombang: v = f × λ.",
+        "sort_order": 4
+      },
+      {
+        "topic": "Gelombang Mekanik",
+        "question": "Apa perbedaan utama antara gelombang transversal dan gelombang longitudinal?",
+        "options": [
+          "Transversal merambat lebih cepat dari longitudinal",
+          "Arah getar transversal tegak lurus arah rambat; longitudinal sejajar arah rambat",
+          "Longitudinal hanya ada di udara, transversal hanya di zat padat",
+          "Keduanya tidak memiliki perbedaan yang signifikan"
+        ],
+        "correct_index": 1,
+        "explanation": "Gelombang transversal: arah getaran ⊥ arah rambat (contoh: cahaya, gelombang tali). Gelombang longitudinal: arah getaran ∥ arah rambat (contoh: suara, gelombang pegas).",
+        "sort_order": 5
+      },
+      {
+        "topic": "Interferensi",
+        "question": "Dua gelombang cahaya koheren berinterferensi. Jika beda fase antara kedua gelombang tersebut adalah π radian, apa yang akan terjadi pada titik pertemuan mereka?",
+        "options": [
+          "Terjadi interferensi konstruktif maksimal, menghasilkan terang maksimum.",
+          "Terjadi interferensi destruktif maksimal, menghasilkan gelap gulita.",
+          "Terbentuk pola difraksi dengan cincin-cincin konsentris.",
+          "Amplitudo gelombang gabungan menjadi dua kali lipat amplitudo masing-masing gelombang."
+        ],
+        "correct_index": 1,
+        "explanation": "Beda fase π radian (180°) berarti puncak gelombang pertama bertemu lembah gelombang kedua, sehingga terjadi pembatalan amplitudo — interferensi destruktif — menghasilkan area gelap.",
+        "sort_order": 6
+      },
+      {
+        "topic": "Interferensi",
+        "question": "Pada percobaan Young (celah ganda), apa yang terjadi jika jarak antar celah diperkecil sementara parameter lain tetap?",
+        "options": [
+          "Pita terang menjadi lebih sempit dan rapat",
+          "Jarak antar pita terang (fringe spacing) semakin besar",
+          "Intensitas cahaya di layar berkurang",
+          "Tidak ada perubahan pada pola interferensi"
+        ],
+        "correct_index": 1,
+        "explanation": "Fringe spacing Δy = λL/d. Jika jarak celah d diperkecil, maka Δy membesar — pita-pita terang semakin jarang/melebar.",
+        "sort_order": 7
+      },
+      {
+        "topic": "Difraksi",
+        "question": "Cahaya dengan panjang gelombang 600 nm melewati celah tunggal selebar 0,1 mm. Pada layar yang berjarak 1 m, di mana posisi minimum orde pertama gelap?",
+        "options": [
+          "6 mm dari pusat",
+          "12 mm dari pusat",
+          "3 mm dari pusat",
+          "0,6 mm dari pusat"
+        ],
+        "correct_index": 0,
+        "explanation": "Posisi gelap orde 1: y = λL/a = (600×10⁻⁹ × 1) / (0,1×10⁻³) = 6×10⁻³ m = 6 mm dari pusat.",
+        "sort_order": 8
+      },
+      {
+        "topic": "Difraksi",
+        "question": "Mengapa difraksi suara lebih mudah diamati dalam kehidupan sehari-hari dibandingkan difraksi cahaya?",
+        "options": [
+          "Suara merambat lebih lambat sehingga lebih mudah difraksi",
+          "Panjang gelombang suara (cm–m) sebanding dengan ukuran rintangan sehari-hari",
+          "Cahaya tidak dapat mengalami difraksi sama sekali",
+          "Suara memiliki energi yang lebih besar dari cahaya"
+        ],
+        "correct_index": 1,
+        "explanation": "Difraksi signifikan terjadi saat ukuran celah ≈ panjang gelombang. Suara λ ≈ cm hingga meter; cahaya λ ≈ 400–700 nm sehingga memerlukan celah sangat kecil agar terlihat.",
+        "sort_order": 9
+      },
+      {
+        "topic": "Resonansi",
+        "question": "Sebuah kolom udara dalam pipa terbuka kedua ujungnya beresonansi pada frekuensi dasar 340 Hz. Jika cepat rambat bunyi 340 m/s, berapakah panjang pipa tersebut?",
+        "options": [
+          "0,5 m",
+          "1 m",
+          "0,25 m",
+          "2 m"
+        ],
+        "correct_index": 0,
+        "explanation": "Pipa terbuka kedua ujungnya: f₁ = v/(2L), maka L = v/(2f₁) = 340/(2×340) = 0,5 m.",
+        "sort_order": 10
+      },
+      {
+        "topic": "Resonansi",
+        "question": "Apa yang dimaksud dengan resonansi pada sistem osilasi?",
+        "options": [
+          "Getaran yang teredam hingga berhenti total",
+          "Kondisi saat frekuensi gaya luar sama dengan frekuensi alami sistem, menyebabkan amplitudo sangat besar",
+          "Interferensi antara dua gelombang yang saling meniadakan",
+          "Pemantulan gelombang pada batas medium"
+        ],
+        "correct_index": 1,
+        "explanation": "Resonansi terjadi ketika frekuensi sumber eksternal sama dengan frekuensi alami sistem. Hasilnya adalah peningkatan amplitudo yang sangat besar karena energi diserap secara efisien.",
+        "sort_order": 11
+      },
+      {
+        "topic": "Gelombang Bunyi",
+        "question": "Sebuah sumber bunyi bergerak mendekati pengamat yang diam dengan kecepatan 20 m/s. Jika frekuensi sumber 500 Hz dan cepat rambat bunyi 340 m/s, berapakah frekuensi yang didengar pengamat?",
+        "options": [
+          "470 Hz",
+          "500 Hz",
+          "531 Hz",
+          "550 Hz"
+        ],
+        "correct_index": 2,
+        "explanation": "Efek Doppler: f' = f × v/(v−vs) = 500 × 340/(340−20) = 500 × 340/320 ≈ 531 Hz. Sumber mendekati menyebabkan frekuensi yang terdengar lebih tinggi.",
+        "sort_order": 12
+      },
+      {
+        "topic": "Gelombang Bunyi",
+        "question": "Intensitas bunyi suatu sumber pada jarak 2 m adalah 10⁻⁴ W/m². Berapakah taraf intensitasnya? (I₀ = 10⁻¹² W/m²)",
+        "options": [
+          "40 dB",
+          "60 dB",
+          "80 dB",
+          "100 dB"
+        ],
+        "correct_index": 2,
+        "explanation": "TI = 10 log(I/I₀) = 10 log(10⁻⁴/10⁻¹²) = 10 log(10⁸) = 10 × 8 = 80 dB.",
+        "sort_order": 13
+      },
+      {
+        "topic": "Gelombang Cahaya",
+        "question": "Cahaya putih melewati prisma dan terurai menjadi spektrum warna. Warna mana yang mengalami pembiasan paling besar?",
+        "options": [
+          "Merah",
+          "Kuning",
+          "Hijau",
+          "Ungu"
+        ],
+        "correct_index": 3,
+        "explanation": "Ungu memiliki panjang gelombang terpendek (~400 nm) sehingga indeks biasnya paling besar dalam kaca dan mengalami pembiasan terbesar.",
+        "sort_order": 14
+      },
+      {
+        "topic": "Gelombang Cahaya",
+        "question": "Polarisasi cahaya merupakan bukti bahwa cahaya adalah gelombang...",
+        "options": [
+          "Longitudinal, karena dapat terpolarisasi",
+          "Transversal, karena arah getarannya dapat dibatasi pada satu bidang",
+          "Mekanik, karena membutuhkan medium untuk merambat",
+          "Stasioner, karena membentuk pola tetap"
+        ],
+        "correct_index": 1,
+        "explanation": "Hanya gelombang transversal yang dapat mengalami polarisasi, karena arah getarannya tegak lurus terhadap arah rambat sehingga bisa dibatasi pada satu bidang oleh polarisator.",
+        "sort_order": 15
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "title": "Hukum Newton",
+    "category": "Mekanika",
+    "description": "Uji pemahamanmu tentang Hukum-hukum Newton tentang gerak",
+    "time_limit_minutes": 15,
+    "sort_order": 2,
+    "questions": [
+      {
+        "topic": "Hukum I Newton",
+        "question": "Jika resultan gaya yang bekerja pada suatu benda adalah nol, maka benda tersebut akan...",
+        "options": [
+          "Bergerak dengan percepatan konstan",
+          "Selalu diam",
+          "Diam atau bergerak dengan kecepatan konstan",
+          "Bergerak diperlambat hingga berhenti"
+        ],
+        "correct_index": 2,
+        "explanation": "Sesuai Hukum I Newton (Kelembaman/Inersia), jika ΣF = 0, benda yang diam akan tetap diam, dan benda yang bergerak akan terus bergerak dengan kecepatan konstan (lurus beraturan).",
+        "sort_order": 1
+      },
+      {
+        "topic": "Hukum II Newton",
+        "question": "Sebuah balok bermassa 5 kg ditarik dengan gaya 20 N di atas lantai licin. Berapakah percepatan balok tersebut?",
+        "options": [
+          "100 m/s²",
+          "15 m/s²",
+          "25 m/s²",
+          "4 m/s²"
+        ],
+        "correct_index": 3,
+        "explanation": "Berdasarkan Hukum II Newton, a = ΣF / m = 20 N / 5 kg = 4 m/s².",
+        "sort_order": 2
+      },
+      {
+        "topic": "Hukum III Newton",
+        "question": "Pernyataan yang BENAR mengenai gaya aksi-reaksi pada Hukum III Newton adalah...",
+        "options": [
+          "Bekerja pada benda yang sama, besarnya sama, arahnya berlawanan",
+          "Bekerja pada dua benda yang berbeda, besarnya sama, arahnya berlawanan",
+          "Menghasilkan resultan gaya sama dengan nol sehingga benda diam",
+          "Hanya terjadi pada benda yang bersentuhan langsung"
+        ],
+        "correct_index": 1,
+        "explanation": "Pasangan gaya aksi-reaksi selalu bekerja pada DUA benda yang saling berinteraksi (berbeda benda), memiliki besar yang sama, dan arah berlawanan. Karena bekerja pada benda berbeda, gaya aksi dan reaksi tidak bisa saling meniadakan.",
+        "sort_order": 3
+      },
+      {
+        "topic": "Gaya Berat",
+        "question": "Berapakah berat benda bermassa 10 kg di Bumi jika percepatan gravitasi g = 9,8 m/s²?",
+        "options": [
+          "10 N",
+          "98 N",
+          "9,8 N",
+          "0 N"
+        ],
+        "correct_index": 1,
+        "explanation": "Berat (w) adalah gaya gravitasi yang bekerja pada massa benda. w = m × g = 10 kg × 9,8 m/s² = 98 N.",
+        "sort_order": 4
+      },
+      {
+        "topic": "Gaya Gesek",
+        "question": "Sebuah benda ditarik, tetapi belum bergerak. Gaya yang menahan benda tersebut agar tetap diam adalah...",
+        "options": [
+          "Gaya Normal",
+          "Gaya Berat",
+          "Gaya Gesek Kinetis",
+          "Gaya Gesek Statis"
+        ],
+        "correct_index": 3,
+        "explanation": "Selama benda belum bergerak, gaya yang menahannya adalah gaya gesek statis. Gaya gesek statis akan menyesuaikan besarnya sama dengan gaya tarik, hingga mencapai batas maksimumnya (gesek statis maksimum).",
+        "sort_order": 5
+      }
+    ]
+  }
+]

@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "title": "Gelombang dan Osilasi",
+    "category": "Fisika",
+    "bannerUrl": "https://example.com/banner1.png",
+    "blocks": [
+      {
+        "type": "text",
+        "content": "Materi tentang gelombang dan osilasi..."
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "title": "Termodinamika",
+    "category": "Fisika",
+    "bannerUrl": "https://example.com/banner2.png",
+    "blocks": [
+      {
+        "type": "text",
+        "content": "Materi tentang termodinamika..."
+      }
+    ]
+  }
+]

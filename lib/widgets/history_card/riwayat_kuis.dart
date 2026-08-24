@@ -1,21 +1,11 @@
 import 'package:blabla/constants/app_theme.dart';
 import 'package:blabla/constants/app_typografy.dart';
 import 'package:blabla/database/db_quiz.dart';
+import 'package:blabla/providers/quiz_provider.dart';
+import 'package:blabla/views/5_features/kuis_page/quiz_screen.dart';
 import 'package:blabla/widgets/bottom_nav/bottom_nav_bar_phintar.dart';
-import 'package:blabla/views/5_features/kuis_page/daftar_quiz/kuiz_gelombang/kuiz_gelombang.dart';
 import 'package:flutter/material.dart';
-
-// Helper daftar kuis yang tersedia
-final Map<int, String> kAvailableQuizzes = {
-  1: 'Gelombang dan Osilasi',
-  // Tambahkan kuis lainnya dengan format berikut:
-  // 2: 'Nama Kuis 2',
-  // dst.
-};
-
-String getQuizTitle(int quizId) {
-  return kAvailableQuizzes[quizId] ?? 'Kuis Fisika #$quizId';
-}
+import 'package:provider/provider.dart';
 
 String formatQuizDate(String isoDate) {
   try {
@@ -64,26 +54,23 @@ class RiwayatKuisSectionState extends State<RiwayatKuisSection> {
     widget.onDataChanged?.call();
   }
 
-  // ─── 1. ULANGI KUIS: Navigasi langsung ke Halaman Kuis ───
+  // ─── 1. ULANGI KUIS: Navigasi dinamis ke QuizScreen ───
   void _retryQuiz(int quizId) async {
-    Widget targetQuizPage;
-    switch (quizId) {
-      case 1:
-      default:
-        targetQuizPage = const QuizGelombangPhintar();
-        break;
+    final quizProvider = context.read<QuizProvider>();
+    final quiz = quizProvider.getQuizById(quizId);
+
+    if (quiz != null) {
+      await Navigator.of(
+        context,
+      ).push(MaterialPageRoute(builder: (context) => QuizScreen(quiz: quiz)));
+    } else {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Kuis tidak ditemukan')));
+      }
     }
-    // tambahkan case untuk kuis lainnya
-    // contoh
-    // case 2:
-    //   targetQuizPage = const QuizGetaranHarmonikSederhana();
-    //   break;
 
-    await Navigator.of(
-      context,
-    ).push(MaterialPageRoute(builder: (context) => targetQuizPage));
-
-    // Refresh riwayat setelah kembali dari pengerjaan kuis
     refreshHistories();
   }
 
@@ -101,11 +88,8 @@ class RiwayatKuisSectionState extends State<RiwayatKuisSection> {
           title: Row(
             children: [
               Icon(Icons.delete_outline_rounded, color: AppTheme.merah),
-              SizedBox(width: 10),
-              Text(
-                'Hapus Riwayat',
-                style: AppTextStyle.dialogTitle,
-              ),
+              const SizedBox(width: 10),
+              Text('Hapus Riwayat', style: AppTextStyle.dialogTitle),
             ],
           ),
           content: Text(
@@ -115,10 +99,7 @@ class RiwayatKuisSectionState extends State<RiwayatKuisSection> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(dialogContext),
-              child: Text(
-                'Batal',
-                style: AppTextStyle.normalText,
-              ),
+              child: Text('Batal', style: AppTextStyle.normalText),
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
@@ -144,10 +125,7 @@ class RiwayatKuisSectionState extends State<RiwayatKuisSection> {
                   );
                 }
               },
-              child: Text(
-                'Hapus',
-                style: AppTextStyle.botttonText,
-              ),
+              child: Text('Hapus', style: AppTextStyle.botttonText),
             ),
           ],
         );
@@ -157,6 +135,8 @@ class RiwayatKuisSectionState extends State<RiwayatKuisSection> {
 
   @override
   Widget build(BuildContext context) {
+    final quizProvider = context.watch<QuizProvider>();
+
     return FutureBuilder<List<Map<String, dynamic>>>(
       future: _historiesFuture,
       builder: (context, snapshot) {
@@ -307,7 +287,9 @@ class RiwayatKuisSectionState extends State<RiwayatKuisSection> {
                   final score = (item['score'] as num).toDouble();
                   final quizId = item['quiz_id'] as int;
                   final dateString = item['created_at'] as String;
-                  final quizName = getQuizTitle(quizId);
+
+                  final matchedQuiz = quizProvider.getQuizById(quizId);
+                  final quizName = matchedQuiz?.title ?? 'Kuis Fisika #$quizId';
                   final scoreColor = getScoreColor(score);
 
                   return Container(
@@ -428,7 +410,7 @@ class RiwayatKuisSectionState extends State<RiwayatKuisSection> {
                                     color: AppTheme.bottonColor,
                                     size: 18,
                                   ),
-                                  SizedBox(width: 8),
+                                  const SizedBox(width: 8),
                                   Text(
                                     'Ulangi Kuis',
                                     style: AppTextStyle.normalText2,
@@ -445,7 +427,7 @@ class RiwayatKuisSectionState extends State<RiwayatKuisSection> {
                                     color: AppTheme.merah,
                                     size: 18,
                                   ),
-                                  SizedBox(width: 8),
+                                  const SizedBox(width: 8),
                                   Text(
                                     'Hapus',
                                     style: AppTextStyle.warningText,

@@ -48,10 +48,15 @@ class CustomTextFields extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(color: AppTheme.borderColor, width: 1.5),
         ),
+        // kalo mode nulis
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: AppTheme.bottonColor, width: 2), // Botton color highlight on focus
+          borderSide: const BorderSide(
+            color: AppTheme.bottonColor,
+            width: 2,
+          ), // Botton color highlight on focus
         ),
+        // jika Error
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: const BorderSide(color: AppTheme.merah, width: 1.5),
@@ -61,7 +66,9 @@ class CustomTextFields extends StatelessWidget {
           borderSide: const BorderSide(color: AppTheme.merah, width: 2),
         ),
         filled: true,
-        fillColor: AppTheme.backgroundTertiary.withValues(alpha: 0.3), // Subtle translucent background
+        fillColor: AppTheme.backgroundTertiary.withValues(
+          alpha: 0.3,
+        ), // Subtle translucent background
       ),
     );
   }

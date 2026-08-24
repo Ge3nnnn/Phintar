@@ -41,6 +41,16 @@ class _HomePagePhintarState extends State<HomePagePhintar> {
         context.push(Materi1Gelombag());
       },
     ),
+    _ModulItem(
+      title: 'Vektor dan Kinematika Gerak',
+      subtitle: 'Modul Fisika Dasar',
+      onTap: () {},
+    ),
+    _ModulItem(
+      title: 'Dinamika Rotasi',
+      subtitle: 'Modul Fisika Dasar',
+      onTap: () {},
+    ),
     // Tambahkan modul lain di sini
   ];
 
