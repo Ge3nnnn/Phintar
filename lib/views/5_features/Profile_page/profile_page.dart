@@ -1,12 +1,13 @@
 import 'package:blabla/constants/app_theme.dart';
 import 'package:blabla/constants/app_typografy.dart';
+import 'package:blabla/views/1_loginpage/login_page_phintar.dart';
+import 'package:blabla/views/4_edit_profile_page/edit_profile_phintar.dart';
 import 'package:blabla/widgets/app_bar.dart';
-import 'package:blabla/models/preference_handler.dart';
 import 'package:blabla/widgets/extention/navigator.dart';
+import 'package:blabla/models/preference_handler.dart';
 import 'package:blabla/widgets/history_card/riwayat_kuis.dart';
 import 'package:blabla/widgets/history_card/riwayat_materi.dart';
-import 'package:blabla/views/4_edit_profile_page/edit_profile_phintar.dart';
-import 'package:blabla/views/1_loginpage/login_page_phintar.dart';
+
 import 'package:flutter/material.dart';
 
 class ProfilePagePhintar extends StatefulWidget {
@@ -27,7 +28,6 @@ class _ProfilePagePhintarState extends State<ProfilePagePhintar> {
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         padding: EdgeInsets.all(16),
-
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

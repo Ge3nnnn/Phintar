@@ -2,7 +2,7 @@ import 'package:blabla/constants/app_theme.dart';
 import 'package:blabla/views/5_features/home_page/home_page.dart';
 import 'package:blabla/views/5_features/kuis_page/quiz_page.dart';
 import 'package:blabla/views/5_features/lab_page/lab_page.dart';
-import 'package:blabla/views/features/Profile_page/profile_page.dart';
+import 'package:blabla/views/5_features/Profile_page/profile_page.dart';
 import 'package:flutter/material.dart';
 
 class BottomNavBarPhintar extends StatefulWidget {

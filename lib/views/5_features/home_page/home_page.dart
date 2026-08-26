@@ -8,6 +8,10 @@ import 'package:blabla/models/preference_handler.dart';
 import 'package:blabla/views/6_materi/Gelombang_dan_materi/1_gelombang_dan_osilasi.dart';
 import 'package:flutter/material.dart';
 
+/// Simple data class representing a course module entry on the home page.
+///
+/// To add a new modul, create a new [_ModulItem] in the [_allModuls] list
+/// inside [_HomePagePhintarState] with title, subtitle, and onTap callback.
 // Model sederhana untuk data modul
 class _ModulItem {
   final String title;
@@ -21,6 +25,11 @@ class _ModulItem {
   });
 }
 
+/// Home page displaying available course modules.
+///
+/// Shows a search bar and a list of [_ModulItem] cards.
+/// Each card navigates to the corresponding materi page.
+/// To add a new course, simply add a new [_ModulItem] to [_allModuls].
 class HomePagePhintar extends StatefulWidget {
   const HomePagePhintar({super.key, this.username});
   final String? username;
@@ -54,7 +63,8 @@ class _HomePagePhintarState extends State<HomePagePhintar> {
     // Tambahkan modul lain di sini
   ];
 
-  // Hasil filter berdasarkan query
+  /// Returns the list of modules filtered by the current search query.
+  /// If the query is empty, returns all modules.
   List<_ModulItem> get _filteredModuls {
     if (_searchQuery.isEmpty) return _allModuls;
     final query = _searchQuery.toLowerCase();
@@ -67,6 +77,8 @@ class _HomePagePhintarState extends State<HomePagePhintar> {
         .toList();
   }
 
+  /// Builds the home page: app bar with username, search bar,
+  /// section header, and the filtered list of module cards.
   @override
   Widget build(BuildContext context) {
     final results = _filteredModuls;

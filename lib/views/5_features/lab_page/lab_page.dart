@@ -22,6 +22,10 @@ class LabPagePhintar extends StatefulWidget {
 class _LabPagePhintaarState extends State<LabPagePhintar> {
   String _searchQuery = '';
 
+  /// Builds the lab listing page: watches [LabProvider] for data,
+  /// shows a loading spinner, search bar, and dynamically renders
+  /// lab cards from the database. To add a new lab, insert a new
+  /// entry in the lab seed JSON — no code changes needed.
   @override
   Widget build(BuildContext context) {
     final labProvider = context.watch<LabProvider>();

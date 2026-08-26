@@ -3,7 +3,7 @@ import 'package:blabla/widgets/app_bar.dart';
 import 'package:blabla/widgets/app_button.dart';
 import 'package:blabla/constants/app_images.dart';
 import 'package:blabla/constants/app_typografy.dart';
-import 'package:blabla/database/db_helper.dart';
+import 'package:blabla/data/database/db_helper.dart';
 import 'package:blabla/constants/app_theme.dart';
 import 'package:blabla/widgets/extention/navigator.dart';
 import 'package:blabla/models/user_model_login.dart';

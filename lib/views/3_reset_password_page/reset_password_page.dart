@@ -3,7 +3,7 @@ import 'package:blabla/widgets/app_textfield.dart';
 import 'package:blabla/constants/app_typografy.dart';
 import 'package:blabla/widgets/app_bar.dart';
 import 'package:blabla/constants/app_theme.dart';
-import 'package:blabla/database/db_helper.dart';
+import 'package:blabla/data/database/db_helper.dart';
 import 'package:blabla/views/3_reset_password_page/reset_password_page2.dart';
 import 'package:flutter/material.dart';
 // Jika kamu menggunakan Firebase, import firebase auth/firestore di sini
@@ -117,7 +117,6 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 borderRadius: BorderRadius.circular(24),
                 border: Border.all(color: AppTheme.glassBorder, width: 1.5),
               ),
-            child: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(30.0),
                 // Bungkus Column dengan Form
@@ -211,7 +210,6 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
               ),
             ),
           ),
-        ),
         ),
       ),
     );

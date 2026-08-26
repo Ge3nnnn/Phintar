@@ -1,34 +1,42 @@
+import 'dart:convert';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:blabla/data/models/lab_model.dart';
-import 'package:blabla/database/db_helper.dart';
 
 /// Local datasource for lab simulation content.
+/// Loads simulation definitions from JSON seed asset.
 class LabLocalSource {
-  final DBHelper _dbHelper = DBHelper();
+  List<LabModel>? _cachedLabs;
 
   /// Returns all labs sorted by [sort_order].
   Future<List<LabModel>> getAllLabs() async {
-    final db = await _dbHelper.database;
-    final rows = await db.query('labs', orderBy: 'sort_order ASC');
-    return rows.map((r) => LabModel.fromMap(r)).toList();
+    if (_cachedLabs != null) return _cachedLabs!;
+    try {
+      final jsonString =
+          await rootBundle.loadString('assets/seed/lab_seed.json');
+      final List<dynamic> list = json.decode(jsonString);
+      _cachedLabs = list
+          .map((item) => LabModel.fromJson(item as Map<String, dynamic>))
+          .toList()
+        ..sort((a, b) => a.sortOrder.compareTo(b.sortOrder));
+      return _cachedLabs!;
+    } catch (e) {
+      return [];
+    }
   }
 
   /// Returns a single lab by its ID, or null if not found.
   Future<LabModel?> getLabById(int id) async {
-    final db = await _dbHelper.database;
-    final rows = await db.query('labs', where: 'id = ?', whereArgs: [id]);
-    if (rows.isEmpty) return null;
-    return LabModel.fromMap(rows.first);
+    final labs = await getAllLabs();
+    try {
+      return labs.firstWhere((l) => l.id == id);
+    } catch (_) {
+      return null;
+    }
   }
 
   /// Returns labs filtered by [simType].
   Future<List<LabModel>> getLabsBySimType(String simType) async {
-    final db = await _dbHelper.database;
-    final rows = await db.query(
-      'labs',
-      where: 'sim_type = ?',
-      whereArgs: [simType],
-      orderBy: 'sort_order ASC',
-    );
-    return rows.map((r) => LabModel.fromMap(r)).toList();
+    final labs = await getAllLabs();
+    return labs.where((l) => l.simType == simType).toList();
   }
 }

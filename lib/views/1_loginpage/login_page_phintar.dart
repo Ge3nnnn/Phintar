@@ -1,7 +1,7 @@
 import 'package:blabla/widgets/app_button.dart';
 import 'package:blabla/widgets/app_textfield.dart';
 import 'package:blabla/constants/app_typografy.dart';
-import 'package:blabla/database/db_helper.dart';
+import 'package:blabla/data/database/db_helper.dart';
 import 'package:blabla/widgets/extention/navigator.dart';
 import 'package:blabla/constants/app_theme.dart';
 import 'package:blabla/models/preference_handler.dart';

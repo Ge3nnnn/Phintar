@@ -1,12 +1,14 @@
 import 'package:blabla/constants/app_theme.dart';
 import 'package:blabla/constants/app_typografy.dart';
+import 'package:blabla/providers/materi_provider.dart';
+import 'package:blabla/views/6_materi/Gelombang_dan_materi/1_gelombang_dan_osilasi.dart';
 import 'package:blabla/widgets/bottom_nav/bottom_nav_bar_phintar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../providers/materi_provider.dart';
-import '../../views/materi/materi_detail_screen.dart';
-import 'package:blabla/database/db_materi.dart';
+import 'package:blabla/data/database/db_materi.dart';
 
+/// Maps materi IDs to their display titles.
+/// To add a new materi, insert a new entry here with the next ID.
 // Helper daftar materi yang tersedia
 final Map<int, String> kAvailableMateri = {
   1: 'Gelombang dan Osilasi',
@@ -15,10 +17,14 @@ final Map<int, String> kAvailableMateri = {
   // dst.
 };
 
+/// Returns the display title for the given [materiId].
+/// Falls back to a generic label if the ID is not found in [kAvailableMateri].
 String getMateriTitle(int materiId) {
   return kAvailableMateri[materiId] ?? 'Materi Fisika #$materiId';
 }
 
+/// Converts an ISO-8601 date string into a human-readable
+/// "dd/mm/yyyy • HH:mm" format for display in history cards.
 String formatMateriDate(String isoDate) {
   try {
     DateTime date = DateTime.parse(isoDate);
@@ -32,6 +38,8 @@ String formatMateriDate(String isoDate) {
   }
 }
 
+/// Formats total seconds into a readable duration string
+/// (e.g. "5 menit 30 detik" or "1 jam 20 menit").
 String formatDuration(int totalSeconds) {
   if (totalSeconds < 60) {
     return '$totalSeconds detik';
@@ -46,12 +54,18 @@ String formatDuration(int totalSeconds) {
   }
 }
 
+/// Returns a colour indicating learning effort:
+/// green (≥10 min), yellow (≥3 min), or red (<3 min).
 Color getDurationColor(int seconds) {
   if (seconds >= 600) return AppTheme.progressColor; // >= 10 menit (rajin)
   if (seconds >= 180) return AppTheme.kuning; // >= 3 menit (cukup)
   return AppTheme.merah; // < 3 menit (sebentar)
 }
 
+/// Embeddable section that shows the user's materi learning history.
+///
+/// Fetches data from [DatabaseHelperMateri] and renders a list of
+/// history cards. Supports continue-learning and delete actions.
 // WIDGET RIWAYAT MATERI (EMBEDDABLE PADA PROFILE PAGE)
 class RiwayatMateriSection extends StatefulWidget {
   final VoidCallback? onDataChanged;
@@ -71,6 +85,8 @@ class RiwayatMateriSectionState extends State<RiwayatMateriSection> {
     refreshHistories();
   }
 
+  /// Reloads all materi histories from the database and notifies
+  /// the parent widget (e.g. profile page) that data changed.
   void refreshHistories() {
     setState(() {
       _historiesFuture = DatabaseHelperMateri.instance.getAllHistories();
@@ -78,13 +94,17 @@ class RiwayatMateriSectionState extends State<RiwayatMateriSection> {
     widget.onDataChanged?.call();
   }
 
+  /// Opens the materi page so the user can continue learning.
+  /// TODO: Make dynamic — currently hardcoded to [Materi1Gelombag].
+  ///       When more materi pages exist, use a registry or route map
+  ///       keyed by [materiId] to navigate to the correct page.
   void _continueMateri(int materiId) {
     final provider = Provider.of<MateriProvider>(context, listen: false);
     final materi = provider.getMateriById(materiId);
     if (materi != null) {
-      Navigator.of(context).push(
-        MaterialPageRoute(builder: (_) => MateriDetailScreen(materi: materi)),
-      );
+      Navigator.of(
+        context,
+      ).push(MaterialPageRoute(builder: (_) => Materi1Gelombag()));
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -95,7 +115,8 @@ class RiwayatMateriSectionState extends State<RiwayatMateriSection> {
     }
   }
 
-  // ─── DELETE: Hapus Riwayat Tertentu ───
+  /// Shows a confirmation dialog before deleting a specific history entry.
+  /// On confirm, removes the row from the database and refreshes the list.
   void _showDeleteConfirmDialog(int id, String materiName) {
     showDialog(
       context: context,
@@ -154,6 +175,8 @@ class RiwayatMateriSectionState extends State<RiwayatMateriSection> {
     );
   }
 
+  /// Builds the history section: header with count badge,
+  /// empty state with CTA button, or a list of history cards.
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Map<String, dynamic>>>(

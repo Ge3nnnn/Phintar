@@ -1,6 +1,6 @@
 import 'package:blabla/constants/app_theme.dart';
 import 'package:blabla/constants/app_typografy.dart';
-import 'package:blabla/database/db_quiz.dart';
+import 'package:blabla/data/database/db_quiz.dart';
 import 'package:blabla/providers/quiz_provider.dart';
 import 'package:blabla/views/5_features/kuis_page/quiz_screen.dart';
 import 'package:blabla/widgets/bottom_nav/bottom_nav_bar_phintar.dart';

@@ -1,35 +1,42 @@
+import 'dart:convert';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:blabla/data/models/materi_model.dart';
-import 'package:blabla/database/db_helper.dart';
 
 /// Local datasource for materi content.
-/// Reads from the unified SQLite database instead of JSON assets.
+/// Reads from JSON seed asset.
 class MateriLocalSource {
-  final DBHelper _dbHelper = DBHelper();
+  List<MateriModel>? _cachedMateri;
 
   /// Returns all materi sorted by [sort_order].
   Future<List<MateriModel>> getAllMateri() async {
-    final db = await _dbHelper.database;
-    final rows = await db.query('materi', orderBy: 'sort_order ASC');
-    return rows.map((r) => MateriModel.fromMap(r)).toList();
+    if (_cachedMateri != null) return _cachedMateri!;
+    try {
+      final jsonString =
+          await rootBundle.loadString('assets/seed/materi_seed.json');
+      final List<dynamic> list = json.decode(jsonString);
+      _cachedMateri = list
+          .map((item) => MateriModel.fromJson(item as Map<String, dynamic>))
+          .toList()
+        ..sort((a, b) => a.sortOrder.compareTo(b.sortOrder));
+      return _cachedMateri!;
+    } catch (e) {
+      return [];
+    }
   }
 
   /// Returns a single materi by its ID, or null if not found.
   Future<MateriModel?> getMateriById(int id) async {
-    final db = await _dbHelper.database;
-    final rows = await db.query('materi', where: 'id = ?', whereArgs: [id]);
-    if (rows.isEmpty) return null;
-    return MateriModel.fromMap(rows.first);
+    final list = await getAllMateri();
+    try {
+      return list.firstWhere((m) => m.id == id);
+    } catch (_) {
+      return null;
+    }
   }
 
   /// Returns materi filtered by [category].
   Future<List<MateriModel>> getMateriByCategory(String category) async {
-    final db = await _dbHelper.database;
-    final rows = await db.query(
-      'materi',
-      where: 'category = ?',
-      whereArgs: [category],
-      orderBy: 'sort_order ASC',
-    );
-    return rows.map((r) => MateriModel.fromMap(r)).toList();
+    final list = await getAllMateri();
+    return list.where((m) => m.category == category).toList();
   }
 }

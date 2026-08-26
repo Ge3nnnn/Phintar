@@ -1,7 +1,8 @@
 import 'package:blabla/constants/app_theme.dart';
 import 'package:blabla/constants/app_typografy.dart';
+import 'package:blabla/data/database/db_quiz.dart';
+import 'package:blabla/data/models/quiz_history_model.dart';
 import 'package:blabla/data/models/quiz_model.dart';
-import 'package:blabla/database/db_helper.dart';
 import 'package:blabla/widgets/app_bar.dart';
 import 'package:flutter/material.dart';
 
@@ -32,8 +33,11 @@ class _QuizScreenState extends State<QuizScreen> {
   int _score = 0;
   bool _finished = false;
 
+  /// Shortcut getter — returns the list of questions from the quiz model.
   List<QuizQuestionModel> get _questions => widget.quiz.questions;
 
+  /// Handles answer selection. Locks input after first tap and
+  /// increments [_score] if the selected option is correct.
   void _selectAnswer(int index) {
     if (_answered) return;
     setState(() {
@@ -45,6 +49,8 @@ class _QuizScreenState extends State<QuizScreen> {
     });
   }
 
+  /// Advances to the next question, or finishes the quiz if all
+  /// questions have been answered. Saves history on completion.
   void _nextQuestion() {
     if (_currentIndex < _questions.length - 1) {
       setState(() {
@@ -60,15 +66,23 @@ class _QuizScreenState extends State<QuizScreen> {
     }
   }
 
+  /// Persists the quiz result (score percentage) to the local SQLite
+  /// database via [DatabaseHelperQuiz]. Uses upsert logic — if a
+  /// history row for this quiz already exists it gets updated.
   Future<void> _saveQuizHistory() async {
     final double percentage = (_score / _questions.length * 100)
         .roundToDouble();
-    await DatabaseHelper().insertQuizHistory(
-      quizId: widget.quiz.id,
-      score: percentage,
+    await DatabaseHelperQuiz.instance.insertHistoryModel(
+      QuizHistoryModel(
+        quizId: widget.quiz.id,
+        score: percentage,
+        createdAt: DateTime.now().toIso8601String(),
+      ),
     );
   }
 
+  /// Resets all quiz state so the user can retake the quiz from
+  /// question 1 without leaving the screen.
   void _restart() {
     setState(() {
       _currentIndex = 0;
@@ -79,6 +93,8 @@ class _QuizScreenState extends State<QuizScreen> {
     });
   }
 
+  /// Builds the main scaffold with app bar showing the quiz title.
+  /// Switches between result page and quiz page based on [_finished].
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -93,6 +109,8 @@ class _QuizScreenState extends State<QuizScreen> {
 
   // ─── Result Page ──────────────────────────────────────────────────────────
 
+  /// Builds the result summary shown after all questions are answered.
+  /// Displays a circular score badge, correct count, and retry/back buttons.
   Widget _buildResultPage() {
     final percentage = (_score / _questions.length * 100).round();
     final Color scoreColor = percentage >= 70
@@ -161,6 +179,7 @@ class _QuizScreenState extends State<QuizScreen> {
     );
   }
 
+  /// Reusable full-width elevated button with icon, used on the result page.
   Widget _buildActionButton({
     required String label,
     required IconData icon,
@@ -193,6 +212,9 @@ class _QuizScreenState extends State<QuizScreen> {
 
   // ─── Quiz Page ────────────────────────────────────────────────────────────
 
+  /// Builds the active quiz view: progress bar, topic badge, question card,
+  /// answer options with correct/wrong highlighting, explanation box, and
+  /// a "next" button. All content is driven by [QuizModel] data.
   Widget _buildQuizPage() {
     final question = _questions[_currentIndex];
     final total = _questions.length;

@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:blabla/models/quiz_history_model.dart';
+import 'package:blabla/data/models/quiz_history_model.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 

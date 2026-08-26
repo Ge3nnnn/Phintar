@@ -3,7 +3,7 @@ import 'package:blabla/widgets/app_textfield.dart';
 import 'package:blabla/constants/app_theme.dart';
 import 'package:blabla/constants/app_typografy.dart';
 import 'package:blabla/widgets/app_bar.dart';
-import 'package:blabla/database/db_helper.dart';
+import 'package:blabla/data/database/db_helper.dart';
 import 'package:blabla/widgets/extention/navigator.dart';
 
 import 'package:blabla/views/1_loginpage/login_page_phintar.dart';
@@ -152,17 +152,15 @@ class _ResetPasswordPage2State extends State<ResetPasswordPage2> {
           physics: const BouncingScrollPhysics(),
           child: Padding(
           padding: const EdgeInsets.all(15.0),
-            child: SingleChildScrollView(
-              child: Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
+            child: Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
                   color: AppTheme.glassBackground,
                   borderRadius: BorderRadius.circular(24),
                   border: Border.all(color: AppTheme.glassBorder, width: 1.5),
                 ),
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(30.0),
+              child: Padding(
+                padding: const EdgeInsets.all(30.0),
                   // Bungkus Column dengan Form
                   child: Form(
                     key: _formKey,
@@ -295,8 +293,6 @@ class _ResetPasswordPage2State extends State<ResetPasswordPage2> {
             ),
           ),
         ),
-        ),
-      ),
     );
   }
 }

@@ -31,12 +31,16 @@ class _QuizPagePhintarState extends State<QuizPagePhintar> {
     final filteredQuizzes = _searchQuery.isEmpty
         ? allQuizzes
         : allQuizzes
-            .where((q) =>
-                q.title.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-                (q.category ?? '')
-                    .toLowerCase()
-                    .contains(_searchQuery.toLowerCase()))
-            .toList();
+              .where(
+                (q) =>
+                    q.title.toLowerCase().contains(
+                      _searchQuery.toLowerCase(),
+                    ) ||
+                    (q.category ?? '').toLowerCase().contains(
+                      _searchQuery.toLowerCase(),
+                    ),
+              )
+              .toList();
 
     return Scaffold(
       backgroundColor: AppTheme.backgroundPrimary,
@@ -92,8 +96,7 @@ class _QuizPagePhintarState extends State<QuizPagePhintar> {
                             onTap: () {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      QuizScreen(quiz: quiz),
+                                  builder: (context) => QuizScreen(quiz: quiz),
                                 ),
                               );
                             },

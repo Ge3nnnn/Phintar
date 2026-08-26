@@ -1,67 +1,41 @@
+import 'dart:convert';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:blabla/data/models/quiz_model.dart';
-import 'package:blabla/database/db_helper.dart';
 
 /// Local datasource for quiz content.
+/// Loads quiz data from JSON seed asset.
 class QuizLocalSource {
-  final DBHelper _dbHelper = DBHelper();
+  List<QuizModel>? _cachedQuizzes;
 
-  /// Returns all quizzes (without questions) sorted by [sort_order].
+  /// Returns all quizzes sorted by [sort_order].
   Future<List<QuizModel>> getAllQuizzes() async {
-    final db = await _dbHelper.database;
-    final rows = await db.query('quizzes', orderBy: 'sort_order ASC');
-    return rows.map((r) => QuizModel.fromMap(r)).toList();
+    return await getAllQuizzesWithQuestions();
   }
 
   /// Returns a quiz with its questions loaded.
   Future<QuizModel?> getQuizWithQuestions(int quizId) async {
-    final db = await _dbHelper.database;
-
-    // Load quiz
-    final quizRows = await db.query(
-      'quizzes',
-      where: 'id = ?',
-      whereArgs: [quizId],
-    );
-    if (quizRows.isEmpty) return null;
-    final quiz = QuizModel.fromMap(quizRows.first);
-
-    // Load questions
-    final questionRows = await db.query(
-      'quiz_questions',
-      where: 'quiz_id = ?',
-      whereArgs: [quizId],
-      orderBy: 'sort_order ASC',
-    );
-    final questions = questionRows
-        .map((r) => QuizQuestionModel.fromMap(r))
-        .toList();
-
-    return quiz.copyWithQuestions(questions);
+    final quizzes = await getAllQuizzesWithQuestions();
+    try {
+      return quizzes.firstWhere((q) => q.id == quizId);
+    } catch (_) {
+      return null;
+    }
   }
 
   /// Returns all quizzes with their questions loaded.
   Future<List<QuizModel>> getAllQuizzesWithQuestions() async {
-    final db = await _dbHelper.database;
-
-    // Load all quizzes
-    final quizRows = await db.query('quizzes', orderBy: 'sort_order ASC');
-    final quizzes = <QuizModel>[];
-
-    for (final row in quizRows) {
-      final quiz = QuizModel.fromMap(row);
-      // Load questions for this quiz
-      final questionRows = await db.query(
-        'quiz_questions',
-        where: 'quiz_id = ?',
-        whereArgs: [quiz.id],
-        orderBy: 'sort_order ASC',
-      );
-      final questions = questionRows
-          .map((r) => QuizQuestionModel.fromMap(r))
-          .toList();
-      quizzes.add(quiz.copyWithQuestions(questions));
+    if (_cachedQuizzes != null) return _cachedQuizzes!;
+    try {
+      final jsonString =
+          await rootBundle.loadString('assets/seed/quiz_seed.json');
+      final List<dynamic> list = json.decode(jsonString);
+      _cachedQuizzes = list
+          .map((item) => QuizModel.fromJson(item as Map<String, dynamic>))
+          .toList()
+        ..sort((a, b) => a.sortOrder.compareTo(b.sortOrder));
+      return _cachedQuizzes!;
+    } catch (e) {
+      return [];
     }
-
-    return quizzes;
   }
 }

@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:blabla/models/materi_history_model.dart';
+import 'package:blabla/data/models/materi_history_model.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
