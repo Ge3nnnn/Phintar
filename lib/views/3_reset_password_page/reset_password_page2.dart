@@ -13,7 +13,12 @@ import 'package:lottie/lottie.dart';
 
 class ResetPasswordPage2 extends StatefulWidget {
   final String email;
-  const ResetPasswordPage2({super.key, required this.email});
+  final bool isFromSettings;
+  const ResetPasswordPage2({
+    super.key,
+    required this.email,
+    this.isFromSettings = false,
+  });
 
   @override
   State<ResetPasswordPage2> createState() => _ResetPasswordPage2State();
@@ -100,12 +105,16 @@ class _ResetPasswordPage2State extends State<ResetPasswordPage2> {
               TextButton(
                 onPressed: () {
                   Navigator.pop(dialogContext);
-                  pageNavigator.pushAndRemoveUntil(
-                    MaterialPageRoute(
-                      builder: (_) => const LoginPagePhintar(),
-                    ),
-                    (route) => false,
-                  );
+                  if (widget.isFromSettings) {
+                    pageNavigator.pop();
+                  } else {
+                    pageNavigator.pushAndRemoveUntil(
+                      MaterialPageRoute(
+                        builder: (_) => const LoginPagePhintar(),
+                      ),
+                      (route) => false,
+                    );
+                  }
                 },
                 child: Text("Kembali", style: AppTextStyle.normalText2),
               ),
@@ -267,7 +276,11 @@ class _ResetPasswordPage2State extends State<ResetPasswordPage2> {
                         SizedBox(height: 10),
                         InkWell(
                           onTap: () {
-                            context.pushAndRemoveAll(const LoginPagePhintar());
+                            if (widget.isFromSettings) {
+                              context.pop();
+                            } else {
+                              context.pushAndRemoveAll(const LoginPagePhintar());
+                            }
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -279,7 +292,9 @@ class _ResetPasswordPage2State extends State<ResetPasswordPage2> {
                               ),
                               const SizedBox(width: 5),
                               Text(
-                                "Kembali ke halaman login",
+                                widget.isFromSettings
+                                    ? "Kembali"
+                                    : "Kembali ke halaman login",
                                 style: AppTextStyle.normalText,
                               ),
                             ],

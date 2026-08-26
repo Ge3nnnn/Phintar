@@ -1,7 +1,6 @@
 import 'package:blabla/constants/app_theme.dart';
 import 'package:blabla/constants/app_typografy.dart';
-import 'package:blabla/views/1_loginpage/login_page_phintar.dart';
-import 'package:blabla/views/4_edit_profile_page/edit_profile_phintar.dart';
+import 'package:blabla/views/7_setting_page/settings_page.dart';
 import 'package:blabla/widgets/app_bar.dart';
 import 'package:blabla/widgets/extention/navigator.dart';
 import 'package:blabla/models/preference_handler.dart';
@@ -84,64 +83,74 @@ class _ProfilePagePhintarState extends State<ProfilePagePhintar> {
                         ],
                       ),
                     ),
-                    PopupMenuButton<String>(
-                      icon: const Icon(
+                    IconButton(
+                      icon: Icon(
                         Icons.settings,
                         color: AppTheme.textColor,
-                        size: 20,
+                        size: 24,
                       ),
-                      color: AppTheme.backgroundSecondary,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        side: const BorderSide(color: Color(0xFF334155)),
-                      ),
-                      onSelected: (value) async {
-                        if (value == 'quit') {
-                          await PreferenceHandler.logOut();
-                          if (!context.mounted) return;
-                          context.pushAndRemoveAll(const LoginPagePhintar());
-                        } else if (value == 'edit_profile') {
-                          context.push(const EditProfilePhintar()).then((_) {
-                            if (mounted) setState(() {});
-                          });
-                        }
-                        // Tambahkan disini jika ingin menambahkan fitur yang lain
+                      onPressed: () {
+                        context.push(SettingsPage());
                       },
-                      itemBuilder: (context) => [
-                        // daftar di titik 3
-                        PopupMenuItem(
-                          value: 'edit_profile',
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.edit,
-                                color: AppTheme.bottonColor,
-                                size: 18,
-                              ),
-                              SizedBox(width: 8),
-                              Text(
-                                'Edit Profile',
-                                style: AppTextStyle.progresText,
-                              ),
-                            ],
-                          ),
-                        ),
-                        PopupMenuItem(
-                          value: 'quit',
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.logout_rounded,
-                                color: AppTheme.merah,
-                                size: 18,
-                              ),
-                              SizedBox(width: 8),
-                              Text('Keluar', style: AppTextStyle.warningText),
-                            ],
-                          ),
-                        ),
-                      ],
                     ),
+                    // PopupMenuButton<String>(
+                    //   icon: const Icon(
+                    //     Icons.settings,
+                    //     color: AppTheme.textColor,
+                    //     size: 20,
+                    //   ),
+                    //   color: AppTheme.backgroundSecondary,
+                    //   shape: RoundedRectangleBorder(
+                    //     borderRadius: BorderRadius.circular(12),
+                    //     side: const BorderSide(color: Color(0xFF334155)),
+                    //   ),
+                    //   onSelected: (value) async {
+                    //     if (value == 'quit') {
+                    //       await PreferenceHandler.logOut();
+                    //       if (!context.mounted) return;
+                    //       context.pushAndRemoveAll(const LoginPagePhintar());
+                    //     } else if (value == 'edit_profile') {
+                    //       context.push(const EditProfilePhintar()).then((_) {
+                    //         if (mounted) setState(() {});
+                    //       });
+                    //     }
+                    //     // Tambahkan disini jika ingin menambahkan fitur yang lain
+                    //   },
+                    //   itemBuilder: (context) => [
+                    //     // daftar di titik 3
+                    //     PopupMenuItem(
+                    //       value: 'edit_profile',
+                    //       child: Row(
+                    //         children: [
+                    //           Icon(
+                    //             Icons.edit,
+                    //             color: AppTheme.bottonColor,
+                    //             size: 18,
+                    //           ),
+                    //           SizedBox(width: 8),
+                    //           Text(
+                    //             'Edit Profile',
+                    //             style: AppTextStyle.progresText,
+                    //           ),
+                    //         ],
+                    //       ),
+                    //     ),
+                    //     PopupMenuItem(
+                    //       value: 'quit',
+                    //       child: Row(
+                    //         children: [
+                    //           Icon(
+                    //             Icons.logout_rounded,
+                    //             color: AppTheme.merah,
+                    //             size: 18,
+                    //           ),
+                    //           SizedBox(width: 8),
+                    //           Text('Keluar', style: AppTextStyle.warningText),
+                    //         ],
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
                   ],
                 ),
               ),
