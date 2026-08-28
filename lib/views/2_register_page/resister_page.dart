@@ -19,70 +19,37 @@ class RegisterScreenPhintar extends StatefulWidget {
 }
 
 class _RegisterScreenPhintarState extends State<RegisterScreenPhintar> {
-  // 1. PINDAHKAN CONTROLLER & KEY KE SINI (Di luar fungsi build)
-  final TextEditingController emailC = TextEditingController();
-  final TextEditingController passwordC = TextEditingController();
-  final TextEditingController confirmpasswordC = TextEditingController();
-  final TextEditingController nameC = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  final _nameC = TextEditingController();
+  final _emailC = TextEditingController();
+  final _passwordC = TextEditingController();
+  final _confirmPasswordC = TextEditingController();
 
-  // 2. TAMBAHKAN DISPOSE UNTUK MENCEGAH MEMORY LEAK
   @override
   void dispose() {
-    emailC.dispose();
-    passwordC.dispose();
-    confirmpasswordC.dispose();
-    nameC.dispose();
+    _nameC.dispose();
+    _emailC.dispose();
+    _passwordC.dispose();
+    _confirmPasswordC.dispose();
     super.dispose();
   }
 
-  // 3. PINDAHKAN FUNGSI REGISTER KE SINI
-  void register() async {
-    final user = emailC.text.trim();
-    final pass = passwordC.text;
-    final name = nameC.text.trim();
-    // memanggil database
-    final pengguna = UserModelSQL(email: user, password: pass, nama: name);
-    bool success = await DBHelper().registerUser(pengguna);
+  // ---------------------------------------------------------------------------
+  // Actions
+  // ---------------------------------------------------------------------------
+
+  Future<void> _register() async {
+    final user = UserModelSQL(
+      email: _emailC.text.trim(),
+      password: _passwordC.text,
+      nama: _nameC.text.trim(),
+    );
+    final success = await DBHelper().registerUser(user);
 
     if (!mounted) return;
 
     if (success) {
-      final pageNavigator = Navigator.of(context);
-      showDialog(
-        context: context,
-        builder: (dialogContext) => AlertDialog(
-          backgroundColor: AppTheme.backgroundSecondary,
-          title: Text(
-            "YEEAAYYY, ${nameC.text} berhasil mendaftar!!🎉🎉🎉🎉",
-            textAlign: TextAlign.center,
-            style: AppTextStyle.normalText2,
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Lottie.asset("assets/Animations/congraturation.json"),
-              Text(
-                "ayo mulai perjalanan sains ${nameC.text}!!",
-                style: AppTextStyle.normalText2,
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(dialogContext);
-                pageNavigator.pushReplacement(
-                  MaterialPageRoute(builder: (_) => const LoginPagePhintar()),
-                );
-              },
-              child: Text("Mulai Sekarang", style: AppTextStyle.normalText2),
-            ),
-          ],
-        ),
-      );
-      // Opsional: Langsung arahkan ke halaman login setelah sukses
-      // context.pushReplacement(const LoginPagePhintar());
+      _showSuccessDialog();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -92,6 +59,47 @@ class _RegisterScreenPhintarState extends State<RegisterScreenPhintar> {
       );
     }
   }
+
+  void _showSuccessDialog() {
+    final pageNavigator = Navigator.of(context);
+
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        backgroundColor: AppTheme.backgroundSecondary,
+        title: Text(
+          "YEEAAYYY, ${_nameC.text} berhasil mendaftar!! 🎉🎉🎉🎉",
+          textAlign: TextAlign.center,
+          style: AppTextStyle.normalText2,
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Lottie.asset("assets/Animations/congraturation.json"),
+            Text(
+              "Ayo mulai perjalanan sains ${_nameC.text}!!",
+              style: AppTextStyle.normalText2,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(dialogContext);
+              pageNavigator.pushReplacement(
+                MaterialPageRoute(builder: (_) => const LoginPagePhintar()),
+              );
+            },
+            child: Text("Mulai Sekarang", style: AppTextStyle.normalText2),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ---------------------------------------------------------------------------
+  // Build
+  // ---------------------------------------------------------------------------
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +112,6 @@ class _RegisterScreenPhintarState extends State<RegisterScreenPhintar> {
           child: Padding(
             padding: const EdgeInsets.all(15.0),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(height: 10),
                 Text("Daftar Akun Anda", style: AppTextStyle.judul),
@@ -113,157 +120,179 @@ class _RegisterScreenPhintarState extends State<RegisterScreenPhintar> {
                   style: AppTextStyle.subjudul,
                 ),
                 const SizedBox(height: 20),
-
-                // 4. HAPUS HEIGHT: 600 PADA CONTAINER AGAR FLEKSIBEL
-                Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: AppTheme.glassBackground, // Glassmorphic effect
-                    borderRadius: BorderRadius.circular(24),
-                    border: Border.all(color: AppTheme.glassBorder, width: 1.5),
-                  ),
-                  padding: const EdgeInsets.all(20.0), // Ganti padding di dalam
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      children: [
-                        CustomTextFields(
-                          controller: nameC,
-                          hintText: "Anda ingin dikenal sebagai",
-                          prefixIcon: Icons.person,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return "Username tidak boleh kosong";
-                            } else if (value.length < 3) {
-                              return "Username terlalu pendek";
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 16),
-                        CustomTextFields(
-                          controller: emailC,
-                          hintText: "Daftarkan email anda",
-                          prefixIcon: Icons.mail_outline,
-                          keyboardType: TextInputType.emailAddress,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return "Email tidak boleh kosong";
-                            } else if (!value.contains('@')) {
-                              return "Email tidak valid";
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 16),
-                        CustomTextFields(
-                          controller: passwordC,
-                          hintText: "Masukan kata sandi anda",
-                          prefixIcon: Icons.lock_outline,
-                          obscureText: true,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return "Kata sandi tidak boleh kosong";
-                            } else if (value.length < 8) {
-                              return "Minimal 8 karakter";
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 16),
-                        CustomTextFields(
-                          controller: confirmpasswordC,
-                          hintText: "Konfirmasi kata sandi anda",
-                          prefixIcon: Icons.lock_outline,
-                          obscureText: true,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return "Konfirmasi password wajib diisi";
-                            } else if (value != passwordC.text) {
-                              return "Kata sandi tidak cocok";
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 25),
-                        CustomElevatedButton(
-                          text: "Daftar",
-                          width: double
-                              .infinity, // Tombol memenuhi lebar container
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              register();
-                            }
-                          },
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 20),
-                          child: Row(
-                            children: [
-                              const Expanded(
-                                child: Divider(
-                                  color: Colors.grey,
-                                  thickness: 1,
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                ),
-                                child: Text(
-                                  "Atau daftar dengan",
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.grey.shade400,
-                                  ),
-                                ),
-                              ),
-                              const Expanded(
-                                child: Divider(
-                                  color: Colors.grey,
-                                  thickness: 1,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        // 5. MENGGUNAKAN ROW DENGAN EXPANDED AGAR TIDAK OVERFLOW
-                        Row(
-                          children: [
-                            Expanded(
-                              child: CustomElevatedButton(
-                                iconAsset: AppImages.googleIcon,
-                                text: "Google",
-                                onPressed: () {},
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                _buildFormCard(),
                 const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text("Sudah Punya Akun?", style: AppTextStyle.bottomText),
-                    const SizedBox(width: 10),
-                    InkWell(
-                      onTap: () {
-                        context.pushReplacement(const LoginPagePhintar());
-                      },
-                      child: Text("Masuk", style: AppTextStyle.progresText),
-                    ),
-                  ],
-                ),
+                _buildLoginLink(),
                 const SizedBox(height: 20),
               ],
             ),
           ),
         ),
       ),
+    );
+  }
+
+  // ---------------------------------------------------------------------------
+  // UI Components
+  // ---------------------------------------------------------------------------
+
+  Widget _buildFormCard() {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: AppTheme.glassBackground,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: AppTheme.glassBorder, width: 1.5),
+      ),
+      padding: const EdgeInsets.all(20.0),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildFormField(
+              label: "USERNAME",
+              controller: _nameC,
+              hint: "Anda ingin dikenal sebagai",
+              icon: Icons.person,
+              validator: (v) {
+                if (v == null || v.isEmpty)
+                  return "Username tidak boleh kosong";
+                if (v.length < 3) return "Username terlalu pendek";
+                return null;
+              },
+            ),
+            _buildFormField(
+              label: "EMAIL",
+              controller: _emailC,
+              hint: "Daftarkan email anda",
+              icon: Icons.mail_outline,
+              keyboardType: TextInputType.emailAddress,
+              validator: (v) {
+                if (v == null || v.isEmpty) return "Email tidak boleh kosong";
+                if (!v.contains('@')) return "Email tidak valid";
+                return null;
+              },
+            ),
+            _buildFormField(
+              label: "PASSWORD",
+              controller: _passwordC,
+              hint: "Masukan kata sandi anda",
+              icon: Icons.lock_outline,
+              obscureText: true,
+              validator: (v) {
+                if (v == null || v.isEmpty) {
+                  return "Kata sandi tidak boleh kosong";
+                }
+                if (v.length < 8) return "Minimal 8 karakter";
+                return null;
+              },
+            ),
+            _buildFormField(
+              label: "CONFIRM PASSWORD",
+              controller: _confirmPasswordC,
+              hint: "Konfirmasi kata sandi anda",
+              icon: Icons.lock_outline,
+              obscureText: true,
+              isLast: true,
+              validator: (v) {
+                if (v == null || v.isEmpty) {
+                  return "Konfirmasi password wajib diisi";
+                }
+                if (v != _passwordC.text) return "Kata sandi tidak cocok";
+                return null;
+              },
+            ),
+            const SizedBox(height: 25),
+            CustomElevatedButton(
+              text: "Daftar",
+              width: double.infinity,
+              onPressed: () {
+                if (_formKey.currentState!.validate()) _register();
+              },
+            ),
+            _buildDivider(),
+            _buildSocialButtons(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Reusable labeled form field — reduces repetition across all four fields.
+  Widget _buildFormField({
+    required String label,
+    required TextEditingController controller,
+    required String hint,
+    required IconData icon,
+    String? Function(String?)? validator,
+    TextInputType? keyboardType,
+    bool obscureText = false,
+    bool isLast = false,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label, style: AppTextStyle.normalText2),
+        const SizedBox(height: 5),
+        CustomTextFields(
+          controller: controller,
+          hintText: hint,
+          prefixIcon: icon,
+          obscureText: obscureText,
+          keyboardType: keyboardType,
+          validator: validator,
+        ),
+        if (!isLast) const SizedBox(height: 5),
+      ],
+    );
+  }
+
+  Widget _buildDivider() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 20),
+      child: Row(
+        children: [
+          const Expanded(child: Divider(color: Colors.grey, thickness: 1)),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: Text(
+              "Atau daftar dengan",
+              style: TextStyle(fontSize: 12, color: Colors.grey.shade400),
+            ),
+          ),
+          const Expanded(child: Divider(color: Colors.grey, thickness: 1)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSocialButtons() {
+    return Row(
+      children: [
+        Expanded(
+          child: CustomElevatedButton(
+            iconAsset: AppImages.googleIcon,
+            text: "Google",
+            onPressed: () {},
+          ),
+        ),
+        const SizedBox(width: 10),
+      ],
+    );
+  }
+
+  Widget _buildLoginLink() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text("Sudah Punya Akun?", style: AppTextStyle.bottomText),
+        const SizedBox(width: 10),
+        InkWell(
+          onTap: () => context.pushReplacement(const LoginPagePhintar()),
+          child: Text("Masuk", style: AppTextStyle.progresText),
+        ),
+      ],
     );
   }
 }
