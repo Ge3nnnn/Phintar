@@ -73,15 +73,10 @@ class _RegisterScreenPhintarState extends State<RegisterScreenPhintar> {
               onPressed: () {
                 Navigator.pop(dialogContext);
                 pageNavigator.pushReplacement(
-                  MaterialPageRoute(
-                    builder: (_) => const LoginPagePhintar(),
-                  ),
+                  MaterialPageRoute(builder: (_) => const LoginPagePhintar()),
                 );
               },
-              child: Text(
-                "Mulai Sekarang",
-                style: AppTextStyle.normalText2,
-              ),
+              child: Text("Mulai Sekarang", style: AppTextStyle.normalText2),
             ),
           ],
         ),
@@ -107,168 +102,165 @@ class _RegisterScreenPhintarState extends State<RegisterScreenPhintar> {
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(height: 10),
-              Text("Daftar Akun Anda", style: AppTextStyle.judul),
-              Text(
-                "Mulai perjalanan sains anda.",
-                style: AppTextStyle.subjudul,
-              ),
-              const SizedBox(height: 20),
-
-              // 4. HAPUS HEIGHT: 600 PADA CONTAINER AGAR FLEKSIBEL
-              Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: AppTheme.glassBackground, // Glassmorphic effect
-                  borderRadius: BorderRadius.circular(24),
-                  border: Border.all(color: AppTheme.glassBorder, width: 1.5),
+            padding: const EdgeInsets.all(15.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(height: 10),
+                Text("Daftar Akun Anda", style: AppTextStyle.judul),
+                Text(
+                  "Mulai perjalanan sains anda.",
+                  style: AppTextStyle.subjudul,
                 ),
-                padding: const EdgeInsets.all(20.0), // Ganti padding di dalam
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      CustomTextFields(
-                        controller: nameC,
-                        hintText: "Anda ingin dikenal sebagai",
-                        prefixIcon: Icons.person,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return "Username tidak boleh kosong";
-                          } else if (value.length < 3) {
-                            return "Username terlalu pendek";
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 16),
-                      CustomTextFields(
-                        controller: emailC,
-                        hintText: "Daftarkan email anda",
-                        prefixIcon: Icons.mail_outline,
-                        keyboardType: TextInputType.emailAddress,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return "Email tidak boleh kosong";
-                          } else if (!value.contains('@')) {
-                            return "Email tidak valid";
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 16),
-                      CustomTextFields(
-                        controller: passwordC,
-                        hintText: "Masukan kata sandi anda",
-                        prefixIcon: Icons.lock_outline,
-                        obscureText: true,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return "Kata sandi tidak boleh kosong";
-                          } else if (value.length < 8) {
-                            return "Minimal 8 karakter";
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 16),
-                      CustomTextFields(
-                        controller: confirmpasswordC,
-                        hintText: "Konfirmasi kata sandi anda",
-                        prefixIcon: Icons.lock_outline,
-                        obscureText: true,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return "Konfirmasi password wajib diisi";
-                          } else if (value != passwordC.text) {
-                            return "Kata sandi tidak cocok";
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 25),
-                      CustomElevatedButton(
-                        text: "Daftar",
-                        width:
-                            double.infinity, // Tombol memenuhi lebar container
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            register();
-                          }
-                        },
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 20),
-                        child: Row(
-                          children: [
-                            const Expanded(
-                              child: Divider(color: Colors.grey, thickness: 1),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                              ),
-                              child: Text(
-                                "Atau daftar dengan",
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.grey.shade400,
+                const SizedBox(height: 20),
+
+                // 4. HAPUS HEIGHT: 600 PADA CONTAINER AGAR FLEKSIBEL
+                Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: AppTheme.glassBackground, // Glassmorphic effect
+                    borderRadius: BorderRadius.circular(24),
+                    border: Border.all(color: AppTheme.glassBorder, width: 1.5),
+                  ),
+                  padding: const EdgeInsets.all(20.0), // Ganti padding di dalam
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      children: [
+                        CustomTextFields(
+                          controller: nameC,
+                          hintText: "Anda ingin dikenal sebagai",
+                          prefixIcon: Icons.person,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Username tidak boleh kosong";
+                            } else if (value.length < 3) {
+                              return "Username terlalu pendek";
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 16),
+                        CustomTextFields(
+                          controller: emailC,
+                          hintText: "Daftarkan email anda",
+                          prefixIcon: Icons.mail_outline,
+                          keyboardType: TextInputType.emailAddress,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Email tidak boleh kosong";
+                            } else if (!value.contains('@')) {
+                              return "Email tidak valid";
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 16),
+                        CustomTextFields(
+                          controller: passwordC,
+                          hintText: "Masukan kata sandi anda",
+                          prefixIcon: Icons.lock_outline,
+                          obscureText: true,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Kata sandi tidak boleh kosong";
+                            } else if (value.length < 8) {
+                              return "Minimal 8 karakter";
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 16),
+                        CustomTextFields(
+                          controller: confirmpasswordC,
+                          hintText: "Konfirmasi kata sandi anda",
+                          prefixIcon: Icons.lock_outline,
+                          obscureText: true,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Konfirmasi password wajib diisi";
+                            } else if (value != passwordC.text) {
+                              return "Kata sandi tidak cocok";
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 25),
+                        CustomElevatedButton(
+                          text: "Daftar",
+                          width: double
+                              .infinity, // Tombol memenuhi lebar container
+                          onPressed: () {
+                            if (_formKey.currentState!.validate()) {
+                              register();
+                            }
+                          },
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 20),
+                          child: Row(
+                            children: [
+                              const Expanded(
+                                child: Divider(
+                                  color: Colors.grey,
+                                  thickness: 1,
                                 ),
                               ),
-                            ),
-                            const Expanded(
-                              child: Divider(color: Colors.grey, thickness: 1),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                ),
+                                child: Text(
+                                  "Atau daftar dengan",
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.grey.shade400,
+                                  ),
+                                ),
+                              ),
+                              const Expanded(
+                                child: Divider(
+                                  color: Colors.grey,
+                                  thickness: 1,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        // 5. MENGGUNAKAN ROW DENGAN EXPANDED AGAR TIDAK OVERFLOW
+                        Row(
+                          children: [
+                            Expanded(
+                              child: CustomElevatedButton(
+                                iconAsset: AppImages.googleIcon,
+                                text: "Google",
+                                onPressed: () {},
+                              ),
                             ),
                           ],
                         ),
-                      ),
-
-                      // 5. MENGGUNAKAN ROW DENGAN EXPANDED AGAR TIDAK OVERFLOW
-                      Row(
-                        children: [
-                          Expanded(
-                            child: CustomElevatedButton(
-                              iconAsset: AppImages.googleIcon,
-                              text: "Google",
-                              onPressed: () {},
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: CustomElevatedButton(
-                              iconAsset: AppImages.facebookIcon,
-                              width: double.infinity,
-                              text: "Facebook",
-                              onPressed: () {},
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text("Sudah Punya Akun?", style: AppTextStyle.bottomText),
-                  const SizedBox(width: 10),
-                  InkWell(
-                    onTap: () {
-                      context.pushReplacement(const LoginPagePhintar());
-                    },
-                    child: Text("Masuk", style: AppTextStyle.progresText),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-            ],
-          ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("Sudah Punya Akun?", style: AppTextStyle.bottomText),
+                    const SizedBox(width: 10),
+                    InkWell(
+                      onTap: () {
+                        context.pushReplacement(const LoginPagePhintar());
+                      },
+                      child: Text("Masuk", style: AppTextStyle.progresText),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+              ],
+            ),
           ),
         ),
       ),
