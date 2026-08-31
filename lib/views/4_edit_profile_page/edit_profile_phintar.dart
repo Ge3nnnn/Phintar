@@ -6,7 +6,6 @@ import 'package:blabla/widgets/app_bar.dart';
 import 'package:blabla/data/database/db_helper.dart';
 import 'package:blabla/widgets/extention/navigator.dart';
 import 'package:blabla/models/preference_handler.dart';
-import 'package:blabla/widgets/bottom_nav/bottom_nav_bar_phintar.dart';
 import 'package:flutter/material.dart';
 
 class EditProfilePhintar extends StatefulWidget {
@@ -76,7 +75,7 @@ class _EditProfilePhintarState extends State<EditProfilePhintar> {
         title: "Edit Profile",
         prefixIcon: Icons.arrow_back,
         onPrefixIconTap: () {
-          context.pushReplacement(const BottomNavBarPhintar(initialIndex: 3));
+          context.pop();
         },
       ),
       body: SafeArea(

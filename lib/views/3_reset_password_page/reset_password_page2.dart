@@ -160,154 +160,154 @@ class _ResetPasswordPage2State extends State<ResetPasswordPage2> {
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: Padding(
-          padding: const EdgeInsets.all(15.0),
+            padding: const EdgeInsets.all(15.0),
             child: Container(
               width: double.infinity,
               decoration: BoxDecoration(
-                  color: AppTheme.glassBackground,
-                  borderRadius: BorderRadius.circular(24),
-                  border: Border.all(color: AppTheme.glassBorder, width: 1.5),
-                ),
+                color: AppTheme.glassBackground,
+                borderRadius: BorderRadius.circular(24),
+                border: Border.all(color: AppTheme.glassBorder, width: 1.5),
+              ),
               child: Padding(
                 padding: const EdgeInsets.all(30.0),
-                  // Bungkus Column dengan Form
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      children: [
-                        Container(
-                          height: 80,
-                          width: 80,
-                          decoration: BoxDecoration(
-                            color: AppTheme.backgroundPrimary,
+                // Bungkus Column dengan Form
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 80,
+                        width: 80,
+                        decoration: BoxDecoration(
+                          color: AppTheme.backgroundPrimary,
 
-                            borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Center(
+                          child: Icon(
+                            Icons.lock_reset,
+                            size: 50,
+                            color: AppTheme.textColor,
                           ),
-                          child: Center(
-                            child: Icon(
-                              Icons.lock_reset,
-                              size: 50,
-                              color: AppTheme.textColor,
-                            ),
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      Text(
+                        "Atur Ulang Kata Sandi",
+                        style: AppTextStyle.subsubjudul,
+                      ),
+                      SizedBox(height: 5),
+                      Text(
+                        "Masukan Kata Sandi Baru Anda Dibawah Ini Untuk Mengamankan Akun.",
+                        style: AppTextStyle.bottomText,
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(height: 13),
+                      Row(
+                        children: [
+                          Text(
+                            "Masukan kata sandi baru",
+                            style: AppTextStyle.normalText2,
                           ),
-                        ),
-                        SizedBox(height: 10),
-                        Text(
-                          "Atur Ulang Kata Sandi",
-                          style: AppTextStyle.subsubjudul,
-                        ),
-                        SizedBox(height: 5),
-                        Text(
-                          "Masukan Kata Sandi Baru Anda Dibawah Ini Untuk Mengamankan Akun.",
-                          style: AppTextStyle.bottomText,
-                          textAlign: TextAlign.center,
-                        ),
-                        SizedBox(height: 13),
-                        Row(
+                        ],
+                      ),
+                      SizedBox(height: 5),
+                      CustomTextFields(
+                        controller: passwordC,
+                        errorText: passwordError,
+                        onChanged: (value) {
+                          if (passwordError != null) {
+                            setState(() {
+                              passwordError = null;
+                            });
+                          }
+                        },
+                        hintText: "Masukan kata sandi anda",
+                        prefixIcon: Icons.lock_outline,
+                        obscureText: true,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "Kata sandi tidak boleh kosong";
+                          } else if (value.length < 8) {
+                            return "Minimal 8 karakter";
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(height: 5),
+                      Row(
+                        children: [
+                          Text(
+                            "Konfirmasi kata sandi baru",
+                            style: AppTextStyle.normalText2,
+                          ),
+                        ],
+                      ),
+                      CustomTextFields(
+                        controller: confirmpasswordC,
+                        errorText: confirmPasswordError,
+                        onChanged: (value) {
+                          if (confirmPasswordError != null) {
+                            setState(() {
+                              confirmPasswordError = null;
+                            });
+                          }
+                        },
+                        hintText: "Konfirmasi kata sandi anda",
+                        prefixIcon: Icons.lock_outline,
+                        obscureText: true,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "Konfirmasi password wajib diisi";
+                          } else if (value != passwordC.text) {
+                            return "Kata sandi tidak cocok";
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(height: 20), // Tambahan jarak
+                      CustomElevatedButton(
+                        onPressed: isLoading ? () {} : resetPassword,
+                        width: double.infinity,
+                        text: "Ubah Kata Sandi",
+                      ),
+                      SizedBox(height: 10),
+                      Divider(color: AppTheme.textColor),
+                      SizedBox(height: 10),
+                      InkWell(
+                        onTap: () {
+                          if (widget.isFromSettings) {
+                            context.pop();
+                          } else {
+                            context.pushAndRemoveAll(const LoginPagePhintar());
+                          }
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+                            Icon(
+                              Icons.arrow_back_ios,
+                              color: AppTheme.putih,
+                              size: 15,
+                            ),
+                            const SizedBox(width: 5),
                             Text(
-                              "Masukan kata sandi baru",
+                              widget.isFromSettings
+                                  ? "Kembali"
+                                  : "Kembali ke halaman login",
                               style: AppTextStyle.normalText,
                             ),
                           ],
                         ),
-                        SizedBox(height: 5),
-                        CustomTextFields(
-                          controller: passwordC,
-                          errorText: passwordError,
-                          onChanged: (value) {
-                            if (passwordError != null) {
-                              setState(() {
-                                passwordError = null;
-                              });
-                            }
-                          },
-                          hintText: "Masukan kata sandi anda",
-                          prefixIcon: Icons.lock_outline,
-                          obscureText: true,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return "Kata sandi tidak boleh kosong";
-                            } else if (value.length < 8) {
-                              return "Minimal 8 karakter";
-                            }
-                            return null;
-                          },
-                        ),
-                        SizedBox(height: 5),
-                        Row(
-                          children: [
-                            Text(
-                              "Konfirmasi kata sandi baru",
-                              style: AppTextStyle.normalText,
-                            ),
-                          ],
-                        ),
-                        CustomTextFields(
-                          controller: confirmpasswordC,
-                          errorText: confirmPasswordError,
-                          onChanged: (value) {
-                            if (confirmPasswordError != null) {
-                              setState(() {
-                                confirmPasswordError = null;
-                              });
-                            }
-                          },
-                          hintText: "Konfirmasi kata sandi anda",
-                          prefixIcon: Icons.lock_outline,
-                          obscureText: true,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return "Konfirmasi password wajib diisi";
-                            } else if (value != passwordC.text) {
-                              return "Kata sandi tidak cocok";
-                            }
-                            return null;
-                          },
-                        ),
-                        SizedBox(height: 20), // Tambahan jarak
-                        CustomElevatedButton(
-                          onPressed: isLoading ? () {} : resetPassword,
-                          width: double.infinity,
-                          text: "Ubah Kata Sandi",
-                        ),
-                        SizedBox(height: 10),
-                        Divider(color: AppTheme.textColor),
-                        SizedBox(height: 10),
-                        InkWell(
-                          onTap: () {
-                            if (widget.isFromSettings) {
-                              context.pop();
-                            } else {
-                              context.pushAndRemoveAll(const LoginPagePhintar());
-                            }
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.arrow_back_ios,
-                                color: AppTheme.putih,
-                                size: 15,
-                              ),
-                              const SizedBox(width: 5),
-                              Text(
-                                widget.isFromSettings
-                                    ? "Kembali"
-                                    : "Kembali ke halaman login",
-                                style: AppTextStyle.normalText,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),
             ),
           ),
         ),
+      ),
     );
   }
 }

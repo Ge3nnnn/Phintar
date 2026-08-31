@@ -50,16 +50,6 @@ class _HomePagePhintarState extends State<HomePagePhintar> {
         context.push(Materi1Gelombag());
       },
     ),
-    _ModulItem(
-      title: 'Vektor dan Kinematika Gerak',
-      subtitle: 'Modul Fisika Dasar',
-      onTap: () {},
-    ),
-    _ModulItem(
-      title: 'Dinamika Rotasi',
-      subtitle: 'Modul Fisika Dasar',
-      onTap: () {},
-    ),
     // Tambahkan modul lain di sini
   ];
 
@@ -102,7 +92,7 @@ class _HomePagePhintarState extends State<HomePagePhintar> {
                 },
               ),
               const SizedBox(height: 16),
-              Text('Materi Materi', style: AppTextStyle.subjudul),
+              Text('Materi', style: AppTextStyle.subjudul),
               const Divider(color: AppTheme.textColor, thickness: 1),
               const SizedBox(height: 8),
 

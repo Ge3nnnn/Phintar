@@ -45,8 +45,9 @@ class _LabSimulationScreenState extends State<LabSimulationScreen>
   // ── Stopwatch ─────────────────────────────────────────────────────────────
   final Stopwatch _stopwatch = Stopwatch();
   Timer? _stopwatchTimer;
-  final ValueNotifier<Duration> _elapsedNotifier =
-      ValueNotifier<Duration>(Duration.zero);
+  final ValueNotifier<Duration> _elapsedNotifier = ValueNotifier<Duration>(
+    Duration.zero,
+  );
 
   @override
   void initState() {
@@ -73,15 +74,15 @@ class _LabSimulationScreenState extends State<LabSimulationScreen>
   // ── Physics calculations (generic pendulum, extensible) ───────────────────
   LabEnvironment get _currentEnv =>
       widget.lab.environments.isNotEmpty &&
-              _selectedEnvIndex < widget.lab.environments.length
-          ? widget.lab.environments[_selectedEnvIndex]
-          : const LabEnvironment(
-              name: 'Bumi',
-              emoji: '🌍',
-              gravity: 9.81,
-              drag: 0.5,
-              atmosphere: 'Default',
-            );
+          _selectedEnvIndex < widget.lab.environments.length
+      ? widget.lab.environments[_selectedEnvIndex]
+      : const LabEnvironment(
+          name: 'Bumi',
+          emoji: '🌍',
+          gravity: 9.81,
+          drag: 0.5,
+          atmosphere: 'Default',
+        );
 
   double get _gravity => _currentEnv.gravity;
   double get _ropeLength => _paramValues['ropeLength'] ?? 1.0;
@@ -91,8 +92,7 @@ class _LabSimulationScreenState extends State<LabSimulationScreen>
   /// Period for pendulum: T = 2π√(L/g)
   double get _periode => 2 * pi * sqrt(_ropeLength / _gravity);
 
-  double get _gamma =>
-      _airResistance ? (_currentEnv.drag / (2 * _mass)) : 0.0;
+  double get _gamma => _airResistance ? (_currentEnv.drag / (2 * _mass)) : 0.0;
   bool get _hasAtmosphere => _currentEnv.drag > 0.0;
 
   void _updateAnimationConfig() {
@@ -181,10 +181,8 @@ class _LabSimulationScreenState extends State<LabSimulationScreen>
             const SizedBox(height: 14),
 
             // ── Experiment Conditions ────────────────────────────────
-            if (widget.lab.environments.isNotEmpty)
-              _buildConditionsCard(),
-            if (widget.lab.environments.isNotEmpty)
-              const SizedBox(height: 14),
+            if (widget.lab.environments.isNotEmpty) _buildConditionsCard(),
+            if (widget.lab.environments.isNotEmpty) const SizedBox(height: 14),
 
             // ── Parameter Controls ───────────────────────────────────
             _buildControlsCard(),
@@ -255,14 +253,16 @@ class _LabSimulationScreenState extends State<LabSimulationScreen>
             builder: (context, _) {
               final u = _animController.value;
               final t = _stopwatch.elapsed.inMilliseconds / 1000.0;
-              final damping =
-                  _airResistance && _hasAtmosphere ? exp(-_gamma * t) : 1.0;
+              final damping = _airResistance && _hasAtmosphere
+                  ? exp(-_gamma * t)
+                  : 1.0;
               final maxAngleDeg = _angle * damping;
               final angleRad = -maxAngleDeg * cos(pi * u) * pi / 180;
 
               // Update parameters with animated angle for the simulation widget
               final animatedParams = Map<String, double>.from(_paramValues);
-              animatedParams['angle'] = angleRad * 180 / pi; // back to degrees for display
+              animatedParams['angle'] =
+                  angleRad * 180 / pi; // back to degrees for display
 
               return SimRegistry.build(
                 simType: widget.lab.simType,
@@ -286,7 +286,11 @@ class _LabSimulationScreenState extends State<LabSimulationScreen>
               Expanded(
                 child: OutlinedButton.icon(
                   onPressed: _reset,
-                  icon: const Icon(Icons.refresh, color: AppTheme.putih, size: 16),
+                  icon: const Icon(
+                    Icons.refresh,
+                    color: AppTheme.putih,
+                    size: 16,
+                  ),
                   label: Text('RESET', style: AppTextStyle.botttonText),
                   style: OutlinedButton.styleFrom(
                     side: const BorderSide(color: AppTheme.textColor),
@@ -300,7 +304,10 @@ class _LabSimulationScreenState extends State<LabSimulationScreen>
               const SizedBox(width: 8),
               Expanded(
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 11),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 11,
+                  ),
                   decoration: BoxDecoration(
                     color: AppTheme.backgroundPrimary,
                     borderRadius: BorderRadius.circular(8),
@@ -384,8 +391,11 @@ class _LabSimulationScreenState extends State<LabSimulationScreen>
         children: [
           Row(
             children: [
-              const Icon(Icons.science_outlined,
-                  color: AppTheme.bottonColor, size: 18),
+              const Icon(
+                Icons.science_outlined,
+                color: AppTheme.bottonColor,
+                size: 18,
+              ),
               const SizedBox(width: 8),
               Text(
                 'KONDISI EKSPERIMEN',
@@ -407,7 +417,10 @@ class _LabSimulationScreenState extends State<LabSimulationScreen>
             children: [
               Text('Tempat Percobaan', style: AppTextStyle.normalText),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
                 decoration: BoxDecoration(
                   color: AppTheme.backgroundPrimary,
                   borderRadius: BorderRadius.circular(8),
@@ -459,14 +472,12 @@ class _LabSimulationScreenState extends State<LabSimulationScreen>
           const SizedBox(height: 6),
 
           // ── Monitor rows for current parameters ────────────────────────
-          _monitorRow(
-            'Percepatan Gravitasi (g)',
-            '${_gravity.toStringAsFixed(2)} m/s²',
+          ...widget.lab.parameters.map(
+            (p) => _monitorRow(
+              p.label,
+              '${(_paramValues[p.key] ?? p.defaultValue).toStringAsFixed(2)}${p.unit}',
+            ),
           ),
-          ...widget.lab.parameters.map((p) => _monitorRow(
-                p.label,
-                '${(_paramValues[p.key] ?? p.defaultValue).toStringAsFixed(2)}${p.unit}',
-              )),
 
           // ── Air Resistance Switch ─────────────────────────────────────
           const Divider(color: AppTheme.textColor, height: 1, thickness: 0.3),
@@ -525,8 +536,9 @@ class _LabSimulationScreenState extends State<LabSimulationScreen>
               Switch(
                 value: _airResistance,
                 onChanged: (v) => setState(() => _airResistance = v),
-                activeThumbColor:
-                    _hasAtmosphere ? AppTheme.progressColor : AppTheme.merah,
+                activeThumbColor: _hasAtmosphere
+                    ? AppTheme.progressColor
+                    : AppTheme.merah,
                 activeTrackColor:
                     (_hasAtmosphere ? AppTheme.progressColor : AppTheme.merah)
                         .withValues(alpha: 0.3),

@@ -152,7 +152,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                       SizedBox(height: 10),
                       Row(
                         children: [
-                          Text("Alamat Email", style: AppTextStyle.normalText),
+                          Text("Alamat Email", style: AppTextStyle.normalText2),
                         ],
                       ),
                       SizedBox(height: 5),

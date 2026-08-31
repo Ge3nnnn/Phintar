@@ -151,19 +151,20 @@ class _RegisterScreenPhintarState extends State<RegisterScreenPhintar> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildFormField(
-              label: "USERNAME",
+              label: "Nama Pengguna",
               controller: _nameC,
               hint: "Anda ingin dikenal sebagai",
               icon: Icons.person,
               validator: (v) {
-                if (v == null || v.isEmpty)
+                if (v == null || v.isEmpty) {
                   return "Username tidak boleh kosong";
+                }
                 if (v.length < 3) return "Username terlalu pendek";
                 return null;
               },
             ),
             _buildFormField(
-              label: "EMAIL",
+              label: "Email",
               controller: _emailC,
               hint: "Daftarkan email anda",
               icon: Icons.mail_outline,
@@ -175,7 +176,7 @@ class _RegisterScreenPhintarState extends State<RegisterScreenPhintar> {
               },
             ),
             _buildFormField(
-              label: "PASSWORD",
+              label: "Kata Sandi",
               controller: _passwordC,
               hint: "Masukan kata sandi anda",
               icon: Icons.lock_outline,
@@ -189,7 +190,7 @@ class _RegisterScreenPhintarState extends State<RegisterScreenPhintar> {
               },
             ),
             _buildFormField(
-              label: "CONFIRM PASSWORD",
+              label: "Konfirmasi Kata Sandi",
               controller: _confirmPasswordC,
               hint: "Konfirmasi kata sandi anda",
               icon: Icons.lock_outline,

@@ -326,7 +326,7 @@ class RiwayatMateriSectionState extends State<RiwayatMateriSection> {
                   final item = data[index];
                   final id = item['id'] as int;
                   final materiId = item['materi_id'] as int;
-                  final materiName = item['materi_name'] as String;
+                  final materiName = getMateriTitle(materiId);
                   final durationSeconds = (item['duration_seconds'] as num)
                       .toInt();
                   final dateString = item['created_at'] as String;
