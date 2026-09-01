@@ -109,7 +109,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: Padding(
-          padding: const EdgeInsets.all(15.0),
+            padding: const EdgeInsets.all(15.0),
             child: Container(
               width: double.infinity,
               decoration: BoxDecoration(
@@ -177,7 +177,9 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                       ),
                       SizedBox(height: 20), // Tambahan jarak
                       CustomElevatedButton(
-                        onPressed: isLoading ? () {} : verifyEmail, // Handle disabled state in verifyEmail or just empty func
+                        onPressed: isLoading
+                            ? () {}
+                            : verifyEmail, // Handle disabled state in verifyEmail or just empty func
                         width: double.infinity,
                         text: "Lanjut Ubah Kata Sandi",
                       ),

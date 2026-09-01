@@ -1,6 +1,7 @@
 import 'package:blabla/constants/app_theme.dart';
 import 'package:blabla/constants/app_typografy.dart';
 import 'package:blabla/data/database/db_materi.dart';
+import 'package:blabla/models/preference_handler.dart';
 import 'package:blabla/widgets/app_button.dart';
 import 'package:blabla/widgets/bottom_nav/bottom_nav_bar_phintar.dart';
 import 'package:blabla/widgets/extention/navigator.dart';
@@ -67,6 +68,7 @@ class _Materi2GelombagState extends State<Materi2Gelombag> {
   Future<void> _saveMateriHistory() async {
     final durationSeconds = DateTime.now().difference(_startTime).inSeconds;
     await DatabaseHelperMateri.instance.insertHistory(
+      userEmail: PreferenceHandler.userEmail,
       materiId: 1,
       materiName: '1.2 Visualisasi Gelombang Harmonik',
       durationSeconds: durationSeconds,

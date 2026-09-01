@@ -1,6 +1,7 @@
 import 'package:blabla/constants/app_theme.dart';
 import 'package:blabla/constants/app_typografy.dart';
 import 'package:blabla/data/database/db_materi.dart';
+import 'package:blabla/models/preference_handler.dart';
 import 'package:blabla/views/6_materi/Gelombang_dan_materi/2_gelombang_dan_osilasi.dart';
 import 'package:blabla/widgets/app_button.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +33,7 @@ class _Materi1State extends State<Materi1Gelombag> {
   Future<void> _saveMateriHistory() async {
     final durationSeconds = DateTime.now().difference(_startTime).inSeconds;
     await DatabaseHelperMateri.instance.insertHistory(
+      userEmail: PreferenceHandler.userEmail,
       materiId: 1,
       materiName: '1.1 Pengantar Gelombang dan Osilasi',
       durationSeconds: durationSeconds,

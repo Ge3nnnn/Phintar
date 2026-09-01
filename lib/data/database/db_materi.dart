@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:blabla/data/models/materi_history_model.dart';
+import 'package:blabla/models/preference_handler.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -23,7 +24,12 @@ class DatabaseHelperMateri {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filePath);
 
-    return await openDatabase(path, version: 1, onCreate: _createDB);
+    return await openDatabase(
+      path,
+      version: 2,
+      onCreate: _createDB,
+      onUpgrade: _onUpgrade,
+    );
   }
 
   // CREATE TABLE
@@ -31,6 +37,7 @@ class DatabaseHelperMateri {
     await db.execute('''
       CREATE TABLE $tableMateriHistories (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_email TEXT NOT NULL,
         materi_id INTEGER NOT NULL,
         materi_name TEXT NOT NULL,
         duration_seconds INTEGER NOT NULL,
@@ -39,22 +46,41 @@ class DatabaseHelperMateri {
     ''');
   }
 
+  Future _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < 2) {
+      await db.execute(
+        "ALTER TABLE $tableMateriHistories ADD COLUMN user_email TEXT NOT NULL DEFAULT ''",
+      );
+    }
+  }
+
+  String _resolveEmail(String? userEmail) {
+    if (userEmail != null && userEmail.isNotEmpty) {
+      return userEmail;
+    }
+    return PreferenceHandler.userEmail;
+  }
+
   // OPERASI CRUD
 
-  // 1. CREATE or UPDATE: Menyimpan riwayat belajar materi (kapan & berapa lama)
+  // 1. CREATE or UPDATE: Menyimpan riwayat belajar materi per user (kapan & berapa lama)
   Future<int> insertHistory({
+    String? userEmail,
     required int materiId,
     required String materiName,
     required int durationSeconds,
   }) async {
+    final email = _resolveEmail(userEmail);
     final db = await instance.database;
-    // update data
-    final existing = await getHistoriesByMateri(materiId);
+
+    // Cek histori materi untuk user tertentu
+    final existing = await getHistoriesByMateri(materiId, userEmail: email);
     if (existing.isNotEmpty) {
       final existingSeconds =
           (existing.first['duration_seconds'] as num?)?.toInt() ?? 0;
       final historyModel = MateriHistoryModel(
         id: (existing.first['id'] as num?)?.toInt(),
+        userEmail: email,
         materiId: materiId,
         materiName: materiName,
         durationSeconds: durationSeconds + existingSeconds,
@@ -64,6 +90,7 @@ class DatabaseHelperMateri {
     }
 
     final historyModel = MateriHistoryModel(
+      userEmail: email,
       materiId: materiId,
       materiName: materiName,
       durationSeconds: durationSeconds,
@@ -76,31 +103,44 @@ class DatabaseHelperMateri {
   // CREATE or UPDATE menggunakan Model langsung
   Future<int> insertHistoryModel(MateriHistoryModel history) async {
     return await insertHistory(
+      userEmail: history.userEmail,
       materiId: history.materiId,
       materiName: history.materiName,
       durationSeconds: history.durationSeconds,
     );
   }
 
-  // 2. READ: Mengambil semua histori (diurutkan dari yang terbaru)
-  Future<List<Map<String, dynamic>>> getAllHistories() async {
-    final db = await instance.database;
-    return await db.query(tableMateriHistories, orderBy: 'created_at DESC');
-  }
-
-  // READ: Mengambil semua histori dalam bentuk Model
-  Future<List<MateriHistoryModel>> getAllHistoryModels() async {
-    final list = await getAllHistories();
-    return list.map((map) => MateriHistoryModel.fromMap(map)).toList();
-  }
-
-  // READ: Mengambil histori untuk materi tertentu saja
-  Future<List<Map<String, dynamic>>> getHistoriesByMateri(int materiId) async {
+  // 2. READ: Mengambil semua histori untuk user tertentu (diurutkan dari yang terbaru)
+  Future<List<Map<String, dynamic>>> getAllHistories({String? userEmail}) async {
+    final email = _resolveEmail(userEmail);
     final db = await instance.database;
     return await db.query(
       tableMateriHistories,
-      where: 'materi_id = ?',
-      whereArgs: [materiId],
+      where: 'user_email = ?',
+      whereArgs: [email],
+      orderBy: 'created_at DESC',
+    );
+  }
+
+  // READ: Mengambil semua histori user dalam bentuk Model
+  Future<List<MateriHistoryModel>> getAllHistoryModels({
+    String? userEmail,
+  }) async {
+    final list = await getAllHistories(userEmail: userEmail);
+    return list.map((map) => MateriHistoryModel.fromMap(map)).toList();
+  }
+
+  // READ: Mengambil histori untuk materi tertentu dari user tertentu
+  Future<List<Map<String, dynamic>>> getHistoriesByMateri(
+    int materiId, {
+    String? userEmail,
+  }) async {
+    final email = _resolveEmail(userEmail);
+    final db = await instance.database;
+    return await db.query(
+      tableMateriHistories,
+      where: 'materi_id = ? AND user_email = ?',
+      whereArgs: [materiId, email],
       orderBy: 'created_at DESC',
     );
   }
@@ -132,31 +172,6 @@ class DatabaseHelperMateri {
       whereArgs: [id],
     );
   }
-
-  // Ringkasan statistik (jumlah materi dipelajari & total waktu belajar)
-  // Future<Map<String, dynamic>> getSummaryStats() async {
-  //   final db = await instance.database;
-  //   final result = await db.rawQuery('''
-  //     SELECT
-  //       COUNT(*) as total,
-  //       SUM(duration_seconds) as total_duration,
-  //       AVG(duration_seconds) as avg_duration
-  //     FROM $tableMateriHistories
-  //   ''');
-  //   if (result.isNotEmpty) {
-  //     final total = (result.first['total'] as num?)?.toInt() ?? 0;
-  //     final totalDuration =
-  //         (result.first['total_duration'] as num?)?.toInt() ?? 0;
-  //     final avgDuration =
-  //         (result.first['avg_duration'] as num?)?.toDouble() ?? 0.0;
-  //     return {
-  //       'total': total,
-  //       'totalDuration': totalDuration,
-  //       'avgDuration': avgDuration,
-  //     };
-  //   }
-  //   return {'total': 0, 'totalDuration': 0, 'avgDuration': 0.0};
-  // }
 
   Future close() async {
     final db = await instance.database;

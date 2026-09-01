@@ -3,6 +3,8 @@ import 'package:blabla/constants/app_typografy.dart';
 import 'package:blabla/data/database/db_quiz.dart';
 import 'package:blabla/data/models/quiz_history_model.dart';
 import 'package:blabla/data/models/quiz_model.dart';
+import 'package:blabla/models/preference_handler.dart';
+import 'package:blabla/views/5_features/kuis_page/quiz_review_screen.dart';
 import 'package:blabla/widgets/app_bar.dart';
 import 'package:flutter/material.dart';
 
@@ -42,7 +44,6 @@ class _QuizScreenState extends State<QuizScreen> {
   int? _selectedAnswer;
   bool _answered = false;
   bool _finished = false;
-  bool _isReviewMode = false;
 
   /// Tracks the status of every question (unattempted / answered / unsure).
   late List<QuestionStatus> _questionStatus;
@@ -107,7 +108,6 @@ class _QuizScreenState extends State<QuizScreen> {
 
   /// Scrolls the question-number navigation bar so that [index] is visible.
   void _scrollToNumber(int index) {
-    // Each number circle is 36 wide + 8 margin = 44 effective width.
     const double itemWidth = 44;
     final double targetOffset =
         (index * itemWidth) -
@@ -125,7 +125,6 @@ class _QuizScreenState extends State<QuizScreen> {
   /// Handles answer selection. During active quiz, allows changing answers
   /// before proceeding.
   void _selectAnswer(int index) {
-    if (_isReviewMode) return;
     setState(() {
       _selectedAnswer = index;
       _answered = false; // Reset so user must confirm new answer
@@ -168,29 +167,36 @@ class _QuizScreenState extends State<QuizScreen> {
       for (int i = 0; i < _questions.length; i++) {
         if (!_savedAnswers.containsKey(i)) {
           allAnswered = false;
-          if (firstUnansweredOrUnsureIndex == -1) firstUnansweredOrUnsureIndex = i;
+          if (firstUnansweredOrUnsureIndex == -1) {
+            firstUnansweredOrUnsureIndex = i;
+          }
         } else if (_questionStatus[i] == QuestionStatus.unsure) {
           anyUnsure = true;
-          if (firstUnansweredOrUnsureIndex == -1) firstUnansweredOrUnsureIndex = i;
+          if (firstUnansweredOrUnsureIndex == -1) {
+            firstUnansweredOrUnsureIndex = i;
+          }
         }
       }
 
       if (!allAnswered || anyUnsure) {
-        String message = !allAnswered 
-            ? 'Harap jawab semua pertanyaan terlebih dahulu!' 
+        String message = !allAnswered
+            ? 'Harap jawab semua pertanyaan terlebih dahulu!'
             : 'Masih ada pertanyaan yang ditandai ragu-ragu!';
-            
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
               message,
-              style: const TextStyle(color: AppTheme.putih, fontWeight: FontWeight.w600),
+              style: const TextStyle(
+                color: AppTheme.putih,
+                fontWeight: FontWeight.w600,
+              ),
             ),
             backgroundColor: AppTheme.merah,
             behavior: SnackBarBehavior.floating,
           ),
         );
-        
+
         if (firstUnansweredOrUnsureIndex != -1) {
           _goToQuestion(firstUnansweredOrUnsureIndex);
         }
@@ -212,6 +218,7 @@ class _QuizScreenState extends State<QuizScreen> {
         .roundToDouble();
     await DatabaseHelperQuiz.instance.insertHistoryModel(
       QuizHistoryModel(
+        userEmail: PreferenceHandler.userEmail,
         quizId: widget.quiz.id,
         score: percentage,
         createdAt: DateTime.now().toIso8601String(),
@@ -223,7 +230,6 @@ class _QuizScreenState extends State<QuizScreen> {
   /// question 1 without leaving the screen.
   void _restart() {
     setState(() {
-      _isReviewMode = false;
       _currentIndex = 0;
       _selectedAnswer = null;
       _answered = false;
@@ -310,19 +316,18 @@ class _QuizScreenState extends State<QuizScreen> {
               icon: Icons.menu_book_rounded,
               color: AppTheme.progressColor,
               onTap: () {
-                setState(() {
-                  _isReviewMode = true;
-                  _finished = false;
-                  _currentIndex = 0;
-                  if (_savedAnswers.containsKey(0)) {
-                    _selectedAnswer = _savedAnswers[0];
-                    _answered = true;
-                  } else {
-                    _selectedAnswer = null;
-                    _answered = false;
-                  }
-                  _scrollToNumber(0);
-                });
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => QuizReviewScreen(
+                      quiz: widget.quiz,
+                      userAnswers: _savedAnswers,
+                      onRetry: () {
+                        Navigator.of(context).pop();
+                        _restart();
+                      },
+                    ),
+                  ),
+                );
               },
             ),
             const SizedBox(height: 12),
@@ -379,8 +384,8 @@ class _QuizScreenState extends State<QuizScreen> {
   // ─── Quiz Page ────────────────────────────────────────────────────────────
 
   /// Builds the active quiz view: question-number navigation bar, topic
-  /// badge, question card, answer options with correct/wrong highlighting,
-  /// explanation box, and "Jawab" / "Ragu-Ragu" action buttons.
+  /// badge, question card, answer options with selection highlighting,
+  /// and "Jawab" / "Ragu-Ragu" action buttons.
   Widget _buildQuizPage() {
     final question = _questions[_currentIndex];
     final total = _questions.length;
@@ -405,16 +410,6 @@ class _QuizScreenState extends State<QuizScreen> {
                     letterSpacing: 1,
                   ),
                 ),
-                if (_isReviewMode)
-                  Text(
-                    'Skor: $_score',
-                    style: const TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w600,
-                      color: AppTheme.progressColor,
-                      letterSpacing: 1,
-                    ),
-                  ),
               ],
             ),
             const SizedBox(height: 10),
@@ -464,26 +459,14 @@ class _QuizScreenState extends State<QuizScreen> {
             // ── Options ──
             ...List.generate(question.options.length, (i) {
               final isSelected = _selectedAnswer == i;
-              final isCorrect = i == question.correctIndex;
 
-              Color bgColor = AppTheme.backgroundSecondary;
-              Color borderColor = AppTheme.borderColor;
+              Color bgColor = isSelected
+                  ? AppTheme.primaryTranslucent
+                  : AppTheme.backgroundSecondary;
+              Color borderColor = isSelected
+                  ? AppTheme.bottonColor
+                  : AppTheme.borderColor;
               Color textColor = AppTheme.putih;
-
-              if (_isReviewMode) {
-                if (isCorrect) {
-                  bgColor = AppTheme.successTranslucent;
-                  borderColor = AppTheme.progressColor;
-                  textColor = AppTheme.progressColor;
-                } else if (isSelected && !isCorrect) {
-                  bgColor = AppTheme.errorTranslucent;
-                  borderColor = AppTheme.merah;
-                  textColor = AppTheme.merah;
-                }
-              } else if (isSelected) {
-                bgColor = AppTheme.primaryTranslucent;
-                borderColor = AppTheme.bottonColor;
-              }
 
               return Padding(
                 padding: const EdgeInsets.only(bottom: 10),
@@ -505,33 +488,19 @@ class _QuizScreenState extends State<QuizScreen> {
                           height: 28,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: _isReviewMode && isCorrect
-                                ? AppTheme.progressColor
-                                : _isReviewMode && isSelected && !isCorrect
-                                ? AppTheme.merah
+                            color: isSelected
+                                ? AppTheme.bottonColor
                                 : AppTheme.backgroundPrimary,
                           ),
                           child: Center(
-                            child: _isReviewMode && isCorrect
-                                ? const Icon(
-                                    Icons.check,
-                                    color: AppTheme.putih,
-                                    size: 16,
-                                  )
-                                : _isReviewMode && isSelected && !isCorrect
-                                ? const Icon(
-                                    Icons.close,
-                                    color: AppTheme.putih,
-                                    size: 16,
-                                  )
-                                : Text(
-                                    String.fromCharCode(65 + i), // A, B, C, D
-                                    style: TextStyle(
-                                      color: textColor,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 13,
-                                    ),
-                                  ),
+                            child: Text(
+                              String.fromCharCode(65 + i), // A, B, C, D
+                              style: TextStyle(
+                                color: isSelected ? AppTheme.putih : textColor,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13,
+                              ),
+                            ),
                           ),
                         ),
                         const SizedBox(width: 12),
@@ -550,82 +519,12 @@ class _QuizScreenState extends State<QuizScreen> {
               );
             }),
 
-            // ── Explanation (shown after answering) ──
-            if (_isReviewMode && question.explanation != null)
-              Container(
-                width: double.infinity,
-                margin: const EdgeInsets.only(top: 4, bottom: 8),
-                padding: const EdgeInsets.all(14),
-                decoration: BoxDecoration(
-                  color: AppTheme.primaryTranslucent,
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                    color: AppTheme.bottonColor.withValues(alpha: 0.3),
-                  ),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.lightbulb_outline,
-                          color: AppTheme.bottonColor,
-                          size: 16,
-                        ),
-                        const SizedBox(width: 6),
-                        Text(
-                          'Pembahasan',
-                          style: AppTextStyle.smallText.copyWith(
-                            color: AppTheme.bottonColor,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      question.explanation!,
-                      style: AppTextStyle.normalText2.copyWith(height: 1.5),
-                    ),
-                  ],
-                ),
-              ),
-
             const SizedBox(height: 8),
 
             // ── Answer / Unsure / Next Buttons ──
-            if (!_answered && _selectedAnswer != null && !_isReviewMode)
+            if (!_answered && _selectedAnswer != null)
               _buildAnswerUnsureButtons(),
-            if (_isReviewMode)
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {
-                    if (_currentIndex < _questions.length - 1) {
-                      _goToQuestion(_currentIndex + 1);
-                    } else {
-                      setState(() {
-                        _finished = true; // Go back to result page
-                      });
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.bottonColor,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: Text(
-                    _currentIndex < _questions.length - 1
-                        ? 'Pertanyaan Selanjutnya'
-                        : 'Selesai Review',
-                    style: AppTextStyle.botttonText,
-                  ),
-                ),
-              )
-            else if (_answered)
+            if (_answered)
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -654,7 +553,7 @@ class _QuizScreenState extends State<QuizScreen> {
   // ─── Question Number Navigation Bar ───────────────────────────────────────
 
   /// Builds a horizontally scrollable row of numbered circles.
-  /// Each circle is color-coded by [QuestionStatus] (or correctness if in review mode).
+  /// Each circle is color-coded by [QuestionStatus].
   Widget _buildQuestionNumberBar(int total) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 8),
@@ -672,33 +571,23 @@ class _QuizScreenState extends State<QuizScreen> {
             final isCurrent = i == _currentIndex;
             final status = _questionStatus[i];
 
-            // Determine circle background color based on status and mode.
             Color circleBg = AppTheme.backgroundPrimary;
-
-            if (_isReviewMode) {
-              if (_savedAnswers.containsKey(i)) {
-                final isCorrect =
-                    _savedAnswers[i] == _questions[i].correctIndex;
-                circleBg = isCorrect ? AppTheme.progressColor : AppTheme.merah;
-              }
-            } else {
-              switch (status) {
-                case QuestionStatus.answered:
-                  circleBg = AppTheme.bottonColor; // blue
-                  break;
-                case QuestionStatus.unsure:
-                  circleBg = AppTheme.kuning; // yellow
-                  break;
-                case QuestionStatus.unattempted:
-                  circleBg = AppTheme.backgroundPrimary; // default
-                  break;
-              }
+            switch (status) {
+              case QuestionStatus.answered:
+                circleBg = AppTheme.bottonColor; // blue
+                break;
+              case QuestionStatus.unsure:
+                circleBg = AppTheme.kuning; // yellow
+                break;
+              case QuestionStatus.unattempted:
+                circleBg = AppTheme.backgroundPrimary; // default
+                break;
             }
 
-            // Text color: white on colored backgrounds, textColor on default.
-            final Color numTextColor = circleBg == AppTheme.backgroundPrimary
-                ? (isCurrent ? AppTheme.putih : AppTheme.textColor)
-                : AppTheme.putih;
+            final Color numTextColor =
+                circleBg == AppTheme.backgroundPrimary
+                    ? (isCurrent ? AppTheme.putih : AppTheme.textColor)
+                    : AppTheme.putih;
 
             return GestureDetector(
               onTap: () => _goToQuestion(i),

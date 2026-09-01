@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:blabla/data/models/quiz_history_model.dart';
+import 'package:blabla/models/preference_handler.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -22,7 +23,12 @@ class DatabaseHelperQuiz {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filePath);
 
-    return await openDatabase(path, version: 1, onCreate: _createDB);
+    return await openDatabase(
+      path,
+      version: 2,
+      onCreate: _createDB,
+      onUpgrade: _onUpgrade,
+    );
   }
 
   // CREATE TABLE - Versi Sederhana
@@ -30,6 +36,7 @@ class DatabaseHelperQuiz {
     await db.execute('''
       CREATE TABLE $tableQuizHistories (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_email TEXT NOT NULL,
         quiz_id INTEGER NOT NULL,
         score REAL NOT NULL,
         created_at TEXT NOT NULL
@@ -37,17 +44,34 @@ class DatabaseHelperQuiz {
     ''');
   }
 
+  Future _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < 2) {
+      await db.execute(
+        "ALTER TABLE $tableQuizHistories ADD COLUMN user_email TEXT NOT NULL DEFAULT ''",
+      );
+    }
+  }
+
+  String _resolveEmail(String? userEmail) {
+    if (userEmail != null && userEmail.isNotEmpty) {
+      return userEmail;
+    }
+    return PreferenceHandler.userEmail;
+  }
+
   // OPERASI CRUD
-  // 1. CREATE or UPDATE: Menyimpan skor dan waktu kuis
+  // 1. CREATE or UPDATE: Menyimpan skor dan waktu kuis per user
   Future<int> insertHistory(Map<String, dynamic> row) async {
     final db = await instance.database;
+    final email = _resolveEmail(row['user_email'] as String?);
 
     int quizId = (row['quiz_id'] as num).toInt();
-    final existing = await getHistoriesByQuiz(quizId);
+    final existing = await getHistoriesByQuiz(quizId, userEmail: email);
 
     if (existing.isNotEmpty) {
       final updatedModel = QuizHistoryModel(
         id: (existing.first['id'] as num?)?.toInt(),
+        userEmail: email,
         quizId: quizId,
         score: (row['score'] as num).toDouble(),
         createdAt: DateTime.now().toIso8601String(),
@@ -56,6 +80,7 @@ class DatabaseHelperQuiz {
     }
 
     final newModel = QuizHistoryModel(
+      userEmail: email,
       quizId: quizId,
       score: (row['score'] as num).toDouble(),
       createdAt: DateTime.now().toIso8601String(),
@@ -66,28 +91,48 @@ class DatabaseHelperQuiz {
 
   // CREATE or UPDATE menggunakan Model langsung
   Future<int> insertHistoryModel(QuizHistoryModel history) async {
-    return await insertHistory(history.toMap());
+    final email = _resolveEmail(history.userEmail);
+    final historyWithEmail = QuizHistoryModel(
+      id: history.id,
+      userEmail: email,
+      quizId: history.quizId,
+      score: history.score,
+      createdAt: history.createdAt,
+    );
+    return await insertHistory(historyWithEmail.toMap());
   }
 
-  // 2. READ: Mengambil semua histori (diurutkan dari yang terbaru)
-  Future<List<Map<String, dynamic>>> getAllHistories() async {
-    final db = await instance.database;
-    return await db.query(tableQuizHistories, orderBy: 'created_at DESC');
-  }
-
-  // READ: Mengambil semua histori dalam bentuk Model
-  Future<List<QuizHistoryModel>> getAllHistoryModels() async {
-    final list = await getAllHistories();
-    return list.map((map) => QuizHistoryModel.fromMap(map)).toList();
-  }
-
-  // READ: Mengambil histori untuk kuis tertentu saja
-  Future<List<Map<String, dynamic>>> getHistoriesByQuiz(int quizId) async {
+  // 2. READ: Mengambil semua histori untuk user tertentu (diurutkan dari yang terbaru)
+  Future<List<Map<String, dynamic>>> getAllHistories({String? userEmail}) async {
+    final email = _resolveEmail(userEmail);
     final db = await instance.database;
     return await db.query(
       tableQuizHistories,
-      where: 'quiz_id = ?',
-      whereArgs: [quizId],
+      where: 'user_email = ?',
+      whereArgs: [email],
+      orderBy: 'created_at DESC',
+    );
+  }
+
+  // READ: Mengambil semua histori user dalam bentuk Model
+  Future<List<QuizHistoryModel>> getAllHistoryModels({
+    String? userEmail,
+  }) async {
+    final list = await getAllHistories(userEmail: userEmail);
+    return list.map((map) => QuizHistoryModel.fromMap(map)).toList();
+  }
+
+  // READ: Mengambil histori untuk kuis tertentu dari user tertentu
+  Future<List<Map<String, dynamic>>> getHistoriesByQuiz(
+    int quizId, {
+    String? userEmail,
+  }) async {
+    final email = _resolveEmail(userEmail);
+    final db = await instance.database;
+    return await db.query(
+      tableQuizHistories,
+      where: 'quiz_id = ? AND user_email = ?',
+      whereArgs: [quizId, email],
       orderBy: 'created_at DESC',
     );
   }
@@ -119,29 +164,6 @@ class DatabaseHelperQuiz {
       whereArgs: [id],
     );
   }
-
-  // Ringkasan statistik (jumlah kuis & rata-rata nilai)
-  // Future<Map<String, dynamic>> getSummaryStats() async {
-  //   final db = await instance.database;
-  //   final result = await db.rawQuery('''
-  //     SELECT
-  //       COUNT(*) as total,
-  //       AVG(score) as average_score,
-  //       MAX(score) as max_score
-  //     FROM $tableQuizHistories
-  //   ''');
-  //   if (result.isNotEmpty) {
-  //     final total = (result.first['total'] as num?)?.toInt() ?? 0;
-  //     final avg = (result.first['average_score'] as num?)?.toDouble() ?? 0.0;
-  //     final max = (result.first['max_score'] as num?)?.toDouble() ?? 0.0;
-  //     return {
-  //       'total': total,
-  //       'averageScore': avg,
-  //       'maxScore': max,
-  //     };
-  //   }
-  //   return {'total': 0, 'averageScore': 0.0, 'maxScore': 0.0};
-  // }
 
   Future close() async {
     final db = await instance.database;
