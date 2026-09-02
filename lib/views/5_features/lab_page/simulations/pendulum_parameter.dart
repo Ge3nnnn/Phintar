@@ -30,10 +30,10 @@ class PendulumSimulation extends StatelessWidget {
   double get _ropeLength => parameters['ropeLength'] ?? 1.0;
   double get _mass => parameters['mass'] ?? 1.0;
 
-  /// Canvas height scales with rope length.
+  /// Canvas height scales with rope length — enlarged for clearer visualization.
   double get _canvasHeight {
-    const minH = 100.0;
-    const maxH = 220.0;
+    const minH = 240.0;
+    const maxH = 380.0;
     const minL = 0.1;
     const maxL = 3.0;
     return minH + (_ropeLength - minL) / (maxL - minL) * (maxH - minH);
@@ -47,7 +47,7 @@ class PendulumSimulation extends StatelessWidget {
       height: _canvasHeight,
       decoration: BoxDecoration(
         color: AppTheme.backgroundPrimary,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(10),
       ),
       child: CustomPaint(
         painter: _PendulumPainter(
@@ -76,12 +76,12 @@ class _PendulumPainter extends CustomPainter {
   });
 
   static final Paint _dashPaint = Paint()
-    ..color = AppTheme.textColor
+    ..color = AppTheme.textColor.withValues(alpha: 0.6)
     ..strokeWidth = 1;
 
   static final Paint _ropePaint = Paint()
     ..color = AppTheme.putih
-    ..strokeWidth = 2
+    ..strokeWidth = 2.2
     ..style = PaintingStyle.stroke;
 
   static final Paint _pivotPaint = Paint()..color = AppTheme.textColor;
@@ -89,20 +89,20 @@ class _PendulumPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final pivotX = size.width / 2;
-    const pivotY = 12.0;
+    const pivotY = 16.0;
 
-    // Rope length visual: 30% – 85% of canvas height
-    const minFrac = 0.30;
-    const maxFrac = 0.85;
+    // Rope length visual: 35% – 82% of canvas height
+    const minFrac = 0.35;
+    const maxFrac = 0.82;
     const minL = 0.1;
     const maxL = 3.0;
     final fraction =
         minFrac + (ropeLengthM - minL) / (maxL - minL) * (maxFrac - minFrac);
     final ropeLength = size.height * fraction.clamp(minFrac, maxFrac);
 
-    // Bob radius: 8 – 22 px based on mass
-    const minR = 8.0;
-    const maxR = 22.0;
+    // Bob radius: 10 – 26 px based on mass
+    const minR = 10.0;
+    const maxR = 26.0;
     const minM = 0.1;
     const maxM = 5.0;
     final bobRadius = (minR + (massaKg - minM) / (maxM - minM) * (maxR - minR))
@@ -126,22 +126,22 @@ class _PendulumPainter extends CustomPainter {
     _drawText(
       canvas,
       '${ropeLengthM.toStringAsFixed(1)} m',
-      Offset(pivotX + 6, pivotY + ropeLength / 2 - 6),
+      Offset(pivotX + 8, pivotY + ropeLength / 2 - 8),
       const TextStyle(
         color: AppTheme.textColor,
-        fontSize: 9,
-        fontWeight: FontWeight.w500,
+        fontSize: 11,
+        fontWeight: FontWeight.w600,
       ),
     );
 
     // ── Pivot point ─────────────────────────────────────────────────────────
-    canvas.drawCircle(Offset(pivotX, pivotY), 4, _pivotPaint);
+    canvas.drawCircle(Offset(pivotX, pivotY), 5, _pivotPaint);
 
-    // ── Bob glow ────────────────────────────────────────────────────────────
+    // ── Bob glow ────────────────────────────────────────────────────
     final glowPaint = Paint()
-      ..color = const Color(0xFF3B82F6).withValues(alpha: 0.25)
-      ..maskFilter = MaskFilter.blur(BlurStyle.normal, bobRadius * 0.5);
-    canvas.drawCircle(Offset(bobX, bobY), bobRadius * 1.3, glowPaint);
+      ..color = const Color(0xFF3B82F6).withValues(alpha: 0.3)
+      ..maskFilter = MaskFilter.blur(BlurStyle.normal, bobRadius * 0.6);
+    canvas.drawCircle(Offset(bobX, bobY), bobRadius * 1.35, glowPaint);
 
     // ── Bob with gradient ───────────────────────────────────────────────────
     final bobGrad = Paint()
@@ -156,16 +156,20 @@ class _PendulumPainter extends CustomPainter {
 
     // ── Mass label inside bob (if large enough) ─────────────────────────────
     if (bobRadius >= 12) {
-      _drawText(
-        canvas,
-        '${massaKg.toStringAsFixed(1)}kg',
-        Offset(bobX - bobRadius * 0.6, bobY - 5),
-        const TextStyle(
-          color: AppTheme.putih,
-          fontSize: 8,
-          fontWeight: FontWeight.bold,
+      final text = '${massaKg.toStringAsFixed(1)}kg';
+      final tp = TextPainter(
+        text: TextSpan(
+          text: text,
+          style: const TextStyle(
+            color: AppTheme.putih,
+            fontSize: 9,
+            fontWeight: FontWeight.bold,
+          ),
         ),
+        textDirection: TextDirection.ltr,
       );
+      tp.layout();
+      tp.paint(canvas, Offset(bobX - tp.width / 2, bobY - tp.height / 2));
     }
   }
 

@@ -1,5 +1,5 @@
 import 'package:blabla/data/models/lab_model.dart';
-import 'package:blabla/views/5_features/lab_page/simulations/pendulum_simulation.dart';
+import 'package:blabla/views/5_features/lab_page/simulations/pendulum_parameter.dart';
 import 'package:flutter/material.dart';
 
 /// Registry that maps simulation type strings to physics engine widgets.

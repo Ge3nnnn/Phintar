@@ -69,6 +69,15 @@ class _LabSimulationScreenState extends State<LabSimulationScreen>
         _animController.forward();
       }
     });
+
+    // Automatically pop up the guide dialog after entering the lab
+    if (widget.lab.guideText != null && widget.lab.guideText!.isNotEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          _showGuideDialog();
+        }
+      });
+    }
   }
 
   // ── Physics calculations (generic pendulum, extensible) ───────────────────
@@ -147,6 +156,143 @@ class _LabSimulationScreenState extends State<LabSimulationScreen>
     return '$mm:$ss.$ds';
   }
 
+  /// Displays the guide as a modal popup dialog
+  void _showGuideDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext ctx) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          insetPadding: const EdgeInsets.symmetric(
+            horizontal: 20,
+            vertical: 24,
+          ),
+          child: Container(
+            constraints: const BoxConstraints(maxWidth: 420),
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: AppTheme.backgroundSecondary,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: AppTheme.bottonColor.withValues(alpha: 0.35),
+                width: 1.5,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.5),
+                  blurRadius: 24,
+                  offset: const Offset(0, 10),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Header with icon & title & close button
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: AppTheme.backgroundTertiary,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Icon(
+                        Icons.lightbulb_outline_rounded,
+                        color: AppTheme.bottonColor,
+                        size: 22,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Panduan Eksperimen',
+                            style: AppTextStyle.subjudul.copyWith(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            widget.lab.title,
+                            style: AppTextStyle.normalText.copyWith(
+                              color: AppTheme.textColor,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(
+                        Icons.close,
+                        color: AppTheme.textColor,
+                        size: 20,
+                      ),
+                      onPressed: () => Navigator.of(ctx).pop(),
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 14),
+                const Divider(
+                  color: AppTheme.textColor,
+                  height: 1,
+                  thickness: 0.3,
+                ),
+                const SizedBox(height: 14),
+
+                // Guide Content (Scrollable if lengthy)
+                Flexible(
+                  child: SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    child: Text(
+                      widget.lab.guideText ?? '',
+                      style: AppTextStyle.normalText.copyWith(
+                        color: AppTheme.putih,
+                        height: 1.6,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+
+                // Button "Mengerti & Mulai"
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    onPressed: () => Navigator.of(ctx).pop(),
+                    icon: const Icon(Icons.play_arrow_rounded, size: 20),
+                    label: const Text(
+                      'Mengerti & Mulai',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppTheme.bottonColor,
+                      foregroundColor: AppTheme.putih,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   void dispose() {
     _stopwatchTimer?.cancel();
@@ -163,6 +309,17 @@ class _LabSimulationScreenState extends State<LabSimulationScreen>
       appBar: CustomAppBar2(
         title: "Lab: ${widget.lab.title}",
         prefixIcon: Icons.arrow_back,
+        actions: [
+          if (widget.lab.guideText != null && widget.lab.guideText!.isNotEmpty)
+            IconButton(
+              tooltip: 'Panduan Eksperimen',
+              icon: const Icon(
+                Icons.help_outline_rounded,
+                color: AppTheme.putih,
+              ),
+              onPressed: _showGuideDialog,
+            ),
+        ],
       ),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -170,13 +327,7 @@ class _LabSimulationScreenState extends State<LabSimulationScreen>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ── Guide Card ───────────────────────────────────────────
-            if (widget.lab.guideText != null &&
-                widget.lab.guideText!.isNotEmpty)
-              _buildGuideCard(),
-            const SizedBox(height: 14),
-
-            // ── Visualization Card ───────────────────────────────────
+            // ── Visualization Card (Top & enlarged) ──────────────────
             _buildVisualizationCard(),
             const SizedBox(height: 14),
 
@@ -193,56 +344,75 @@ class _LabSimulationScreenState extends State<LabSimulationScreen>
     );
   }
 
-  // ── Guide Card ────────────────────────────────────────────────────────────
-  Widget _buildGuideCard() {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppTheme.backgroundSecondary,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Panduan Eksperimen',
-            style: AppTextStyle.subjudul.copyWith(fontSize: 20),
-          ),
-          const SizedBox(height: 10),
-          Text(
-            widget.lab.guideText!,
-            style: AppTextStyle.normalText.copyWith(
-              color: AppTheme.putih,
-              height: 1.6,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   // ── Visualization Card ────────────────────────────────────────────────────
   Widget _buildVisualizationCard() {
     return Container(
       decoration: BoxDecoration(
         color: AppTheme.backgroundSecondary,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(14),
       ),
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Icon(Icons.monitor, color: AppTheme.bottonColor, size: 18),
-              const SizedBox(width: 8),
-              Text(
-                'Visualisasi Simulasi',
-                style: AppTextStyle.normalText.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: AppTheme.putih,
-                ),
+              Row(
+                children: [
+                  const Icon(
+                    Icons.monitor,
+                    color: AppTheme.bottonColor,
+                    size: 20,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Visualisasi Simulasi',
+                    style: AppTextStyle.normalText.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: AppTheme.putih,
+                    ),
+                  ),
+                ],
               ),
+              if (widget.lab.guideText != null &&
+                  widget.lab.guideText!.isNotEmpty)
+                InkWell(
+                  onTap: _showGuideDialog,
+                  borderRadius: BorderRadius.circular(8),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppTheme.bottonColor.withValues(alpha: 0.15),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: AppTheme.bottonColor.withValues(alpha: 0.3),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(
+                          Icons.lightbulb_outline_rounded,
+                          color: AppTheme.bottonColor,
+                          size: 14,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          'Panduan',
+                          style: AppTextStyle.normalText.copyWith(
+                            color: AppTheme.bottonColor,
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
             ],
           ),
           const SizedBox(height: 14),

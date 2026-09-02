@@ -57,12 +57,14 @@ class CustomAppBar2 extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final IconData? prefixIcon;
   final VoidCallback? onPrefixIconTap;
+  final List<Widget>? actions;
 
   const CustomAppBar2({
     super.key,
     required this.title,
     this.prefixIcon,
     this.onPrefixIconTap,
+    this.actions,
   });
 
   @override
@@ -88,6 +90,7 @@ class CustomAppBar2 extends StatelessWidget implements PreferredSizeWidget {
                   },
             )
           : null, // Jika null, Flutter akan otomatis memberikan tombol back bawaan jika ada halaman sebelumnya
+      actions: actions,
       // menambahkan warna atau styling default lainnya di bawah ini
       backgroundColor: AppTheme.backgroundPrimary,
       elevation: 0,
