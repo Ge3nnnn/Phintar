@@ -48,6 +48,31 @@ class PreferenceHandler {
     return _prefs.getString(_keyUserEmail) ?? '';
   }
 
+  static const _keyUserPhoto = "userPhoto";
+
+  static String _getUserPhotoKey([String? email]) {
+    final target = (email != null && email.isNotEmpty) ? email : userEmail;
+    return target.isNotEmpty ? "${_keyUserPhoto}_$target" : _keyUserPhoto;
+  }
+
+  // Menyimpan path foto profil pengguna ke dalam SharedPreferences.
+  static Future<void> setUserPhoto(String? path, [String? email]) async {
+    final key = _getUserPhotoKey(email);
+    if (path == null || path.isEmpty) {
+      await _prefs.remove(key);
+    } else {
+      await _prefs.setString(key, path);
+    }
+  }
+
+  // Getter static untuk mendapatkan path foto profil pengguna.
+  static String? getUserPhoto([String? email]) {
+    final key = _getUserPhotoKey(email);
+    return _prefs.getString(key);
+  }
+
+  static String? get userPhoto => getUserPhoto();
+
   // Fungsi untuk logout. Menghapus key status login dan data pengguna dari SharedPreferences.
   static Future<void> logOut() async {
     await _prefs.remove(_keyIsLogin);

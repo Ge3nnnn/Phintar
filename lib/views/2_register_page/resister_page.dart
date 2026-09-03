@@ -24,6 +24,8 @@ class _RegisterScreenPhintarState extends State<RegisterScreenPhintar> {
   final _emailC = TextEditingController();
   final _passwordC = TextEditingController();
   final _confirmPasswordC = TextEditingController();
+  bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
 
   @override
   void dispose() {
@@ -180,7 +182,20 @@ class _RegisterScreenPhintarState extends State<RegisterScreenPhintar> {
               controller: _passwordC,
               hint: "Masukan kata sandi anda",
               icon: Icons.lock_outline,
-              obscureText: true,
+              obscureText: _obscurePassword,
+              suffixIcon: IconButton(
+                icon: Icon(
+                  _obscurePassword
+                      ? Icons.visibility_off_outlined
+                      : Icons.visibility_outlined,
+                  color: AppTheme.textColor,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _obscurePassword = !_obscurePassword;
+                  });
+                },
+              ),
               validator: (v) {
                 if (v == null || v.isEmpty) {
                   return "Kata sandi tidak boleh kosong";
@@ -194,7 +209,20 @@ class _RegisterScreenPhintarState extends State<RegisterScreenPhintar> {
               controller: _confirmPasswordC,
               hint: "Konfirmasi kata sandi anda",
               icon: Icons.lock_outline,
-              obscureText: true,
+              obscureText: _obscureConfirmPassword,
+              suffixIcon: IconButton(
+                icon: Icon(
+                  _obscureConfirmPassword
+                      ? Icons.visibility_off_outlined
+                      : Icons.visibility_outlined,
+                  color: AppTheme.textColor,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _obscureConfirmPassword = !_obscureConfirmPassword;
+                  });
+                },
+              ),
               isLast: true,
               validator: (v) {
                 if (v == null || v.isEmpty) {
@@ -229,6 +257,7 @@ class _RegisterScreenPhintarState extends State<RegisterScreenPhintar> {
     String? Function(String?)? validator,
     TextInputType? keyboardType,
     bool obscureText = false,
+    Widget? suffixIcon,
     bool isLast = false,
   }) {
     return Column(
@@ -241,6 +270,7 @@ class _RegisterScreenPhintarState extends State<RegisterScreenPhintar> {
           hintText: hint,
           prefixIcon: icon,
           obscureText: obscureText,
+          suffixIcon: suffixIcon,
           keyboardType: keyboardType,
           validator: validator,
         ),

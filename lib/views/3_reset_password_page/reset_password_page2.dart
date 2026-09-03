@@ -29,6 +29,9 @@ class _ResetPasswordPage2State extends State<ResetPasswordPage2> {
   final TextEditingController confirmpasswordC = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
+
   // Variabel untuk mengatur state loading saat mengecek database
   bool isLoading = false;
 
@@ -224,7 +227,20 @@ class _ResetPasswordPage2State extends State<ResetPasswordPage2> {
                         },
                         hintText: "Masukan kata sandi anda",
                         prefixIcon: Icons.lock_outline,
-                        obscureText: true,
+                        obscureText: _obscurePassword,
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscurePassword
+                                ? Icons.visibility_off_outlined
+                                : Icons.visibility_outlined,
+                            color: AppTheme.textColor,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _obscurePassword = !_obscurePassword;
+                            });
+                          },
+                        ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return "Kata sandi tidak boleh kosong";
@@ -255,7 +271,21 @@ class _ResetPasswordPage2State extends State<ResetPasswordPage2> {
                         },
                         hintText: "Konfirmasi kata sandi anda",
                         prefixIcon: Icons.lock_outline,
-                        obscureText: true,
+                        obscureText: _obscureConfirmPassword,
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscureConfirmPassword
+                                ? Icons.visibility_off_outlined
+                                : Icons.visibility_outlined,
+                            color: AppTheme.textColor,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _obscureConfirmPassword =
+                                  !_obscureConfirmPassword;
+                            });
+                          },
+                        ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return "Konfirmasi password wajib diisi";

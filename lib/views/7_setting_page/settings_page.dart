@@ -16,8 +16,68 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  void _navigateTo(Widget page) {
+    context.push(page).then((_) {
+      if (mounted) setState(() {});
+    });
+  }
+
+  Future<void> _handleLogout() async {
+    await PreferenceHandler.logOut();
+    if (!mounted) return;
+    context.pushAndRemoveAll(const LoginPagePhintar());
+  }
+
+  List<_SettingItem> _buildSettingItems() {
+    return [
+      _SettingItem(
+        icon: Icons.edit,
+        title: 'Edit Profile',
+        onTap: () => _navigateTo(const EditProfilePhintar()),
+      ),
+      _SettingItem(
+        icon: Icons.lock_reset,
+        title: 'Ubah Kata Sandi',
+        onTap: () => _navigateTo(
+          ResetPasswordPage2(
+            email: PreferenceHandler.userEmail,
+            isFromSettings: true,
+          ),
+        ),
+      ),
+      _SettingItem(
+        icon: Icons.logout_rounded,
+        title: 'Keluar',
+        iconColor: AppTheme.merah,
+        titleStyle: AppTextStyle.warningText,
+        showTrailing: false,
+        onTap: _handleLogout,
+      ),
+    ];
+  }
+
+  Widget _buildSettingTile(_SettingItem item) {
+    return ListTile(
+      leading: Icon(item.icon, color: item.iconColor),
+      title: Text(
+        item.title,
+        style: item.titleStyle ?? AppTextStyle.progresText,
+      ),
+      trailing: item.showTrailing
+          ? const Icon(
+              Icons.arrow_forward_ios,
+              color: AppTheme.bottonColor,
+              size: 16,
+            )
+          : null,
+      onTap: item.onTap,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final items = _buildSettingItems();
+
     return Scaffold(
       backgroundColor: AppTheme.backgroundPrimary,
       appBar: const CustomAppBar2(
@@ -33,69 +93,35 @@ class _SettingsPageState extends State<SettingsPage> {
               borderRadius: BorderRadius.circular(16),
               border: Border.all(color: AppTheme.glassBorder, width: 1.5),
             ),
-            child: Column(
-              children: [
-                ListTile(
-                  leading: const Icon(Icons.edit, color: AppTheme.bottonColor),
-                  title: Text('Edit Profile', style: AppTextStyle.progresText),
-                  trailing: const Icon(
-                    Icons.arrow_forward_ios,
-                    color: AppTheme.bottonColor,
-                    size: 16,
-                  ),
-                  onTap: () {
-                    context.push(const EditProfilePhintar()).then((_) {
-                      if (mounted) setState(() {});
-                    });
-                  },
-                ),
-                const Divider(color: AppTheme.borderColor, height: 1),
-                ListTile(
-                  leading: const Icon(
-                    Icons.lock_reset,
-                    color: AppTheme.bottonColor,
-                  ),
-                  title: Text(
-                    'Ubah Kata Sandi',
-                    style: AppTextStyle.progresText,
-                  ),
-                  trailing: const Icon(
-                    Icons.arrow_forward_ios,
-                    color: AppTheme.bottonColor,
-                    size: 16,
-                  ),
-                  onTap: () {
-                    final email = PreferenceHandler.userEmail;
-                    context
-                        .push(
-                          ResetPasswordPage2(
-                            email: email,
-                            isFromSettings: true,
-                          ),
-                        )
-                        .then((_) {
-                          if (mounted) setState(() {});
-                        });
-                  },
-                ),
-                const Divider(color: AppTheme.borderColor, height: 1),
-                ListTile(
-                  leading: const Icon(
-                    Icons.logout_rounded,
-                    color: AppTheme.merah,
-                  ),
-                  title: Text('Keluar', style: AppTextStyle.warningText),
-                  onTap: () async {
-                    await PreferenceHandler.logOut();
-                    if (!context.mounted) return;
-                    context.pushAndRemoveAll(const LoginPagePhintar());
-                  },
-                ),
-              ],
+            child: ListView.separated(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: items.length,
+              separatorBuilder: (context, index) =>
+                  const Divider(color: AppTheme.borderColor, height: 1),
+              itemBuilder: (context, index) => _buildSettingTile(items[index]),
             ),
           ),
         ],
       ),
     );
   }
+}
+
+class _SettingItem {
+  final IconData icon;
+  final String title;
+  final VoidCallback onTap;
+  final Color iconColor;
+  final TextStyle? titleStyle;
+  final bool showTrailing;
+
+  const _SettingItem({
+    required this.icon,
+    required this.title,
+    required this.onTap,
+    this.iconColor = AppTheme.bottonColor,
+    this.titleStyle,
+    this.showTrailing = true,
+  });
 }

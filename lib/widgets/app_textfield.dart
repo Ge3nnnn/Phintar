@@ -7,6 +7,7 @@ class CustomTextFields extends StatelessWidget {
   final String? Function(String?)? validator;
   final String hintText;
   final IconData prefixIcon;
+  final Widget? suffixIcon;
   final bool obscureText;
   final TextInputType? keyboardType;
   final String? errorText;
@@ -18,6 +19,7 @@ class CustomTextFields extends StatelessWidget {
     this.validator,
     required this.hintText,
     required this.prefixIcon,
+    this.suffixIcon,
     this.obscureText = false,
     this.keyboardType,
     this.errorText,
@@ -39,6 +41,7 @@ class CustomTextFields extends StatelessWidget {
         hintText: hintText,
         hintStyle: AppTextStyle.normalText,
         prefixIcon: Icon(prefixIcon, color: AppTheme.textColor),
+        suffixIcon: suffixIcon,
         // 1. Padding di dalam TextField agar luas dan tidak mepet
         contentPadding: const EdgeInsets.symmetric(
           vertical: 18, // Slightly more vertical padding for breathing room

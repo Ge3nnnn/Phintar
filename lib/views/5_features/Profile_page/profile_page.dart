@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:blabla/constants/app_theme.dart';
 import 'package:blabla/constants/app_typografy.dart';
 import 'package:blabla/views/7_setting_page/settings_page.dart';
@@ -21,6 +22,11 @@ class _ProfilePagePhintarState extends State<ProfilePagePhintar> {
   Widget build(BuildContext context) {
     final userName = PreferenceHandler.userName;
     final userEmail = PreferenceHandler.userEmail;
+    final userPhoto = PreferenceHandler.userPhoto;
+    final hasPhoto = userPhoto != null &&
+        userPhoto.isNotEmpty &&
+        File(userPhoto).existsSync();
+
     return Scaffold(
       backgroundColor: AppTheme.backgroundPrimary,
       appBar: CustomAppBar(title: "Profile"),
@@ -53,10 +59,19 @@ class _ProfilePagePhintarState extends State<ProfilePagePhintar> {
                           width: 2,
                         ),
                       ),
-                      child: const Icon(
-                        Icons.person_rounded,
-                        color: AppTheme.bottonColor,
-                        size: 36,
+                      child: ClipOval(
+                        child: hasPhoto
+                            ? Image.file(
+                                File(userPhoto),
+                                width: 60,
+                                height: 60,
+                                fit: BoxFit.cover,
+                              )
+                            : const Icon(
+                                Icons.person_rounded,
+                                color: AppTheme.bottonColor,
+                                size: 36,
+                              ),
                       ),
                     ),
                     const SizedBox(width: 16),
@@ -90,7 +105,9 @@ class _ProfilePagePhintarState extends State<ProfilePagePhintar> {
                         size: 24,
                       ),
                       onPressed: () {
-                        context.push(SettingsPage());
+                        context.push(const SettingsPage()).then((_) {
+                          if (mounted) setState(() {});
+                        });
                       },
                     ),
                     // PopupMenuButton<String>(
