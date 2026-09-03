@@ -1,7 +1,7 @@
 import 'package:blabla/constants/app_theme.dart';
 import 'package:blabla/constants/app_typografy.dart';
 import 'package:blabla/providers/lab_provider.dart';
-import 'package:blabla/views/5_features/lab_page/lab_simulation_screen.dart';
+import 'package:blabla/views/5_features/lab_page/lab_simulation_screen_pendulu.dart';
 import 'package:blabla/widgets/app_banner.dart';
 import 'package:blabla/widgets/app_bar.dart';
 import 'package:blabla/widgets/app_search_bar.dart';

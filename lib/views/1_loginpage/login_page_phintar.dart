@@ -22,6 +22,7 @@ class _LoginPagePhintarState extends State<LoginPagePhintar> {
   final TextEditingController emailC = TextEditingController();
   final TextEditingController passwordC = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  bool _obscurePassword = true;
 
   // 2. TAMBAHKAN DISPOSE UNTUK MENCEGAH MEMORY LEAK
   @override
@@ -99,7 +100,20 @@ class _LoginPagePhintarState extends State<LoginPagePhintar> {
                       controller: passwordC,
                       hintText: 'Password',
                       prefixIcon: Icons.lock_outline,
-                      obscureText: true,
+                      obscureText: _obscurePassword,
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _obscurePassword
+                              ? Icons.visibility_off
+                              : Icons.visibility,
+                          color: AppTheme.textColor,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _obscurePassword = !_obscurePassword;
+                          });
+                        },
+                      ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return "Password tidak boleh kosong";

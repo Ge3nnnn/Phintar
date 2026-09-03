@@ -11,6 +11,7 @@ class CustomTextFields extends StatelessWidget {
   final TextInputType? keyboardType;
   final String? errorText;
   final ValueChanged<String>? onChanged;
+  final Widget? suffixIcon;
 
   const CustomTextFields({
     super.key,
@@ -22,6 +23,7 @@ class CustomTextFields extends StatelessWidget {
     this.keyboardType,
     this.errorText,
     this.onChanged,
+    this.suffixIcon,
   });
 
   @override
@@ -39,6 +41,7 @@ class CustomTextFields extends StatelessWidget {
         hintText: hintText,
         hintStyle: AppTextStyle.normalText,
         prefixIcon: Icon(prefixIcon, color: AppTheme.textColor),
+        suffixIcon: suffixIcon,
         // 1. Padding di dalam TextField agar luas dan tidak mepet
         contentPadding: const EdgeInsets.symmetric(
           vertical: 18, // Slightly more vertical padding for breathing room

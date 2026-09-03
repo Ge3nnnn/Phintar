@@ -35,6 +35,8 @@ class _ResetPasswordPage2State extends State<ResetPasswordPage2> {
   // Variabel untuk menyimpan pesan error password
   String? passwordError;
   String? confirmPasswordError;
+  bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
 
   void resetPassword() async {
     final pass = passwordC.text.trim();
@@ -224,7 +226,20 @@ class _ResetPasswordPage2State extends State<ResetPasswordPage2> {
                         },
                         hintText: "Masukan kata sandi anda",
                         prefixIcon: Icons.lock_outline,
-                        obscureText: true,
+                        obscureText: _obscurePassword,
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscurePassword
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                            color: AppTheme.textColor,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _obscurePassword = !_obscurePassword;
+                            });
+                          },
+                        ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return "Kata sandi tidak boleh kosong";
@@ -255,7 +270,21 @@ class _ResetPasswordPage2State extends State<ResetPasswordPage2> {
                         },
                         hintText: "Konfirmasi kata sandi anda",
                         prefixIcon: Icons.lock_outline,
-                        obscureText: true,
+                        obscureText: _obscureConfirmPassword,
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscureConfirmPassword
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                            color: AppTheme.textColor,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _obscureConfirmPassword =
+                                  !_obscureConfirmPassword;
+                            });
+                          },
+                        ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return "Konfirmasi password wajib diisi";

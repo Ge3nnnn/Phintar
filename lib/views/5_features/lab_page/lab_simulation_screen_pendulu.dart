@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 /// Dynamic lab simulation screen — the SINGLE template for ALL labs.
 ///
 /// Receives a [LabModel] and dynamically builds:
-/// - Guide card from [lab.guideText]
+/// - Guide pop-up dialog from [lab.guideText]
 /// - Simulation canvas via [SimRegistry] using [lab.simType]
 /// - Parameter sliders from [lab.parameters]
 /// - Environment selector from [lab.environments]
@@ -67,6 +67,15 @@ class _LabSimulationScreenState extends State<LabSimulationScreen>
         _animController.reverse();
       } else if (status == AnimationStatus.dismissed) {
         _animController.forward();
+      }
+    });
+
+    // Automatically display the guide pop-up when first entering the lab
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted &&
+          widget.lab.guideText != null &&
+          widget.lab.guideText!.isNotEmpty) {
+        _showGuideDialog();
       }
     });
   }
@@ -158,11 +167,25 @@ class _LabSimulationScreenState extends State<LabSimulationScreen>
 
   @override
   Widget build(BuildContext context) {
+    final hasGuide =
+        widget.lab.guideText != null && widget.lab.guideText!.isNotEmpty;
+
     return Scaffold(
       backgroundColor: AppTheme.backgroundPrimary,
       appBar: CustomAppBar2(
         title: "Lab: ${widget.lab.title}",
         prefixIcon: Icons.arrow_back,
+        actions: [
+          if (hasGuide)
+            IconButton(
+              icon: const Icon(
+                Icons.help_outline_rounded,
+                color: AppTheme.putih,
+              ),
+              tooltip: 'Panduan Eksperimen',
+              onPressed: _showGuideDialog,
+            ),
+        ],
       ),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -170,12 +193,6 @@ class _LabSimulationScreenState extends State<LabSimulationScreen>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ── Guide Card ───────────────────────────────────────────
-            if (widget.lab.guideText != null &&
-                widget.lab.guideText!.isNotEmpty)
-              _buildGuideCard(),
-            const SizedBox(height: 14),
-
             // ── Visualization Card ───────────────────────────────────
             _buildVisualizationCard(),
             const SizedBox(height: 14),
@@ -193,30 +210,105 @@ class _LabSimulationScreenState extends State<LabSimulationScreen>
     );
   }
 
-  // ── Guide Card ────────────────────────────────────────────────────────────
-  Widget _buildGuideCard() {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppTheme.backgroundSecondary,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Panduan Eksperimen',
-            style: AppTextStyle.subjudul.copyWith(fontSize: 20),
+  // ── Guide Pop-up Dialog ───────────────────────────────────────────────────
+  void _showGuideDialog() {
+    if (!mounted) return;
+    if (widget.lab.guideText == null || widget.lab.guideText!.isEmpty) return;
+
+    showDialog(
+      context: context,
+      builder: (dialogCtx) => Dialog(
+        backgroundColor: AppTheme.backgroundSecondary,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: const BorderSide(color: AppTheme.borderColor),
+        ),
+        insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height * 0.75,
+            maxWidth: 500,
           ),
-          const SizedBox(height: 10),
-          Text(
-            widget.lab.guideText!,
-            style: AppTextStyle.normalText.copyWith(
-              color: AppTheme.putih,
-              height: 1.6,
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // ── Header ──────────────────────────────────────────
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: AppTheme.bottonColor.withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: const Icon(
+                        Icons.menu_book_rounded,
+                        color: AppTheme.bottonColor,
+                        size: 22,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        'Panduan Eksperimen',
+                        style: AppTextStyle.dialogTitle,
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(
+                        Icons.close_rounded,
+                        color: AppTheme.textColor,
+                        size: 20,
+                      ),
+                      onPressed: () => Navigator.pop(dialogCtx),
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 14),
+                const Divider(color: AppTheme.borderColor, height: 1),
+                const SizedBox(height: 14),
+
+                // ── Scrollable Content ──────────────────────────────
+                Flexible(
+                  child: SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    child: Text(
+                      widget.lab.guideText!,
+                      style: AppTextStyle.normalText.copyWith(
+                        color: AppTheme.textLight,
+                        height: 1.6,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 18),
+
+                // ── Close Button ────────────────────────────────────
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppTheme.bottonColor,
+                      foregroundColor: AppTheme.putih,
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    onPressed: () => Navigator.pop(dialogCtx),
+                    child: Text('Mengerti', style: AppTextStyle.botttonText),
+                  ),
+                ),
+              ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }
