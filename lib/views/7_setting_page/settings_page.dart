@@ -87,14 +87,16 @@ class _SettingsPageState extends State<SettingsPage> {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          Container(
-            decoration: BoxDecoration(
-              color: AppTheme.glassBackground,
+          Material(
+            color: AppTheme.glassBackground,
+            clipBehavior: Clip.antiAlias,
+            shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: AppTheme.glassBorder, width: 1.5),
+              side: BorderSide(color: AppTheme.glassBorder, width: 1.5),
             ),
             child: ListView.separated(
               shrinkWrap: true,
+              padding: EdgeInsets.zero,
               physics: const NeverScrollableScrollPhysics(),
               itemCount: items.length,
               separatorBuilder: (context, index) =>

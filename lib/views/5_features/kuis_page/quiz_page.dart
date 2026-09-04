@@ -90,6 +90,7 @@ class _QuizPagePhintarState extends State<QuizPagePhintar> {
                         (quiz) => Padding(
                           padding: const EdgeInsets.only(bottom: 10),
                           child: EnterCourse(
+                            icon: Icons.quiz_rounded,
                             title: quiz.title,
                             subtitle:
                                 '${quiz.questions.length} Soal | ${quiz.timeLimitMinutes} Menit',

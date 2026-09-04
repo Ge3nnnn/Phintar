@@ -38,6 +38,13 @@ class _ResetPasswordPage2State extends State<ResetPasswordPage2> {
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
 
+  @override
+  void dispose() {
+    passwordC.dispose();
+    confirmpasswordC.dispose();
+    super.dispose();
+  }
+
   void resetPassword() async {
     final pass = passwordC.text.trim();
     final confirm = confirmpasswordC.text.trim();

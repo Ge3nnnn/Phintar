@@ -6,7 +6,7 @@ import 'package:blabla/widgets/extention/navigator.dart';
 import 'package:blabla/constants/app_theme.dart';
 import 'package:blabla/models/preference_handler.dart';
 import 'package:blabla/widgets/bottom_nav/bottom_nav_bar_phintar.dart';
-import 'package:blabla/views/2_register_page/resister_page.dart';
+import 'package:blabla/views/2_register_page/register_page.dart';
 import 'package:blabla/views/3_reset_password_page/reset_password_page.dart';
 import 'package:flutter/material.dart';
 

@@ -44,6 +44,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
   }
 
   void _onTextChanged() {
+    if (!mounted) return;
     if (_controller.text.isNotEmpty && !_showClearButton) {
       setState(() => _showClearButton = true);
     } else if (_controller.text.isEmpty && _showClearButton) {

@@ -94,12 +94,6 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     }
   }
 
-  // // Fungsi pura-pura (Mock) untuk contoh. Hapus ini nanti.
-  // bool _checkMockDatabase(String email) {
-  //   List<String> registeredEmails = ["fisikawan@gmail.com", "test@gmail.com"];
-  //   return registeredEmails.contains(email);
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

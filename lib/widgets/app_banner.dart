@@ -8,11 +8,13 @@ class EnterCourse extends StatelessWidget {
     required this.title,
     required this.subtitle,
     required this.onTap,
+    this.icon,
   });
 
   final String title;
   final String subtitle;
   final VoidCallback onTap;
+  final IconData? icon;
 
   @override
   Widget build(BuildContext context) {
@@ -32,32 +34,47 @@ class EnterCourse extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(
-              children: [
-                Container(
-                  height: 50,
-                  width: 50,
-                  decoration: BoxDecoration(
-                    color: AppTheme.backgroundPrimary,
-                    borderRadius: BorderRadius.circular(5),
+            Expanded(
+              child: Row(
+                children: [
+                  Container(
+                    height: 50,
+                    width: 50,
+                    decoration: BoxDecoration(
+                      color: AppTheme.backgroundPrimary,
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: Icon(
+                      icon ?? Icons.menu_book_rounded,
+                      color: AppTheme.textColor,
+                    ),
                   ),
-                  child: const Icon(
-                    Icons.electric_bike,
-                    color: AppTheme.textColor,
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          title,
+                          style: AppTextStyle.subsubjudul,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        Text(
+                          subtitle,
+                          style: AppTextStyle.normalText,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                const SizedBox(width: 12),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(title, style: AppTextStyle.subsubjudul),
-                    Text(subtitle, style: AppTextStyle.normalText),
-                  ],
-                ),
-              ],
+                ],
+              ),
             ),
-            const Icon(Icons.arrow_forward_ios, color: AppTheme.putih),
+            const SizedBox(width: 8),
+            const Icon(Icons.arrow_forward_ios, color: AppTheme.putih, size: 18),
           ],
         ),
       ),

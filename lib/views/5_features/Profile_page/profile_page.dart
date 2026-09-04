@@ -99,7 +99,7 @@ class _ProfilePagePhintarState extends State<ProfilePagePhintar> {
                       ),
                     ),
                     IconButton(
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.settings,
                         color: AppTheme.textColor,
                         size: 24,
@@ -110,64 +110,6 @@ class _ProfilePagePhintarState extends State<ProfilePagePhintar> {
                         });
                       },
                     ),
-                    // PopupMenuButton<String>(
-                    //   icon: const Icon(
-                    //     Icons.settings,
-                    //     color: AppTheme.textColor,
-                    //     size: 20,
-                    //   ),
-                    //   color: AppTheme.backgroundSecondary,
-                    //   shape: RoundedRectangleBorder(
-                    //     borderRadius: BorderRadius.circular(12),
-                    //     side: const BorderSide(color: Color(0xFF334155)),
-                    //   ),
-                    //   onSelected: (value) async {
-                    //     if (value == 'quit') {
-                    //       await PreferenceHandler.logOut();
-                    //       if (!context.mounted) return;
-                    //       context.pushAndRemoveAll(const LoginPagePhintar());
-                    //     } else if (value == 'edit_profile') {
-                    //       context.push(const EditProfilePhintar()).then((_) {
-                    //         if (mounted) setState(() {});
-                    //       });
-                    //     }
-                    //     // Tambahkan disini jika ingin menambahkan fitur yang lain
-                    //   },
-                    //   itemBuilder: (context) => [
-                    //     // daftar di titik 3
-                    //     PopupMenuItem(
-                    //       value: 'edit_profile',
-                    //       child: Row(
-                    //         children: [
-                    //           Icon(
-                    //             Icons.edit,
-                    //             color: AppTheme.bottonColor,
-                    //             size: 18,
-                    //           ),
-                    //           SizedBox(width: 8),
-                    //           Text(
-                    //             'Edit Profile',
-                    //             style: AppTextStyle.progresText,
-                    //           ),
-                    //         ],
-                    //       ),
-                    //     ),
-                    //     PopupMenuItem(
-                    //       value: 'quit',
-                    //       child: Row(
-                    //         children: [
-                    //           Icon(
-                    //             Icons.logout_rounded,
-                    //             color: AppTheme.merah,
-                    //             size: 18,
-                    //           ),
-                    //           SizedBox(width: 8),
-                    //           Text('Keluar', style: AppTextStyle.warningText),
-                    //         ],
-                    //       ),
-                    //     ),
-                    //   ],
-                    // ),
                   ],
                 ),
               ),

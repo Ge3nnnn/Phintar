@@ -30,7 +30,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       // Logika untuk menampilkan leading (prefix icon) jika ada
       leading: prefixIcon != null
           ? IconButton(
-              icon: Icon(prefixIcon),
+              icon: Icon(prefixIcon, color: prefixIconColor ?? AppTheme.putih),
               onPressed:
                   onPrefixIconTap ??
                   () {
@@ -40,7 +40,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     }
                   },
             )
-          : null, // Jika null, Flutter akan otomatis memberikan tombol back bawaan jika ada halaman sebelumnya
+          : null,
       // menambahkan warna atau styling default lainnya di bawah ini
       backgroundColor: AppTheme.backgroundPrimary,
       elevation: 0,
@@ -130,7 +130,7 @@ class CustomAppBarMateri extends StatelessWidget
       // Logika untuk menampilkan leading (prefix icon) jika ada
       leading: prefixIcon != null
           ? IconButton(
-              icon: Icon(prefixIcon),
+              icon: Icon(prefixIcon, color: AppTheme.putih),
               onPressed:
                   onPrefixIconTap ??
                   () {
@@ -140,7 +140,7 @@ class CustomAppBarMateri extends StatelessWidget
                     }
                   },
             )
-          : null, // Jika null, Flutter akan otomatis memberikan tombol back bawaan jika ada halaman sebelumnya
+          : null,
       // menambahkan warna atau styling default lainnya di bawah ini
       backgroundColor: AppTheme.backgroundPrimary,
       elevation: 0,

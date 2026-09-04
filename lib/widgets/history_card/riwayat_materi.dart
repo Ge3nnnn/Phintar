@@ -1,25 +1,23 @@
 import 'package:blabla/constants/app_theme.dart';
 import 'package:blabla/constants/app_typografy.dart';
-import 'package:blabla/providers/materi_provider.dart';
-import 'package:blabla/views/6_materi/Gelombang_dan_materi/1_gelombang_dan_osilasi.dart';
+import 'package:blabla/views/6_materi/Gelombang_dan_materi/gelombang_dan_osilasi_1.dart';
 import 'package:blabla/widgets/bottom_nav/bottom_nav_bar_phintar.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:blabla/data/database/db_materi.dart';
 
 /// Maps materi IDs to their display titles.
-/// To add a new materi, insert a new entry here with the next ID.
-// Helper daftar materi yang tersedia
 final Map<int, String> kAvailableMateri = {
-  1: 'Gelombang dan Osilasi',
-  // Tambahkan materi lainnya dengan format berikut:
-  // 2: 'Nama Materi 2',
-  // dst.
+  1: 'Gelombang Osilasi',
 };
 
 /// Returns the display title for the given [materiId].
-/// Falls back to a generic label if the ID is not found in [kAvailableMateri].
-String getMateriTitle(int materiId) {
+String getMateriTitle(int materiId, [String? recordedName]) {
+  if (materiId == 1 || materiId == 2) {
+    return 'Gelombang Osilasi';
+  }
+  if (recordedName != null && recordedName.isNotEmpty) {
+    return recordedName;
+  }
   return kAvailableMateri[materiId] ?? 'Materi Fisika #$materiId';
 }
 
@@ -95,24 +93,12 @@ class RiwayatMateriSectionState extends State<RiwayatMateriSection> {
   }
 
   /// Opens the materi page so the user can continue learning.
-  /// TODO: Make dynamic — currently hardcoded to [Materi1Gelombag].
-  ///       When more materi pages exist, use a registry or route map
-  ///       keyed by [materiId] to navigate to the correct page.
-  void _continueMateri(int materiId) {
-    final provider = Provider.of<MateriProvider>(context, listen: false);
-    final materi = provider.getMateriById(materiId);
-    if (materi != null) {
-      Navigator.of(
-        context,
-      ).push(MaterialPageRoute(builder: (_) => Materi1Gelombag()));
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Materi tidak ditemukan'),
-          backgroundColor: AppTheme.merah,
-        ),
-      );
-    }
+  void _continueMateri(int materiId) async {
+    await Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (_) => const Materi1Gelombang()));
+
+    refreshHistories();
   }
 
   /// Shows a confirmation dialog before deleting a specific history entry.
@@ -326,7 +312,10 @@ class RiwayatMateriSectionState extends State<RiwayatMateriSection> {
                   final item = data[index];
                   final id = item['id'] as int;
                   final materiId = item['materi_id'] as int;
-                  final materiName = getMateriTitle(materiId);
+                  final materiName = getMateriTitle(
+                    materiId,
+                    item['materi_name'] as String?,
+                  );
                   final durationSeconds = (item['duration_seconds'] as num)
                       .toInt();
                   final dateString = item['created_at'] as String;

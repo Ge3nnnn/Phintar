@@ -1,7 +1,7 @@
 import 'package:blabla/constants/app_theme.dart';
 import 'package:blabla/constants/app_typografy.dart';
 import 'package:blabla/providers/lab_provider.dart';
-import 'package:blabla/views/5_features/lab_page/lab_simulation_screen_pendulu.dart';
+import 'package:blabla/views/5_features/lab_page/lab_simulation_screen_pendulum.dart';
 import 'package:blabla/widgets/app_banner.dart';
 import 'package:blabla/widgets/app_bar.dart';
 import 'package:blabla/widgets/app_search_bar.dart';
@@ -16,10 +16,10 @@ class LabPagePhintar extends StatefulWidget {
   const LabPagePhintar({super.key});
 
   @override
-  State<LabPagePhintar> createState() => _LabPagePhintaarState();
+  State<LabPagePhintar> createState() => _LabPagePhintarState();
 }
 
-class _LabPagePhintaarState extends State<LabPagePhintar> {
+class _LabPagePhintarState extends State<LabPagePhintar> {
   String _searchQuery = '';
 
   /// Builds the lab listing page: watches [LabProvider] for data,
@@ -85,6 +85,7 @@ class _LabPagePhintaarState extends State<LabPagePhintar> {
                         (lab) => Padding(
                           padding: const EdgeInsets.only(bottom: 10),
                           child: EnterCourse(
+                            icon: Icons.science_rounded,
                             title: lab.title,
                             subtitle: lab.subtitle ?? '',
                             onTap: () {

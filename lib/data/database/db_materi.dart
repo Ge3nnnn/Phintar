@@ -111,9 +111,55 @@ class DatabaseHelperMateri {
   }
 
   // 2. READ: Mengambil semua histori untuk user tertentu (diurutkan dari yang terbaru)
-  Future<List<Map<String, dynamic>>> getAllHistories({String? userEmail}) async {
+  Future<List<Map<String, dynamic>>> getAllHistories({
+    String? userEmail,
+  }) async {
     final email = _resolveEmail(userEmail);
     final db = await instance.database;
+
+    // Konsolidasi: Gabungkan histori lama materi_id = 2 ke materi_id = 1 (Gelombang Osilasi)
+    final p2List = await db.query(
+      tableMateriHistories,
+      where: 'user_email = ? AND materi_id = 2',
+      whereArgs: [email],
+    );
+    if (p2List.isNotEmpty) {
+      for (final p2 in p2List) {
+        final p2Seconds = (p2['duration_seconds'] as num?)?.toInt() ?? 0;
+        final p1List = await db.query(
+          tableMateriHistories,
+          where: 'user_email = ? AND materi_id = 1',
+          whereArgs: [email],
+        );
+        if (p1List.isNotEmpty) {
+          final p1Seconds =
+              (p1List.first['duration_seconds'] as num?)?.toInt() ?? 0;
+          await db.update(
+            tableMateriHistories,
+            {
+              'materi_name': 'Gelombang Osilasi',
+              'duration_seconds': p1Seconds + p2Seconds,
+              'created_at': p2['created_at'],
+            },
+            where: 'id = ?',
+            whereArgs: [p1List.first['id']],
+          );
+          await db.delete(
+            tableMateriHistories,
+            where: 'id = ?',
+            whereArgs: [p2['id']],
+          );
+        } else {
+          await db.update(
+            tableMateriHistories,
+            {'materi_id': 1, 'materi_name': 'Gelombang Osilasi'},
+            where: 'id = ?',
+            whereArgs: [p2['id']],
+          );
+        }
+      }
+    }
+
     return await db.query(
       tableMateriHistories,
       where: 'user_email = ?',
