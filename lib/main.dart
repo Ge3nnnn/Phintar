@@ -1,16 +1,19 @@
-import 'package:blabla/providers/lab_provider.dart';
-import 'package:blabla/providers/materi_provider.dart';
-import 'package:blabla/providers/quiz_provider.dart';
+import 'package:Phintar/firebase_options.dart';
+import 'package:Phintar/providers/lab_provider.dart';
+import 'package:Phintar/providers/materi_provider.dart';
+import 'package:Phintar/providers/quiz_provider.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:blabla/constants/app_theme.dart';
-import 'package:blabla/models/preference_handler.dart';
-import 'package:blabla/widgets/bottom_nav/bottom_nav_bar_phintar.dart';
-import 'package:blabla/views/1_loginpage/login_page_phintar.dart';
+import 'package:Phintar/constants/app_theme.dart';
+import 'package:Phintar/models/preference_handler.dart';
+import 'package:Phintar/widgets/bottom_nav/bottom_nav_bar_phintar.dart';
+import 'package:Phintar/views/1_loginpage/login_page_phintar.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await PreferenceHandler.init();
+  Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }
 

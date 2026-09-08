@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:blabla/data/models/materi_model.dart';
+import 'package:Phintar/data/models/materi_model.dart';
 
 /// Local datasource for materi content.
 /// Reads from JSON seed asset.
@@ -11,13 +11,15 @@ class MateriLocalSource {
   Future<List<MateriModel>> getAllMateri() async {
     if (_cachedMateri != null) return _cachedMateri!;
     try {
-      final jsonString =
-          await rootBundle.loadString('assets/seed/materi_seed.json');
+      final jsonString = await rootBundle.loadString(
+        'assets/seed/materi_seed.json',
+      );
       final List<dynamic> list = json.decode(jsonString);
-      _cachedMateri = list
-          .map((item) => MateriModel.fromJson(item as Map<String, dynamic>))
-          .toList()
-        ..sort((a, b) => a.sortOrder.compareTo(b.sortOrder));
+      _cachedMateri =
+          list
+              .map((item) => MateriModel.fromJson(item as Map<String, dynamic>))
+              .toList()
+            ..sort((a, b) => a.sortOrder.compareTo(b.sortOrder));
       return _cachedMateri!;
     } catch (e) {
       return [];

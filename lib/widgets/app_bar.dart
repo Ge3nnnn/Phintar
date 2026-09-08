@@ -1,5 +1,5 @@
-import 'package:blabla/constants/app_theme.dart';
-import 'package:blabla/constants/app_typografy.dart';
+import 'package:Phintar/constants/app_theme.dart';
+import 'package:Phintar/constants/app_typografy.dart';
 import 'package:flutter/material.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {

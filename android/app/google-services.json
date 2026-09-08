@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "130515174634",
+    "project_id": "phintar-edu-6cd66",
+    "storage_bucket": "phintar-edu-6cd66.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:130515174634:android:e18b05e0665eab00d30393",
+        "android_client_info": {
+          "package_name": "com.FKN.Phintar"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA4DT-vj60_QT_CM_mxeP09IOdepAkOSCo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

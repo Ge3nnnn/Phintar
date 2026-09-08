@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:blabla/data/models/lab_model.dart';
+import 'package:Phintar/data/models/lab_model.dart';
 
 /// Local datasource for lab simulation content.
 /// Loads simulation definitions from JSON seed asset.
@@ -11,13 +11,15 @@ class LabLocalSource {
   Future<List<LabModel>> getAllLabs() async {
     if (_cachedLabs != null) return _cachedLabs!;
     try {
-      final jsonString =
-          await rootBundle.loadString('assets/seed/lab_seed.json');
+      final jsonString = await rootBundle.loadString(
+        'assets/seed/lab_seed.json',
+      );
       final List<dynamic> list = json.decode(jsonString);
-      _cachedLabs = list
-          .map((item) => LabModel.fromJson(item as Map<String, dynamic>))
-          .toList()
-        ..sort((a, b) => a.sortOrder.compareTo(b.sortOrder));
+      _cachedLabs =
+          list
+              .map((item) => LabModel.fromJson(item as Map<String, dynamic>))
+              .toList()
+            ..sort((a, b) => a.sortOrder.compareTo(b.sortOrder));
       return _cachedLabs!;
     } catch (e) {
       return [];

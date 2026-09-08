@@ -1,7 +1,7 @@
-import 'package:blabla/constants/app_theme.dart';
-import 'package:blabla/constants/app_typografy.dart';
-import 'package:blabla/data/models/quiz_model.dart';
-import 'package:blabla/widgets/app_bar.dart';
+import 'package:Phintar/constants/app_theme.dart';
+import 'package:Phintar/constants/app_typografy.dart';
+import 'package:Phintar/data/models/quiz_model.dart';
+import 'package:Phintar/widgets/app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 

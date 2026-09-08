@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'package:blabla/data/models/materi_history_model.dart';
-import 'package:blabla/models/preference_handler.dart';
+import 'package:Phintar/data/models/materi_history_model.dart';
+import 'package:Phintar/models/preference_handler.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 

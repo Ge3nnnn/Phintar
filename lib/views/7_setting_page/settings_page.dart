@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:blabla/constants/app_theme.dart';
-import 'package:blabla/constants/app_typografy.dart';
-import 'package:blabla/views/1_loginpage/login_page_phintar.dart';
-import 'package:blabla/views/4_edit_profile_page/edit_profile_phintar.dart';
-import 'package:blabla/views/3_reset_password_page/reset_password_page2.dart';
-import 'package:blabla/widgets/extention/navigator.dart';
-import 'package:blabla/models/preference_handler.dart';
-import 'package:blabla/widgets/app_bar.dart';
+import 'package:Phintar/constants/app_theme.dart';
+import 'package:Phintar/constants/app_typografy.dart';
+import 'package:Phintar/views/1_loginpage/login_page_phintar.dart';
+import 'package:Phintar/views/4_edit_profile_page/edit_profile_phintar.dart';
+import 'package:Phintar/views/3_reset_password_page/reset_password_page2.dart';
+import 'package:Phintar/widgets/extention/navigator.dart';
+import 'package:Phintar/models/preference_handler.dart';
+import 'package:Phintar/widgets/app_bar.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});

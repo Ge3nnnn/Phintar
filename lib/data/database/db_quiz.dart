@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'package:blabla/data/models/quiz_history_model.dart';
-import 'package:blabla/models/preference_handler.dart';
+import 'package:Phintar/data/models/quiz_history_model.dart';
+import 'package:Phintar/models/preference_handler.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -103,7 +103,9 @@ class DatabaseHelperQuiz {
   }
 
   // 2. READ: Mengambil semua histori untuk user tertentu (diurutkan dari yang terbaru)
-  Future<List<Map<String, dynamic>>> getAllHistories({String? userEmail}) async {
+  Future<List<Map<String, dynamic>>> getAllHistories({
+    String? userEmail,
+  }) async {
     final email = _resolveEmail(userEmail);
     final db = await instance.database;
     return await db.query(
