@@ -1,4 +1,4 @@
-package com.FKN.phintar
+package com.FKN.Phintar
 
 import io.flutter.embedding.android.FlutterActivity
 
