@@ -1,4 +1,4 @@
-# Phintar
+# phintar
 
 A new Flutter project.
 

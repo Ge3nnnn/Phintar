@@ -1,14 +1,14 @@
-import 'package:Phintar/constants/app_images.dart';
-import 'package:Phintar/services/firebase_auth_service.dart';
-import 'package:Phintar/widgets/app_button.dart';
-import 'package:Phintar/widgets/app_textfield.dart';
-import 'package:Phintar/constants/app_typografy.dart';
-import 'package:Phintar/widgets/extention/navigator.dart';
-import 'package:Phintar/constants/app_theme.dart';
-import 'package:Phintar/models/preference_handler.dart';
-import 'package:Phintar/widgets/bottom_nav/bottom_nav_bar_phintar.dart';
-import 'package:Phintar/views/2_register_page/register_page.dart';
-import 'package:Phintar/views/3_reset_password_page/reset_password_page.dart';
+import 'package:phintar/constants/app_images.dart';
+import 'package:phintar/services/firebase_auth_service.dart';
+import 'package:phintar/widgets/app_button.dart';
+import 'package:phintar/widgets/app_textfield.dart';
+import 'package:phintar/constants/app_typografy.dart';
+import 'package:phintar/widgets/extention/navigator.dart';
+import 'package:phintar/constants/app_theme.dart';
+import 'package:phintar/models/preference_handler.dart';
+import 'package:phintar/widgets/bottom_nav/bottom_nav_bar_phintar.dart';
+import 'package:phintar/views/2_register_page/register_page.dart';
+import 'package:phintar/views/3_reset_password_page/reset_password_page.dart';
 import 'package:flutter/material.dart';
 
 class LoginPagePhintar extends StatefulWidget {
@@ -49,7 +49,7 @@ class _LoginPagePhintarState extends State<LoginPagePhintar> {
         final profile = await FirebaseAuthService().getUserDetails(user.uid);
         final displayName = (profile != null && profile.name.isNotEmpty)
             ? profile.name
-            : (user.displayName ?? 'Pengguna Phintar');
+            : (user.displayName ?? 'Pengguna phintar');
 
         await PreferenceHandler.setLogin(true);
         await PreferenceHandler.setUserName(displayName);
@@ -62,10 +62,7 @@ class _LoginPagePhintarState extends State<LoginPagePhintar> {
       if (!mounted) return;
       final message = FirebaseAuthService.getErrorMessage(e);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(message),
-          backgroundColor: AppTheme.merah,
-        ),
+        SnackBar(content: Text(message), backgroundColor: AppTheme.merah),
       );
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -94,10 +91,7 @@ class _LoginPagePhintarState extends State<LoginPagePhintar> {
       if (!mounted) return;
       final message = FirebaseAuthService.getErrorMessage(e);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(message),
-          backgroundColor: AppTheme.merah,
-        ),
+        SnackBar(content: Text(message), backgroundColor: AppTheme.merah),
       );
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -121,7 +115,7 @@ class _LoginPagePhintarState extends State<LoginPagePhintar> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Phintar",
+                      "phintar",
                       style: AppTextStyle.judul.copyWith(fontSize: 48),
                     ),
                     SizedBox(height: 40),

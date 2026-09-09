@@ -1,6 +1,6 @@
-import 'package:Phintar/constants/app_theme.dart';
-import 'package:Phintar/constants/app_typografy.dart';
-import 'package:Phintar/models/materi_model.dart';
+import 'package:phintar/constants/app_theme.dart';
+import 'package:phintar/constants/app_typografy.dart';
+import 'package:phintar/models/materi_model.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';

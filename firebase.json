@@ -1,1 +1,25 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"phintar-edu-6cd66","appId":"1:130515174634:android:e18b05e0665eab00d30393","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"phintar-edu-6cd66","configurations":{"android":"1:130515174634:android:e18b05e0665eab00d30393","ios":"1:130515174634:ios:30cc08cf00dd0b40d30393","macos":"1:130515174634:ios:30cc08cf00dd0b40d30393","web":"1:130515174634:web:7570ff7d289e1a39d30393","windows":"1:130515174634:web:6f7ffd8529875e5bd30393"}}}}}}
+{
+    "flutter": {
+        "platforms": {
+            "android": {
+                "default": {
+                    "projectId": "phintar-edu-6cd66",
+                    "appId": "1:130515174634:android:e18b05e0665eab00d30393",
+                    "fileOutput": "android/app/google-services.json"
+                }
+            },
+            "dart": {
+                "lib/firebase_options.dart": {
+                    "projectId": "phintar-edu-6cd66",
+                    "configurations": {
+                        "android": "1:130515174634:android:e18b05e0665eab00d30393",
+                        "ios": "1:130515174634:ios:30cc08cf00dd0b40d30393",
+                        "macos": "1:130515174634:ios:30cc08cf00dd0b40d30393",
+                        "web": "1:130515174634:web:7570ff7d289e1a39d30393",
+                        "windows": "1:130515174634:web:6f7ffd8529875e5bd30393"
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,11 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:Phintar/models/materi_history_model.dart';
-import 'package:Phintar/models/preference_handler.dart';
+import 'package:phintar/models/materi_history_model.dart';
+import 'package:phintar/models/preference_handler.dart';
 
 /// Layanan untuk mengelola riwayat durasi belajar materi pada Cloud Firestore (koleksi `materi_histories`).
 class FirestoreMateriService {
-  static final FirestoreMateriService _instance = FirestoreMateriService._init();
+  static final FirestoreMateriService _instance =
+      FirestoreMateriService._init();
   factory FirestoreMateriService() => _instance;
   static FirestoreMateriService get instance => _instance;
 
@@ -102,8 +103,10 @@ class FirestoreMateriService {
   }) async {
     final list = await getAllHistories(userEmail: userEmail);
     return list
-        .map((map) =>
-            MateriHistoryModel.fromMap(map, docId: map['id']?.toString()))
+        .map(
+          (map) =>
+              MateriHistoryModel.fromMap(map, docId: map['id']?.toString()),
+        )
         .toList();
   }
 

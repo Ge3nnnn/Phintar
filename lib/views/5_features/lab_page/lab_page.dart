@@ -1,10 +1,10 @@
-import 'package:Phintar/constants/app_theme.dart';
-import 'package:Phintar/constants/app_typografy.dart';
-import 'package:Phintar/providers/lab_provider.dart';
-import 'package:Phintar/views/5_features/lab_page/lab_simulation_screen_pendulum.dart';
-import 'package:Phintar/widgets/app_banner.dart';
-import 'package:Phintar/widgets/app_bar.dart';
-import 'package:Phintar/widgets/app_search_bar.dart';
+import 'package:phintar/constants/app_theme.dart';
+import 'package:phintar/constants/app_typografy.dart';
+import 'package:phintar/providers/lab_provider.dart';
+import 'package:phintar/views/5_features/lab_page/lab_simulation_screen_pendulum.dart';
+import 'package:phintar/widgets/app_banner.dart';
+import 'package:phintar/widgets/app_bar.dart';
+import 'package:phintar/widgets/app_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

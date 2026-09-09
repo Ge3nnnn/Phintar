@@ -1,12 +1,12 @@
-import 'package:Phintar/widgets/app_button.dart';
-import 'package:Phintar/widgets/app_textfield.dart';
-import 'package:Phintar/constants/app_theme.dart';
-import 'package:Phintar/constants/app_typografy.dart';
-import 'package:Phintar/widgets/app_bar.dart';
-import 'package:Phintar/services/firebase_auth_service.dart';
-import 'package:Phintar/widgets/extention/navigator.dart';
+import 'package:phintar/widgets/app_button.dart';
+import 'package:phintar/widgets/app_textfield.dart';
+import 'package:phintar/constants/app_theme.dart';
+import 'package:phintar/constants/app_typografy.dart';
+import 'package:phintar/widgets/app_bar.dart';
+import 'package:phintar/services/firebase_auth_service.dart';
+import 'package:phintar/widgets/extention/navigator.dart';
 
-import 'package:Phintar/views/1_loginpage/login_page_phintar.dart';
+import 'package:phintar/views/1_loginpage/login_page_phintar.dart';
 
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
@@ -119,9 +119,7 @@ class _ResetPasswordPage2State extends State<ResetPasswordPage2> {
                   pageNavigator.pop();
                 } else {
                   pageNavigator.pushAndRemoveUntil(
-                    MaterialPageRoute(
-                      builder: (_) => const LoginPagePhintar(),
-                    ),
+                    MaterialPageRoute(builder: (_) => const LoginPagePhintar()),
                     (route) => false,
                   );
                 }
@@ -135,10 +133,7 @@ class _ResetPasswordPage2State extends State<ResetPasswordPage2> {
       if (mounted) {
         final message = FirebaseAuthService.getErrorMessage(e);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(message),
-            backgroundColor: Colors.red,
-          ),
+          SnackBar(content: Text(message), backgroundColor: Colors.red),
         );
       }
     } finally {
@@ -153,7 +148,7 @@ class _ResetPasswordPage2State extends State<ResetPasswordPage2> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: "Phintar"),
+      appBar: CustomAppBar(title: "phintar"),
       backgroundColor: AppTheme.backgroundPrimary,
       body: SafeArea(
         child: SingleChildScrollView(

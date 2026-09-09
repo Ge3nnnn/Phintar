@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:Phintar/constants/app_theme.dart';
-import 'package:Phintar/constants/app_typografy.dart';
-import 'package:Phintar/models/lab_model.dart';
-import 'package:Phintar/views/5_features/lab_page/simulations/sim_registry.dart';
-import 'package:Phintar/widgets/app_bar.dart';
+import 'package:phintar/constants/app_theme.dart';
+import 'package:phintar/constants/app_typografy.dart';
+import 'package:phintar/models/lab_model.dart';
+import 'package:phintar/views/5_features/lab_page/simulations/sim_registry.dart';
+import 'package:phintar/widgets/app_bar.dart';
 import 'package:flutter/material.dart';
 
 /// Dynamic lab simulation screen — the SINGLE template for ALL labs.

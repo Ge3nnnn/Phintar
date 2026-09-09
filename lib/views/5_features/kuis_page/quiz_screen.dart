@@ -1,11 +1,11 @@
-import 'package:Phintar/constants/app_theme.dart';
-import 'package:Phintar/constants/app_typografy.dart';
-import 'package:Phintar/services/firestore_quiz_service.dart';
-import 'package:Phintar/models/quiz_history_model.dart';
-import 'package:Phintar/models/quiz_model.dart';
-import 'package:Phintar/models/preference_handler.dart';
-import 'package:Phintar/views/5_features/kuis_page/quiz_review_screen.dart';
-import 'package:Phintar/widgets/app_bar.dart';
+import 'package:phintar/constants/app_theme.dart';
+import 'package:phintar/constants/app_typografy.dart';
+import 'package:phintar/services/firestore_quiz_service.dart';
+import 'package:phintar/models/quiz_history_model.dart';
+import 'package:phintar/models/quiz_model.dart';
+import 'package:phintar/models/preference_handler.dart';
+import 'package:phintar/views/5_features/kuis_page/quiz_review_screen.dart';
+import 'package:phintar/widgets/app_bar.dart';
 import 'package:flutter/material.dart';
 
 /// Dynamic quiz screen — the SINGLE template for ALL quizzes.

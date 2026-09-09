@@ -1,10 +1,10 @@
-import 'package:Phintar/constants/app_theme.dart';
-import 'package:Phintar/constants/app_typografy.dart';
-import 'package:Phintar/providers/quiz_provider.dart';
-import 'package:Phintar/views/5_features/kuis_page/quiz_screen.dart';
-import 'package:Phintar/widgets/app_banner.dart';
-import 'package:Phintar/widgets/app_bar.dart';
-import 'package:Phintar/widgets/app_search_bar.dart';
+import 'package:phintar/constants/app_theme.dart';
+import 'package:phintar/constants/app_typografy.dart';
+import 'package:phintar/providers/quiz_provider.dart';
+import 'package:phintar/views/5_features/kuis_page/quiz_screen.dart';
+import 'package:phintar/widgets/app_banner.dart';
+import 'package:phintar/widgets/app_bar.dart';
+import 'package:phintar/widgets/app_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

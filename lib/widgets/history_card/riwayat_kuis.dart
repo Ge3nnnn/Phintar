@@ -1,9 +1,9 @@
-import 'package:Phintar/constants/app_theme.dart';
-import 'package:Phintar/constants/app_typografy.dart';
-import 'package:Phintar/services/firestore_quiz_service.dart';
-import 'package:Phintar/providers/quiz_provider.dart';
-import 'package:Phintar/views/5_features/kuis_page/quiz_screen.dart';
-import 'package:Phintar/widgets/bottom_nav/bottom_nav_bar_phintar.dart';
+import 'package:phintar/constants/app_theme.dart';
+import 'package:phintar/constants/app_typografy.dart';
+import 'package:phintar/services/firestore_quiz_service.dart';
+import 'package:phintar/providers/quiz_provider.dart';
+import 'package:phintar/views/5_features/kuis_page/quiz_screen.dart';
+import 'package:phintar/widgets/bottom_nav/bottom_nav_bar_phintar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

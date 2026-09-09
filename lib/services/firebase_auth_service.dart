@@ -1,7 +1,7 @@
-import 'package:Phintar/models/firebase_model/user_models.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:phintar/models/firebase_model/user_models.dart';
 
 /// Service khusus untuk mengelola otentikasi Firebase (Email/Password & Google Sign In)
 /// serta sinkronisasi data profil pengguna ke Cloud Firestore.
@@ -166,7 +166,8 @@ class FirebaseAuthService {
         case 'requires-recent-login':
           return 'Demi keamanan, silakan keluar dan masuk kembali sebelum mengubah kata sandi.';
         default:
-          return error.message ?? 'Terjadi kesalahan otentikasi. Silakan coba lagi.';
+          return error.message ??
+              'Terjadi kesalahan otentikasi. Silakan coba lagi.';
       }
     }
     return error.toString();

@@ -1,14 +1,14 @@
-import 'package:Phintar/models/preference_handler.dart';
-import 'package:Phintar/services/firebase_auth_service.dart';
-import 'package:Phintar/widgets/bottom_nav/bottom_nav_bar_phintar.dart';
-import 'package:Phintar/widgets/app_textfield.dart';
-import 'package:Phintar/widgets/app_bar.dart';
-import 'package:Phintar/widgets/app_button.dart';
-import 'package:Phintar/constants/app_images.dart';
-import 'package:Phintar/constants/app_typografy.dart';
-import 'package:Phintar/constants/app_theme.dart';
-import 'package:Phintar/widgets/extention/navigator.dart';
-import 'package:Phintar/views/1_loginpage/login_page_phintar.dart';
+import 'package:phintar/models/preference_handler.dart';
+import 'package:phintar/services/firebase_auth_service.dart';
+import 'package:phintar/widgets/bottom_nav/bottom_nav_bar_phintar.dart';
+import 'package:phintar/widgets/app_textfield.dart';
+import 'package:phintar/widgets/app_bar.dart';
+import 'package:phintar/widgets/app_button.dart';
+import 'package:phintar/constants/app_images.dart';
+import 'package:phintar/constants/app_typografy.dart';
+import 'package:phintar/constants/app_theme.dart';
+import 'package:phintar/widgets/extention/navigator.dart';
+import 'package:phintar/views/1_loginpage/login_page_phintar.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
@@ -88,7 +88,7 @@ class _RegisterScreenPhintarState extends State<RegisterScreenPhintar> {
             : null;
         final displayName = (profile != null && profile.name.isNotEmpty)
             ? profile.name
-            : (user?.displayName ?? 'Pengguna Phintar');
+            : (user?.displayName ?? 'Pengguna phintar');
 
         await PreferenceHandler.setLogin(true);
         await PreferenceHandler.setUserName(displayName);
@@ -148,7 +148,7 @@ class _RegisterScreenPhintarState extends State<RegisterScreenPhintar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(title: "Phintar"),
+      appBar: const CustomAppBar(title: "phintar"),
       backgroundColor: AppTheme.backgroundPrimary,
       body: SafeArea(
         child: SingleChildScrollView(

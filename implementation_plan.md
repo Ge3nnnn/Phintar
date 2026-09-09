@@ -1,16 +1,16 @@
-# Rencana Pengembangan Komprehensif Aplikasi Belajar Fisika Mandiri "Phintar"
+# Rencana Pengembangan Komprehensif Aplikasi Belajar Fisika Mandiri "phintar"
 
-Dokumen ini menyajikan rencana pengembangan sistematis dan komprehensif untuk aplikasi **Phintar** — platform pembelajaran fisika mandiri interaktif berbasis multimedia, laboratorium virtual real-time, dan gamifikasi.
+Dokumen ini menyajikan rencana pengembangan sistematis dan komprehensif untuk aplikasi **phintar** — platform pembelajaran fisika mandiri interaktif berbasis multimedia, laboratorium virtual real-time, dan gamifikasi.
 
 ---
 
 ## 1. Ringkasan Eksekutif & Visi Produk
 
 ### 1.1 Visi Produk
-Menjadi platform pembelajaran fisika interaktif nomor 1 di Indonesia yang mentransformasi pemahaman fisika dari sekadar "hafalan rumus abstrak" menjadi **pengalaman visual, intuitif, dan eksperimental**. Phintar memungkinkan siswa SMA dan mahasiswa tingkat awal memahami prinsip-prinsip fisika secara mandiri melalui simulasi laboratorium virtual real-time dan umpan balik langsung.
+Menjadi platform pembelajaran fisika interaktif nomor 1 di Indonesia yang mentransformasi pemahaman fisika dari sekadar "hafalan rumus abstrak" menjadi **pengalaman visual, intuitif, dan eksperimental**. phintar memungkinkan siswa SMA dan mahasiswa tingkat awal memahami prinsip-prinsip fisika secara mandiri melalui simulasi laboratorium virtual real-time dan umpan balik langsung.
 
 ### 1.2 Problematika Utama & Solusi
-| Problematika Pembelajaran Fisika | Solusi Aplikasi Phintar |
+| Problematika Pembelajaran Fisika | Solusi Aplikasi phintar |
 | :--- | :--- |
 | **Abstraksi Konsep**: Konsep fisika (gelombang, medan listrik, vektor) sulit dibayangkan tanpa media visual. | **Modul Multimedia Interaktif**: Diagram interaktif, rumus terformat LaTeX/MathML, dan video konsep singkat. |
 | **Keterbatasan Lab Fisik**: Sekolah/kampus seringkali memiliki keterbatasan alat praktikum fisika. | **Virtual Lab Real-Time**: Simulasi fisika 2D/3D berbasis parameter dinamis dengan pengolahan grafik real-time. |
@@ -24,7 +24,7 @@ Menjadi platform pembelajaran fisika interaktif nomor 1 di Indonesia yang mentra
 
 ```mermaid
 mindmap
-  root((Fitur Utama Phintar))
+  root((Fitur Utama phintar))
     Modul Material Learning
       Teks Interaktif & LaTeX
       Video Player HLS
@@ -93,7 +93,7 @@ mindmap
 sequenceDiagram
     autonumber
     actor User as Siswa / Mahasiswa
-    participant App as Phintar App (Flutter)
+    participant App as phintar App (Flutter)
     participant Engine as Physics Sim Engine
     participant API as Backend Server
     participant DB as Cloud Database
@@ -127,20 +127,20 @@ sequenceDiagram
 
 ### 4.1 Visual Hierarchy & Design System Tokens
 
-Aplikasi Phintar mengusung pendekatan visual **Friendly, Modern, Dynamic & Scientific** dengan kombinasi elemen *Glassmorphism* dan warna aksen fisikis yang kontras.
+Aplikasi phintar mengusung pendekatan visual **Friendly, Modern, Dynamic & Scientific** dengan kombinasi elemen *Glassmorphism* dan warna aksen fisikis yang kontras.
 
 ```
 +-----------------------------------------------------------------------+
 |                              COLOR PALETTE                            |
 +-------------------+--------------------+------------------+-----------+
-| Phintar Blue      | Energy Amber       | Quantum Purple   | Dark Slate|
+| phintar Blue      | Energy Amber       | Quantum Purple   | Dark Slate|
 | #2A64F6           | #FF9F1C            | #7C3AED          | #0F172A   |
 | (Primary Theme)   | (XP, Streaks, Acc) | (Interactive Lab)| (Canvas)  |
 +-------------------+--------------------+------------------+-----------+
 ```
 
 1. **Color Tokens**:
-   - **Primary**: `Phintar Blue (#2A64F6)` — Memberikan kesan profesional, percaya diri, dan saintifik.
+   - **Primary**: `phintar Blue (#2A64F6)` — Memberikan kesan profesional, percaya diri, dan saintifik.
    - **Secondary / Accent**: `Energy Amber (#FF9F1C)` — Digunakan untuk elemen gamifikasi (XP, Streaks, Bintang Prestasi).
    - **Lab Interactive Elements**: `Quantum Purple (#7C3AED)` & `Neon Teal (#06B6D4)` — Warna variabel slider, node rangkaian listrik, dan vektor gaya.
    - **Background & Canvas**:
@@ -227,7 +227,7 @@ graph TD
 
 ```mermaid
 gantt
-    title Roadmap Pelaksanaan Pengembangan Aplikasi Phintar
+    title Roadmap Pelaksanaan Pengembangan Aplikasi phintar
     dateFormat  YYYY-MM-DD
     section Fase 1: MVP
     Arsitektur Core & Auth        :done, m1, 2026-09-01, 2w
@@ -294,7 +294,7 @@ gantt
 
 ## 7. Kesimpulan & Langkah Selanjutnya
 
-Rencana pengembangan aplikasi **Phintar** ini dirancang secara terstruktur untuk menjawab tantangan pembelajaran fisika mandiri melalui fondasi teknologi yang fleksibel, scalable, dan berperforma tinggi.
+Rencana pengembangan aplikasi **phintar** ini dirancang secara terstruktur untuk menjawab tantangan pembelajaran fisika mandiri melalui fondasi teknologi yang fleksibel, scalable, dan berperforma tinggi.
 
 > [!IMPORTANT]
 > **Rekomendasi Tindakan Selanjutnya**:

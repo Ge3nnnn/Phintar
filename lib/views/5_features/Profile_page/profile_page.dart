@@ -1,13 +1,13 @@
 import 'dart:io';
-import 'package:Phintar/constants/app_theme.dart';
-import 'package:Phintar/constants/app_typografy.dart';
-import 'package:Phintar/services/firebase_auth_service.dart';
-import 'package:Phintar/views/7_setting_page/settings_page.dart';
-import 'package:Phintar/widgets/app_bar.dart';
-import 'package:Phintar/widgets/extention/navigator.dart';
-import 'package:Phintar/models/preference_handler.dart';
-import 'package:Phintar/widgets/history_card/riwayat_kuis.dart';
-import 'package:Phintar/widgets/history_card/riwayat_materi.dart';
+import 'package:phintar/constants/app_theme.dart';
+import 'package:phintar/constants/app_typografy.dart';
+import 'package:phintar/services/firebase_auth_service.dart';
+import 'package:phintar/views/7_setting_page/settings_page.dart';
+import 'package:phintar/widgets/app_bar.dart';
+import 'package:phintar/widgets/extention/navigator.dart';
+import 'package:phintar/models/preference_handler.dart';
+import 'package:phintar/widgets/history_card/riwayat_kuis.dart';
+import 'package:phintar/widgets/history_card/riwayat_materi.dart';
 
 import 'package:flutter/material.dart';
 
@@ -22,10 +22,13 @@ class _ProfilePagePhintarState extends State<ProfilePagePhintar> {
   @override
   Widget build(BuildContext context) {
     final currentUser = FirebaseAuthService().currentUser;
-    final userName = (currentUser?.displayName != null && currentUser!.displayName!.isNotEmpty)
+    final userName =
+        (currentUser?.displayName != null &&
+            currentUser!.displayName!.isNotEmpty)
         ? currentUser.displayName!
         : PreferenceHandler.userName;
-    final userEmail = (currentUser?.email != null && currentUser!.email!.isNotEmpty)
+    final userEmail =
+        (currentUser?.email != null && currentUser!.email!.isNotEmpty)
         ? currentUser.email!
         : PreferenceHandler.userEmail;
     final userPhoto = PreferenceHandler.userPhoto;
@@ -77,22 +80,22 @@ class _ProfilePagePhintarState extends State<ProfilePagePhintar> {
                                 fit: BoxFit.cover,
                               )
                             : hasNetworkPhoto
-                                ? Image.network(
-                                    networkPhoto,
-                                    width: 60,
-                                    height: 60,
-                                    fit: BoxFit.cover,
-                                    errorBuilder: (_, _, _) => const Icon(
-                                      Icons.person_rounded,
-                                      color: AppTheme.bottonColor,
-                                      size: 36,
-                                    ),
-                                  )
-                                : const Icon(
-                                    Icons.person_rounded,
-                                    color: AppTheme.bottonColor,
-                                    size: 36,
-                                  ),
+                            ? Image.network(
+                                networkPhoto,
+                                width: 60,
+                                height: 60,
+                                fit: BoxFit.cover,
+                                errorBuilder: (_, _, _) => const Icon(
+                                  Icons.person_rounded,
+                                  color: AppTheme.bottonColor,
+                                  size: 36,
+                                ),
+                              )
+                            : const Icon(
+                                Icons.person_rounded,
+                                color: AppTheme.bottonColor,
+                                size: 36,
+                              ),
                       ),
                     ),
                     const SizedBox(width: 16),
@@ -102,7 +105,7 @@ class _ProfilePagePhintarState extends State<ProfilePagePhintar> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            userName.isNotEmpty ? userName : 'Pengguna Phintar',
+                            userName.isNotEmpty ? userName : 'Pengguna phintar',
                             style: AppTextStyle.subsubjudul,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,

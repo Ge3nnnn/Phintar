@@ -1,5 +1,5 @@
-import 'package:Phintar/models/firebase_model/user_models.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:phintar/models/firebase_model/user_models.dart';
 
 /// Service untuk mengelola dokumen profil pengguna di Cloud Firestore koleksi `users`.
 class FirestoreUserService {

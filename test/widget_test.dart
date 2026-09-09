@@ -1,5 +1,5 @@
-import 'package:Phintar/main.dart';
-import 'package:Phintar/models/preference_handler.dart';
+import 'package:phintar/main.dart';
+import 'package:phintar/models/preference_handler.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -15,8 +15,8 @@ void main() {
     await tester.pumpWidget(const MyApp());
     await tester.pump();
 
-    // Verify that the title 'Phintar' is present on the login screen
-    expect(find.text('Phintar'), findsOneWidget);
+    // Verify that the title 'phintar' is present on the login screen
+    expect(find.text('phintar'), findsOneWidget);
     expect(find.text('Masuk'), findsOneWidget);
   });
 }

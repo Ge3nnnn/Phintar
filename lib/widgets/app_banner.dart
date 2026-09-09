@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:Phintar/constants/app_theme.dart';
-import 'package:Phintar/constants/app_typografy.dart';
+import 'package:phintar/constants/app_theme.dart';
+import 'package:phintar/constants/app_typografy.dart';
 
 class EnterCourse extends StatelessWidget {
   const EnterCourse({

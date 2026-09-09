@@ -1,13 +1,13 @@
-import 'package:Phintar/services/firebase_auth_service.dart';
+import 'package:phintar/services/firebase_auth_service.dart';
 import 'package:flutter/material.dart';
-import 'package:Phintar/constants/app_theme.dart';
-import 'package:Phintar/constants/app_typografy.dart';
-import 'package:Phintar/views/1_loginpage/login_page_phintar.dart';
-import 'package:Phintar/views/4_edit_profile_page/edit_profile_phintar.dart';
-import 'package:Phintar/views/3_reset_password_page/reset_password_page2.dart';
-import 'package:Phintar/widgets/extention/navigator.dart';
-import 'package:Phintar/models/preference_handler.dart';
-import 'package:Phintar/widgets/app_bar.dart';
+import 'package:phintar/constants/app_theme.dart';
+import 'package:phintar/constants/app_typografy.dart';
+import 'package:phintar/views/1_loginpage/login_page_phintar.dart';
+import 'package:phintar/views/4_edit_profile_page/edit_profile_phintar.dart';
+import 'package:phintar/views/3_reset_password_page/reset_password_page2.dart';
+import 'package:phintar/widgets/extention/navigator.dart';
+import 'package:phintar/models/preference_handler.dart';
+import 'package:phintar/widgets/app_bar.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});

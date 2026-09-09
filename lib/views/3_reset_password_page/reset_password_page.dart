@@ -1,9 +1,9 @@
-import 'package:Phintar/services/firebase_auth_service.dart';
-import 'package:Phintar/widgets/app_button.dart';
-import 'package:Phintar/widgets/app_textfield.dart';
-import 'package:Phintar/constants/app_typografy.dart';
-import 'package:Phintar/widgets/app_bar.dart';
-import 'package:Phintar/constants/app_theme.dart';
+import 'package:phintar/services/firebase_auth_service.dart';
+import 'package:phintar/widgets/app_button.dart';
+import 'package:phintar/widgets/app_textfield.dart';
+import 'package:phintar/constants/app_typografy.dart';
+import 'package:phintar/widgets/app_bar.dart';
+import 'package:phintar/constants/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
@@ -56,12 +56,12 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
           ),
           title: Row(
             children: [
-              const Icon(Icons.mark_email_read_rounded, color: AppTheme.bottonColor),
-              const SizedBox(width: 10),
-              Text(
-                "Email Terkirim!",
-                style: AppTextStyle.dialogTitle,
+              const Icon(
+                Icons.mark_email_read_rounded,
+                color: AppTheme.bottonColor,
               ),
+              const SizedBox(width: 10),
+              Text("Email Terkirim!", style: AppTextStyle.dialogTitle),
             ],
           ),
           content: Text(
@@ -84,10 +84,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         final message = FirebaseAuthService.getErrorMessage(e);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(
-              message,
-              style: AppTextStyle.normalText,
-            ),
+            content: Text(message, style: AppTextStyle.normalText),
             backgroundColor: AppTheme.merah,
           ),
         );
@@ -104,7 +101,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(title: "Phintar"),
+      appBar: const CustomAppBar(title: "phintar"),
       backgroundColor: AppTheme.backgroundPrimary,
       body: SafeArea(
         child: SingleChildScrollView(

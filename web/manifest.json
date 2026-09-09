@@ -1,6 +1,6 @@
 {
-    "name": "Phintar",
-    "short_name": "Phintar",
+    "name": "phintar",
+    "short_name": "phintar",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
