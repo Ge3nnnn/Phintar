@@ -1,12 +1,13 @@
 import 'dart:async';
-import 'package:blabla/data/models/materi_history_model.dart';
-import 'package:blabla/models/preference_handler.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:phintar/data/models/materi_history_model.dart';
+import 'package:phintar/data/datasources/preference_handler.dart';
 
 class DatabaseHelperMateri {
   // Singleton pattern
   static final DatabaseHelperMateri instance = DatabaseHelperMateri._init();
+  factory DatabaseHelperMateri() => instance;
   static Database? _database;
 
   DatabaseHelperMateri._init();
@@ -71,7 +72,7 @@ class DatabaseHelperMateri {
     required int durationSeconds,
   }) async {
     final email = _resolveEmail(userEmail);
-    final db = await instance.database;
+    final db = await database;
 
     // Cek histori materi untuk user tertentu
     final existing = await getHistoriesByMateri(materiId, userEmail: email);
@@ -115,9 +116,9 @@ class DatabaseHelperMateri {
     String? userEmail,
   }) async {
     final email = _resolveEmail(userEmail);
-    final db = await instance.database;
+    final db = await database;
 
-    // Konsolidasi: Gabungkan histori lama materi_id = 2 ke materi_id = 1 (Gelombang Osilasi)
+    // Konsolidasi: Gabungkan histori lama materi_id = 2 ke materi_id = 1 (Gelombang Osilasi) jika ada
     final p2List = await db.query(
       tableMateriHistories,
       where: 'user_email = ? AND materi_id = 2',
@@ -182,7 +183,7 @@ class DatabaseHelperMateri {
     String? userEmail,
   }) async {
     final email = _resolveEmail(userEmail);
-    final db = await instance.database;
+    final db = await database;
     return await db.query(
       tableMateriHistories,
       where: 'materi_id = ? AND user_email = ?',
@@ -193,8 +194,9 @@ class DatabaseHelperMateri {
 
   // 3. UPDATE: Memperbarui riwayat materi (berdasarkan ID histori)
   Future<int> updateHistory(Map<String, dynamic> row) async {
-    final db = await instance.database;
-    int id = row['id'];
+    final db = await database;
+    final id = row['id'];
+    if (id == null) return 0;
     return await db.update(
       tableMateriHistories,
       row,
@@ -211,7 +213,7 @@ class DatabaseHelperMateri {
 
   // 4. DELETE: Menghapus histori tertentu
   Future<int> deleteHistory(int id) async {
-    final db = await instance.database;
+    final db = await database;
     return await db.delete(
       tableMateriHistories,
       where: 'id = ?',
@@ -219,8 +221,9 @@ class DatabaseHelperMateri {
     );
   }
 
-  Future close() async {
-    final db = await instance.database;
-    db.close();
+  Future<void> close() async {
+    final db = await database;
+    await db.close();
+    _database = null;
   }
 }

@@ -1,10 +1,12 @@
-import 'package:blabla/models/user_model_login.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:phintar/data/models/user_model_login.dart';
 
 class DBHelper {
   static final DBHelper _instance = DBHelper._internal();
   factory DBHelper() => _instance;
+  static DBHelper get instance => _instance;
+
   DBHelper._internal();
 
   static Database? _database;
@@ -17,17 +19,16 @@ class DBHelper {
 
   Future<Database> _initDB() async {
     final dbPath = await getDatabasesPath();
-    // 1. PERBAIKAN: Menghapus spasi di akhir nama file .db
     final path = join(dbPath, 'datapengguna.db');
 
     return await openDatabase(
       path,
       version: 3,
-      // 2. PERBAIKAN: Logika onUpgrade menggunakan oldVersion
       onUpgrade: (db, oldVersion, newVersion) async {
         if (oldVersion < 2) {
+          // Backward compatibility for legacy installations
           await db.execute('''
-            CREATE TABLE siswa(
+            CREATE TABLE IF NOT EXISTS siswa(
               id INTEGER PRIMARY KEY AUTOINCREMENT,
               nama TEXT,
               kelas TEXT
@@ -38,7 +39,6 @@ class DBHelper {
           await db.execute('ALTER TABLE users ADD COLUMN nomor_hp TEXT');
         }
       },
-      // 3. PERBAIKAN: onCreate harus mencerminkan struktur TERBARU (Versi 3)
       onCreate: (db, version) async {
         await db.execute('''
           CREATE TABLE users(
@@ -47,15 +47,6 @@ class DBHelper {
             password TEXT,
             nama TEXT,
             nomor_hp TEXT 
-          )
-        ''');
-
-        // Tabel siswa langsung dibuat saat instalasi baru
-        await db.execute('''
-          CREATE TABLE siswa(
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            nama TEXT,
-            kelas TEXT
           )
         ''');
       },
@@ -88,6 +79,20 @@ class DBHelper {
     return null;
   }
 
+  Future<UserModelSQL?> getUserByEmail(String email) async {
+    final db = await database;
+    final List<Map<String, dynamic>> results = await db.query(
+      'users',
+      where: 'email = ?',
+      whereArgs: [email],
+    );
+
+    if (results.isNotEmpty) {
+      return UserModelSQL.fromMap(results.first);
+    }
+    return null;
+  }
+
   Future<List<UserModelSQL>> getAllUsers() async {
     final db = await database;
     final List<Map<String, dynamic>> results = await db.query('users');
@@ -106,15 +111,28 @@ class DBHelper {
         'users',
         pengguna.toMap(),
         where: 'id = ?',
-        // 4. PERBAIKAN: Gunakan ID, bukan Nama.
-        // Pastikan di UserModelSQL kamu sudah menambahkan variabel 'id' (int?).
         whereArgs: [pengguna.id],
       );
       return count > 0;
     } catch (e) {
       return false;
     }
-  } // Tambahkan fungsi ini di db_helper.dart untuk mengecek keberadaan email
+  }
+
+  Future<bool> updateUserName(String email, String newName) async {
+    final db = await database;
+    try {
+      int count = await db.update(
+        'users',
+        {'nama': newName},
+        where: 'email = ?',
+        whereArgs: [email],
+      );
+      return count > 0;
+    } catch (e) {
+      return false;
+    }
+  }
 
   Future<bool> checkEmailExists(String email) async {
     final db = await database;
@@ -123,10 +141,9 @@ class DBHelper {
       where: 'email = ?',
       whereArgs: [email],
     );
-    return result.isNotEmpty; // Mengembalikan true jika email ditemukan
+    return result.isNotEmpty;
   }
 
-  // Fungsi untuk memperbarui password berdasarkan email
   Future<bool> updatePassword(String email, String newPassword) async {
     final db = await database;
     try {
@@ -140,5 +157,11 @@ class DBHelper {
     } catch (e) {
       return false;
     }
+  }
+
+  Future<void> close() async {
+    final db = await database;
+    await db.close();
+    _database = null;
   }
 }

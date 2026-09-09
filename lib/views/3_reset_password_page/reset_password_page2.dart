@@ -1,12 +1,12 @@
-import 'package:blabla/widgets/app_button.dart';
-import 'package:blabla/widgets/app_textfield.dart';
-import 'package:blabla/constants/app_theme.dart';
-import 'package:blabla/constants/app_typografy.dart';
-import 'package:blabla/widgets/app_bar.dart';
-import 'package:blabla/data/database/db_helper.dart';
-import 'package:blabla/widgets/extention/navigator.dart';
+import 'package:phintar/widgets/app_button.dart';
+import 'package:phintar/widgets/app_textfield.dart';
+import 'package:phintar/constants/app_theme.dart';
+import 'package:phintar/constants/app_typografy.dart';
+import 'package:phintar/widgets/app_bar.dart';
+import 'package:phintar/data/database/db_helper.dart';
+import 'package:phintar/widgets/extention/navigator.dart';
 
-import 'package:blabla/views/1_loginpage/login_page_phintar.dart';
+import 'package:phintar/views/1_loginpage/login_page_phintar.dart';
 
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';

@@ -1,11 +1,11 @@
-import 'package:blabla/constants/app_theme.dart';
-import 'package:blabla/constants/app_typografy.dart';
-import 'package:blabla/data/database/db_quiz.dart';
-import 'package:blabla/data/models/quiz_history_model.dart';
-import 'package:blabla/data/models/quiz_model.dart';
-import 'package:blabla/models/preference_handler.dart';
-import 'package:blabla/views/5_features/kuis_page/quiz_review_screen.dart';
-import 'package:blabla/widgets/app_bar.dart';
+import 'package:phintar/constants/app_theme.dart';
+import 'package:phintar/constants/app_typografy.dart';
+import 'package:phintar/data/database/db_quiz.dart';
+import 'package:phintar/data/models/preference_handler.dart';
+import 'package:phintar/data/models/quiz_history_model.dart';
+import 'package:phintar/data/models/quiz_model.dart';
+import 'package:phintar/views/5_features/kuis_page/quiz_review_screen.dart';
+import 'package:phintar/widgets/app_bar.dart';
 import 'package:flutter/material.dart';
 
 /// Dynamic quiz screen — the SINGLE template for ALL quizzes.
@@ -584,10 +584,9 @@ class _QuizScreenState extends State<QuizScreen> {
                 break;
             }
 
-            final Color numTextColor =
-                circleBg == AppTheme.backgroundPrimary
-                    ? (isCurrent ? AppTheme.putih : AppTheme.textColor)
-                    : AppTheme.putih;
+            final Color numTextColor = circleBg == AppTheme.backgroundPrimary
+                ? (isCurrent ? AppTheme.putih : AppTheme.textColor)
+                : AppTheme.putih;
 
             return GestureDetector(
               onTap: () => _goToQuestion(i),

@@ -1,10 +1,10 @@
-import 'package:blabla/constants/app_theme.dart';
-import 'package:blabla/constants/app_typografy.dart';
-import 'package:blabla/providers/lab_provider.dart';
-import 'package:blabla/views/5_features/lab_page/lab_simulation_screen_pendulum.dart';
-import 'package:blabla/widgets/app_banner.dart';
-import 'package:blabla/widgets/app_bar.dart';
-import 'package:blabla/widgets/app_search_bar.dart';
+import 'package:phintar/constants/app_theme.dart';
+import 'package:phintar/constants/app_typografy.dart';
+import 'package:phintar/providers/lab_provider.dart';
+import 'package:phintar/views/5_features/lab_page/lab_simulation_screen_pendulum.dart';
+import 'package:phintar/widgets/app_banner.dart';
+import 'package:phintar/widgets/app_bar.dart';
+import 'package:phintar/widgets/app_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -35,12 +35,16 @@ class _LabPagePhintarState extends State<LabPagePhintar> {
     final filteredLabs = _searchQuery.isEmpty
         ? allLabs
         : allLabs
-            .where((l) =>
-                l.title.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-                (l.subtitle ?? '')
-                    .toLowerCase()
-                    .contains(_searchQuery.toLowerCase()))
-            .toList();
+              .where(
+                (l) =>
+                    l.title.toLowerCase().contains(
+                      _searchQuery.toLowerCase(),
+                    ) ||
+                    (l.subtitle ?? '').toLowerCase().contains(
+                      _searchQuery.toLowerCase(),
+                    ),
+              )
+              .toList();
 
     return Scaffold(
       backgroundColor: AppTheme.backgroundPrimary,

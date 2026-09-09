@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:blabla/data/models/quiz_model.dart';
+import 'package:phintar/data/models/quiz_model.dart';
 
 /// Local datasource for quiz content.
 /// Loads quiz data from JSON seed asset.

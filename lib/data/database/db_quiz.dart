@@ -1,11 +1,12 @@
 import 'dart:async';
-import 'package:blabla/data/models/quiz_history_model.dart';
-import 'package:blabla/models/preference_handler.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:phintar/data/models/quiz_history_model.dart';
+import 'package:phintar/data/datasources/preference_handler.dart';
 
 class DatabaseHelperQuiz {
   static final DatabaseHelperQuiz instance = DatabaseHelperQuiz._init();
+  factory DatabaseHelperQuiz() => instance;
   static Database? _database;
 
   DatabaseHelperQuiz._init();
@@ -62,7 +63,7 @@ class DatabaseHelperQuiz {
   // OPERASI CRUD
   // 1. CREATE or UPDATE: Menyimpan skor dan waktu kuis per user
   Future<int> insertHistory(Map<String, dynamic> row) async {
-    final db = await instance.database;
+    final db = await database;
     final email = _resolveEmail(row['user_email'] as String?);
 
     int quizId = (row['quiz_id'] as num).toInt();
@@ -103,9 +104,11 @@ class DatabaseHelperQuiz {
   }
 
   // 2. READ: Mengambil semua histori untuk user tertentu (diurutkan dari yang terbaru)
-  Future<List<Map<String, dynamic>>> getAllHistories({String? userEmail}) async {
+  Future<List<Map<String, dynamic>>> getAllHistories({
+    String? userEmail,
+  }) async {
     final email = _resolveEmail(userEmail);
-    final db = await instance.database;
+    final db = await database;
     return await db.query(
       tableQuizHistories,
       where: 'user_email = ?',
@@ -128,7 +131,7 @@ class DatabaseHelperQuiz {
     String? userEmail,
   }) async {
     final email = _resolveEmail(userEmail);
-    final db = await instance.database;
+    final db = await database;
     return await db.query(
       tableQuizHistories,
       where: 'quiz_id = ? AND user_email = ?',
@@ -139,8 +142,9 @@ class DatabaseHelperQuiz {
 
   // 3. UPDATE: Memperbarui skor jika kuis diulang (berdasarkan ID histori)
   Future<int> updateHistory(Map<String, dynamic> row) async {
-    final db = await instance.database;
-    int id = row['id'];
+    final db = await database;
+    final id = row['id'];
+    if (id == null) return 0;
     return await db.update(
       tableQuizHistories,
       row,
@@ -157,7 +161,7 @@ class DatabaseHelperQuiz {
 
   // 4. DELETE: Menghapus histori
   Future<int> deleteHistory(int id) async {
-    final db = await instance.database;
+    final db = await database;
     return await db.delete(
       tableQuizHistories,
       where: 'id = ?',
@@ -165,8 +169,9 @@ class DatabaseHelperQuiz {
     );
   }
 
-  Future close() async {
-    final db = await instance.database;
-    db.close();
+  Future<void> close() async {
+    final db = await database;
+    await db.close();
+    _database = null;
   }
 }

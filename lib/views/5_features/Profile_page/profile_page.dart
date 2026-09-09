@@ -1,12 +1,12 @@
 import 'dart:io';
-import 'package:blabla/constants/app_theme.dart';
-import 'package:blabla/constants/app_typografy.dart';
-import 'package:blabla/views/7_setting_page/settings_page.dart';
-import 'package:blabla/widgets/app_bar.dart';
-import 'package:blabla/widgets/extention/navigator.dart';
-import 'package:blabla/models/preference_handler.dart';
-import 'package:blabla/widgets/history_card/riwayat_kuis.dart';
-import 'package:blabla/widgets/history_card/riwayat_materi.dart';
+import 'package:phintar/constants/app_theme.dart';
+import 'package:phintar/constants/app_typografy.dart';
+import 'package:phintar/data/models/preference_handler.dart';
+import 'package:phintar/views/7_setting_page/settings_page.dart';
+import 'package:phintar/widgets/app_bar.dart';
+import 'package:phintar/widgets/extention/navigator.dart';
+import 'package:phintar/widgets/history_card/riwayat_kuis.dart';
+import 'package:phintar/widgets/history_card/riwayat_materi.dart';
 
 import 'package:flutter/material.dart';
 
@@ -23,7 +23,8 @@ class _ProfilePagePhintarState extends State<ProfilePagePhintar> {
     final userName = PreferenceHandler.userName;
     final userEmail = PreferenceHandler.userEmail;
     final userPhoto = PreferenceHandler.userPhoto;
-    final hasPhoto = userPhoto != null &&
+    final hasPhoto =
+        userPhoto != null &&
         userPhoto.isNotEmpty &&
         File(userPhoto).existsSync();
 

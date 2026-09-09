@@ -1,14 +1,12 @@
-import 'package:blabla/constants/app_theme.dart';
-import 'package:blabla/constants/app_typografy.dart';
-import 'package:blabla/views/6_materi/Gelombang_dan_materi/gelombang_dan_osilasi_1.dart';
-import 'package:blabla/widgets/bottom_nav/bottom_nav_bar_phintar.dart';
+import 'package:phintar/constants/app_theme.dart';
+import 'package:phintar/constants/app_typografy.dart';
+import 'package:phintar/views/6_materi/Gelombang_dan_materi/gelombang_dan_osilasi_1.dart';
+import 'package:phintar/widgets/bottom_nav/bottom_nav_bar_phintar.dart';
 import 'package:flutter/material.dart';
-import 'package:blabla/data/database/db_materi.dart';
+import 'package:phintar/data/database/db_materi.dart';
 
 /// Maps materi IDs to their display titles.
-final Map<int, String> kAvailableMateri = {
-  1: 'Gelombang Osilasi',
-};
+final Map<int, String> kAvailableMateri = {1: 'Gelombang Osilasi'};
 
 /// Returns the display title for the given [materiId].
 String getMateriTitle(int materiId, [String? recordedName]) {

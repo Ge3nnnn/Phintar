@@ -1,12 +1,12 @@
 import 'dart:io';
-import 'package:blabla/widgets/app_button.dart';
-import 'package:blabla/widgets/app_textfield.dart';
-import 'package:blabla/constants/app_theme.dart';
-import 'package:blabla/constants/app_typografy.dart';
-import 'package:blabla/widgets/app_bar.dart';
-import 'package:blabla/data/database/db_helper.dart';
-import 'package:blabla/widgets/extention/navigator.dart';
-import 'package:blabla/models/preference_handler.dart';
+import 'package:phintar/data/models/preference_handler.dart';
+import 'package:phintar/widgets/app_button.dart';
+import 'package:phintar/widgets/app_textfield.dart';
+import 'package:phintar/constants/app_theme.dart';
+import 'package:phintar/constants/app_typografy.dart';
+import 'package:phintar/widgets/app_bar.dart';
+import 'package:phintar/data/database/db_helper.dart';
+import 'package:phintar/widgets/extention/navigator.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
@@ -96,7 +96,8 @@ class _EditProfilePhintarState extends State<EditProfilePhintar> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (context) {
-        final hasImage = _imageFile != null ||
+        final hasImage =
+            _imageFile != null ||
             (!_isPhotoDeleted &&
                 (PreferenceHandler.userPhoto?.isNotEmpty ?? false));
 
@@ -115,10 +116,7 @@ class _EditProfilePhintarState extends State<EditProfilePhintar> {
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
-                Text(
-                  "Foto Profil",
-                  style: AppTextStyle.subsubjudul,
-                ),
+                Text("Foto Profil", style: AppTextStyle.subsubjudul),
                 const SizedBox(height: 12),
                 ListTile(
                   leading: const Icon(
@@ -148,10 +146,7 @@ class _EditProfilePhintarState extends State<EditProfilePhintar> {
                       Icons.delete_outline_rounded,
                       color: AppTheme.merah,
                     ),
-                    title: Text(
-                      "Hapus Foto",
-                      style: AppTextStyle.warningText,
-                    ),
+                    title: Text("Hapus Foto", style: AppTextStyle.warningText),
                     onTap: _removePhoto,
                   ),
               ],
@@ -183,12 +178,15 @@ class _EditProfilePhintarState extends State<EditProfilePhintar> {
             ? p.extension(_imageFile!.path)
             : '.jpg';
         final safeEmail = currentEmail.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '_');
-        final fileName = 'profile_${safeEmail}_${DateTime.now().millisecondsSinceEpoch}$ext';
+        final fileName =
+            'profile_${safeEmail}_${DateTime.now().millisecondsSinceEpoch}$ext';
         final savedFile = await _imageFile!.copy('${appDir.path}/$fileName');
 
         // Hapus file foto lama jika ada
         final oldPhoto = PreferenceHandler.userPhoto;
-        if (oldPhoto != null && oldPhoto.isNotEmpty && oldPhoto != savedFile.path) {
+        if (oldPhoto != null &&
+            oldPhoto.isNotEmpty &&
+            oldPhoto != savedFile.path) {
           final oldFile = File(oldPhoto);
           if (await oldFile.exists()) {
             try {
@@ -217,13 +215,7 @@ class _EditProfilePhintarState extends State<EditProfilePhintar> {
 
     // Update di database jika email terdaftar
     if (currentEmail.isNotEmpty) {
-      final db = await DBHelper().database;
-      await db.update(
-        'users',
-        {'nama': newName},
-        where: 'email = ?',
-        whereArgs: [currentEmail],
-      );
+      await DBHelper.instance.updateUserName(currentEmail, newName);
     }
 
     if (!mounted) return;

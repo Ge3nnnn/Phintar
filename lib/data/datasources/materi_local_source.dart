@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:blabla/data/models/materi_model.dart';
+import 'package:phintar/data/models/materi_model.dart';
 
 /// Local datasource for materi content.
 /// Reads from JSON seed asset.

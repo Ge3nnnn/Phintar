@@ -1,5 +1,5 @@
-import 'package:blabla/constants/app_theme.dart';
-import 'package:blabla/constants/app_typografy.dart';
+import 'package:phintar/constants/app_theme.dart';
+import 'package:phintar/constants/app_typografy.dart';
 import 'package:flutter/material.dart';
 
 class CustomElevatedButton extends StatelessWidget {
@@ -28,9 +28,13 @@ class CustomElevatedButton extends StatelessWidget {
         fixedSize: Size(width, height),
         backgroundColor: backgroundColor ?? AppTheme.bottonColor,
         elevation: 2, // Subtle shadow for depth
-        shadowColor: (backgroundColor ?? AppTheme.bottonColor).withValues(alpha: 0.5),
+        shadowColor: (backgroundColor ?? AppTheme.bottonColor).withValues(
+          alpha: 0.5,
+        ),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12), // Softer, more modern corners
+          borderRadius: BorderRadius.circular(
+            12,
+          ), // Softer, more modern corners
         ),
       ),
       child: Row(

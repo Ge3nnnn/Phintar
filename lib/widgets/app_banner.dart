@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:blabla/constants/app_theme.dart';
-import 'package:blabla/constants/app_typografy.dart';
+import 'package:phintar/constants/app_theme.dart';
+import 'package:phintar/constants/app_typografy.dart';
 
 class EnterCourse extends StatelessWidget {
   const EnterCourse({
@@ -74,7 +74,11 @@ class EnterCourse extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 8),
-            const Icon(Icons.arrow_forward_ios, color: AppTheme.putih, size: 18),
+            const Icon(
+              Icons.arrow_forward_ios,
+              color: AppTheme.putih,
+              size: 18,
+            ),
           ],
         ),
       ),

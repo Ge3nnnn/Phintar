@@ -1,11 +1,11 @@
-import 'package:blabla/widgets/app_banner.dart';
-import 'package:blabla/widgets/app_search_bar.dart';
-import 'package:blabla/constants/app_theme.dart';
-import 'package:blabla/constants/app_typografy.dart';
-import 'package:blabla/widgets/app_bar.dart';
-import 'package:blabla/widgets/extention/navigator.dart';
-import 'package:blabla/models/preference_handler.dart';
-import 'package:blabla/views/6_materi/Gelombang_dan_materi/gelombang_dan_osilasi_1.dart';
+import 'package:phintar/data/models/preference_handler.dart';
+import 'package:phintar/widgets/app_banner.dart';
+import 'package:phintar/widgets/app_search_bar.dart';
+import 'package:phintar/constants/app_theme.dart';
+import 'package:phintar/constants/app_typografy.dart';
+import 'package:phintar/widgets/app_bar.dart';
+import 'package:phintar/widgets/extention/navigator.dart';
+import 'package:phintar/views/6_materi/Gelombang_dan_materi/gelombang_dan_osilasi_1.dart';
 import 'package:flutter/material.dart';
 
 /// Simple data class representing a course module entry on the home page.

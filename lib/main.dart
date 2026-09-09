@@ -1,11 +1,11 @@
-import 'package:blabla/providers/lab_provider.dart';
-import 'package:blabla/providers/materi_provider.dart';
-import 'package:blabla/providers/quiz_provider.dart';
+import 'package:phintar/data/models/preference_handler.dart';
+import 'package:phintar/providers/lab_provider.dart';
+import 'package:phintar/providers/materi_provider.dart';
+import 'package:phintar/providers/quiz_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:blabla/constants/app_theme.dart';
-import 'package:blabla/models/preference_handler.dart';
-import 'package:blabla/widgets/bottom_nav/bottom_nav_bar_phintar.dart';
-import 'package:blabla/views/1_loginpage/login_page_phintar.dart';
+import 'package:phintar/constants/app_theme.dart';
+import 'package:phintar/widgets/bottom_nav/bottom_nav_bar_phintar.dart';
+import 'package:phintar/views/1_loginpage/login_page_phintar.dart';
 import 'package:provider/provider.dart';
 
 void main() async {

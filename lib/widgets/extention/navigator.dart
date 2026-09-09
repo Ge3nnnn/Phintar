@@ -39,7 +39,7 @@ extension ExtendedNavigator on BuildContext {
     RoutePredicate predicate, {
     Object? arguments,
   }) async {
-    Navigator.pushNamedAndRemoveUntil(
+    return Navigator.pushNamedAndRemoveUntil(
       this,
       newRouteName,
       predicate,
@@ -58,7 +58,7 @@ extension ExtendedNavigator on BuildContext {
     );
   }
 
-  void pop([dynamic result]) async {
-    return Navigator.of(this).pop(result);
+  void pop<T extends Object?>([T? result]) {
+    Navigator.of(this).pop<T>(result);
   }
 }

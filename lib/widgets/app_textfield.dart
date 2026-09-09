@@ -1,6 +1,6 @@
-import 'package:blabla/constants/app_theme.dart';
+import 'package:phintar/constants/app_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:blabla/constants/app_typografy.dart';
+import 'package:phintar/constants/app_typografy.dart';
 
 class CustomTextFields extends StatelessWidget {
   final TextEditingController controller;

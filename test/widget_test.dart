@@ -1,5 +1,5 @@
-import 'package:blabla/main.dart';
-import 'package:blabla/models/preference_handler.dart';
+﻿import 'package:phintar/main.dart';
+import 'package:phintar/data/datasources/preference_handler.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -20,3 +20,4 @@ void main() {
     expect(find.text('Masuk'), findsOneWidget);
   });
 }
+

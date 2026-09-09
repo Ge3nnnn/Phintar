@@ -1,7 +1,6 @@
 import 'dart:math';
-
-import 'package:blabla/constants/app_theme.dart';
-import 'package:blabla/data/models/lab_model.dart';
+import 'package:phintar/constants/app_theme.dart';
+import 'package:phintar/data/models/lab_model.dart';
 import 'package:flutter/material.dart';
 
 /// Pendulum simulation widget — extracted from labo_bandul_matematis.dart.

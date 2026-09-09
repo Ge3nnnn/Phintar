@@ -1,13 +1,13 @@
-import 'package:blabla/widgets/app_button.dart';
-import 'package:blabla/widgets/app_textfield.dart';
-import 'package:blabla/constants/app_typografy.dart';
-import 'package:blabla/data/database/db_helper.dart';
-import 'package:blabla/widgets/extention/navigator.dart';
-import 'package:blabla/constants/app_theme.dart';
-import 'package:blabla/models/preference_handler.dart';
-import 'package:blabla/widgets/bottom_nav/bottom_nav_bar_phintar.dart';
-import 'package:blabla/views/2_register_page/register_page.dart';
-import 'package:blabla/views/3_reset_password_page/reset_password_page.dart';
+import 'package:phintar/constants/app_theme.dart';
+import 'package:phintar/constants/app_typografy.dart';
+import 'package:phintar/data/models/preference_handler.dart';
+import 'package:phintar/views/2_register_page/register_page.dart';
+import 'package:phintar/widgets/app_button.dart';
+import 'package:phintar/widgets/app_textfield.dart';
+import 'package:phintar/data/database/db_helper.dart';
+import 'package:phintar/widgets/extention/navigator.dart';
+import 'package:phintar/widgets/bottom_nav/bottom_nav_bar_phintar.dart';
+import 'package:phintar/views/3_reset_password_page/reset_password_page.dart';
 import 'package:flutter/material.dart';
 
 class LoginPagePhintar extends StatefulWidget {
