@@ -1,20 +1,21 @@
 import 'package:phintar/constants/app_theme.dart';
 import 'package:phintar/constants/app_typografy.dart';
-import 'package:phintar/views/6_materi/Gelombang_dan_materi/gelombang_dan_osilasi_1.dart';
+import 'package:phintar/services/materi_service.dart';
+import 'package:phintar/views/6_materi/dynamic_materi_page.dart';
 import 'package:phintar/widgets/bottom_nav/bottom_nav_bar_phintar.dart';
 import 'package:flutter/material.dart';
 import 'package:phintar/services/firestore_materi_service.dart';
 
 /// Maps materi IDs to their display titles.
-final Map<int, String> kAvailableMateri = {1: 'Gelombang Osilasi'};
+final Map<int, String> kAvailableMateri = {1: 'Gelombang dan Osilasi'};
 
 /// Returns the display title for the given [materiId].
 String getMateriTitle(int materiId, [String? recordedName]) {
-  if (materiId == 1 || materiId == 2) {
-    return 'Gelombang Osilasi';
-  }
-  if (recordedName != null && recordedName.isNotEmpty) {
+  if (recordedName != null && recordedName.trim().isNotEmpty) {
     return recordedName;
+  }
+  if (materiId == 1 || materiId == 2) {
+    return 'Gelombang dan Osilasi';
   }
   return kAvailableMateri[materiId] ?? 'Materi Fisika #$materiId';
 }
@@ -74,6 +75,7 @@ class RiwayatMateriSection extends StatefulWidget {
 
 class RiwayatMateriSectionState extends State<RiwayatMateriSection> {
   late Future<List<Map<String, dynamic>>> _historiesFuture;
+  bool _isLoadingMateri = false;
 
   @override
   void initState() {
@@ -91,12 +93,47 @@ class RiwayatMateriSectionState extends State<RiwayatMateriSection> {
   }
 
   /// Opens the materi page so the user can continue learning.
-  void _continueMateri(int materiId) async {
-    await Navigator.of(
-      context,
-    ).push(MaterialPageRoute(builder: (_) => const Materi1Gelombang()));
+  void _continueMateri(int materiId, [String? materiName]) async {
+    if (_isLoadingMateri) return;
+    setState(() => _isLoadingMateri = true);
 
-    refreshHistories();
+    try {
+      final materi = await MateriService.instance.getMateriByIdOrTitle(
+        materiId,
+        materiName,
+      );
+
+      if (!mounted) return;
+
+      if (materi != null) {
+        await Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => DynamicMateriPage(materi: materi),
+          ),
+        );
+        refreshHistories();
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Materi pembelajaran tidak ditemukan.'),
+            backgroundColor: AppTheme.merah,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Gagal membuka materi: $e'),
+            backgroundColor: AppTheme.merah,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoadingMateri = false);
+      }
+    }
   }
 
   /// Shows a confirmation dialog before deleting a specific history entry.
@@ -320,153 +357,160 @@ class RiwayatMateriSectionState extends State<RiwayatMateriSection> {
                   final dateString = item['created_at'] as String;
                   final durationColor = getDurationColor(durationSeconds);
 
-                  return Container(
-                    padding: const EdgeInsets.all(14),
-                    decoration: BoxDecoration(
-                      color: AppTheme.backgroundSecondary,
+                  return Material(
+                    color: Colors.transparent,
+                    child: InkWell(
                       borderRadius: BorderRadius.circular(16),
-                      border: Border.all(
-                        color: const Color(0xFF334155),
-                        width: 1,
-                      ),
-                    ),
-                    child: Row(
-                      children: [
-                        // Icon Bulat
-                        Container(
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: AppTheme.bottonColor.withValues(alpha: 0.15),
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.menu_book_rounded,
-                            color: AppTheme.bottonColor,
-                            size: 22,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-
-                        // Informasi Materi
-                        Expanded(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                materiName,
-                                style: AppTextStyle.cardTitle,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              const SizedBox(height: 4),
-                              Row(
-                                children: [
-                                  const Icon(
-                                    Icons.access_time_rounded,
-                                    size: 13,
-                                    color: AppTheme.textColor,
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Expanded(
-                                    child: Text(
-                                      formatMateriDate(dateString),
-                                      style: AppTextStyle.cardSubtitle,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-
-                        // Indikator Durasi
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(
-                              formatDuration(durationSeconds),
-                              style: TextStyle(
-                                color: durationColor,
-                                fontSize: 13,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Text(
-                              durationSeconds >= 600
-                                  ? 'Rajin!'
-                                  : durationSeconds >= 180
-                                  ? 'Cukup'
-                                  : 'Sebentar',
-                              style: TextStyle(
-                                color: durationColor.withValues(alpha: 0.85),
-                                fontSize: 10,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(width: 4),
-
-                        // Popup Menu Aksi (Lanjutkan & Hapus)
-                        PopupMenuButton<String>(
-                          icon: const Icon(
-                            Icons.more_vert,
-                            color: AppTheme.textColor,
-                            size: 20,
-                          ),
+                      onTap: () => _continueMateri(materiId, materiName),
+                      child: Container(
+                        padding: const EdgeInsets.all(14),
+                        decoration: BoxDecoration(
                           color: AppTheme.backgroundSecondary,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            side: const BorderSide(color: Color(0xFF334155)),
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: const Color(0xFF334155),
+                            width: 1,
                           ),
-                          onSelected: (value) {
-                            if (value == 'continue') {
-                              _continueMateri(materiId);
-                            } else if (value == 'delete') {
-                              _showDeleteConfirmDialog(id, materiName);
-                            }
-                          },
-                          itemBuilder: (context) => [
-                            PopupMenuItem(
-                              value: 'continue',
-                              child: Row(
+                        ),
+                        child: Row(
+                          children: [
+                            // Icon Bulat
+                            Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: AppTheme.bottonColor.withValues(alpha: 0.15),
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.menu_book_rounded,
+                                color: AppTheme.bottonColor,
+                                size: 22,
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+
+                            // Informasi Materi
+                            Expanded(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Icon(
-                                    Icons.play_arrow_rounded,
-                                    color: AppTheme.bottonColor,
-                                    size: 18,
-                                  ),
-                                  SizedBox(width: 8),
                                   Text(
-                                    'Lanjutkan',
-                                    style: AppTextStyle.normalText2,
+                                    materiName,
+                                    style: AppTextStyle.cardTitle,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Row(
+                                    children: [
+                                      const Icon(
+                                        Icons.access_time_rounded,
+                                        size: 13,
+                                        color: AppTheme.textColor,
+                                      ),
+                                      const SizedBox(width: 4),
+                                      Expanded(
+                                        child: Text(
+                                          formatMateriDate(dateString),
+                                          style: AppTextStyle.cardSubtitle,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
                             ),
-                            PopupMenuItem(
-                              value: 'delete',
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    Icons.delete_outline_rounded,
-                                    color: AppTheme.merah,
-                                    size: 18,
+                            const SizedBox(width: 8),
+
+                            // Indikator Durasi
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text(
+                                  formatDuration(durationSeconds),
+                                  style: TextStyle(
+                                    color: durationColor,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.bold,
                                   ),
-                                  SizedBox(width: 8),
-                                  Text(
-                                    'Hapus',
-                                    style: AppTextStyle.warningText,
+                                ),
+                                Text(
+                                  durationSeconds >= 600
+                                      ? 'Rajin!'
+                                      : durationSeconds >= 180
+                                      ? 'Cukup'
+                                      : 'Sebentar',
+                                  style: TextStyle(
+                                    color: durationColor.withValues(alpha: 0.85),
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w600,
                                   ),
-                                ],
+                                ),
+                              ],
+                            ),
+                            const SizedBox(width: 4),
+
+                            // Popup Menu Aksi (Lanjutkan & Hapus)
+                            PopupMenuButton<String>(
+                              icon: const Icon(
+                                Icons.more_vert,
+                                color: AppTheme.textColor,
+                                size: 20,
                               ),
+                              color: AppTheme.backgroundSecondary,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                side: const BorderSide(color: Color(0xFF334155)),
+                              ),
+                              onSelected: (value) {
+                                if (value == 'continue') {
+                                  _continueMateri(materiId, materiName);
+                                } else if (value == 'delete') {
+                                  _showDeleteConfirmDialog(id, materiName);
+                                }
+                              },
+                              itemBuilder: (context) => [
+                                PopupMenuItem(
+                                  value: 'continue',
+                                  child: Row(
+                                    children: [
+                                      const Icon(
+                                        Icons.play_arrow_rounded,
+                                        color: AppTheme.bottonColor,
+                                        size: 18,
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Text(
+                                        'Lanjutkan Materi',
+                                        style: AppTextStyle.normalText2,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                PopupMenuItem(
+                                  value: 'delete',
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.delete_outline_rounded,
+                                        color: AppTheme.merah,
+                                        size: 18,
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Text(
+                                        'Hapus',
+                                        style: AppTextStyle.warningText,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
-                      ],
+                      ),
                     ),
                   );
                 },

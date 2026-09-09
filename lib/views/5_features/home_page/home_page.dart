@@ -152,7 +152,7 @@ class _HomePagePhintarState extends State<HomePagePhintar> {
                       offset: const Offset(0, 3),
                     ),
                   ]
-                 : null,
+                : null,
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -167,8 +167,7 @@ class _HomePagePhintarState extends State<HomePagePhintar> {
                 title,
                 style: AppTextStyle.normalText.copyWith(
                   color: isSelected ? AppTheme.putih : AppTheme.textColor,
-                  fontWeight:
-                      isSelected ? FontWeight.bold : FontWeight.w500,
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
                 ),
               ),
             ],
@@ -213,7 +212,8 @@ class _HomePagePhintarState extends State<HomePagePhintar> {
                   scrollDirection: Axis.horizontal,
                   physics: const BouncingScrollPhysics(),
                   itemCount: _currentCategories.length,
-                  separatorBuilder: (context, index) => const SizedBox(width: 8),
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(width: 8),
                   itemBuilder: (context, index) {
                     final category = _currentCategories[index];
                     final isSelected = category == _selectedCategory;
@@ -222,9 +222,12 @@ class _HomePagePhintarState extends State<HomePagePhintar> {
                       label: Text(
                         category,
                         style: AppTextStyle.smallText.copyWith(
-                          color: isSelected ? AppTheme.putih : AppTheme.textColor,
-                          fontWeight:
-                              isSelected ? FontWeight.bold : FontWeight.normal,
+                          color: isSelected
+                              ? AppTheme.putih
+                              : AppTheme.textColor,
+                          fontWeight: isSelected
+                              ? FontWeight.bold
+                              : FontWeight.normal,
                         ),
                       ),
                       selected: isSelected,
@@ -257,12 +260,6 @@ class _HomePagePhintarState extends State<HomePagePhintar> {
                   Text(
                     'Materi Fisika Kelas $_selectedGrade',
                     style: AppTextStyle.subjudul,
-                  ),
-                  Text(
-                    _selectedCategory == 'Semua' ? 'Semua Topik' : _selectedCategory,
-                    style: AppTextStyle.smallText.copyWith(
-                      color: AppTheme.bottonColor,
-                    ),
                   ),
                 ],
               ),
@@ -329,9 +326,9 @@ class _HomePagePhintarState extends State<HomePagePhintar> {
                   final categoryFiltered = (_selectedCategory == 'Semua')
                       ? gradeFiltered
                       : gradeFiltered.where((m) {
-                          return m.category
-                              .toLowerCase()
-                              .contains(_selectedCategory.toLowerCase());
+                          return m.category.toLowerCase().contains(
+                            _selectedCategory.toLowerCase(),
+                          );
                         }).toList();
 
                   // 3. Filter Pencarian Teks
@@ -368,12 +365,13 @@ class _HomePagePhintarState extends State<HomePagePhintar> {
                         const SizedBox(height: 8),
                     itemBuilder: (context, index) {
                       final materi = finalMateriList[index];
-                      final subtitleText = (materi.description != null &&
+                      final subtitleText =
+                          (materi.description != null &&
                               materi.description!.isNotEmpty)
                           ? materi.description!
                           : (materi.category.isNotEmpty
-                              ? materi.category
-                              : 'Modul Pembelajaran Fisika SMA Kelas ${materi.grade}');
+                                ? materi.category
+                                : 'Modul Pembelajaran Fisika SMA Kelas ${materi.grade}');
 
                       return EnterCourse(
                         title: materi.title,

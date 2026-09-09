@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:phintar/models/materi_model.dart';
 import 'package:phintar/models/materi_history_model.dart';
 import 'package:phintar/widgets/content_block_renderer.dart';
+import 'package:phintar/widgets/history_card/riwayat_materi.dart';
 
 void main() {
   group('MateriModel & MateriHistoryModel Tests', () {
@@ -175,6 +176,21 @@ void main() {
       };
       final model10 = MateriModel.fromMap(mapKelas10);
       expect(model10.grade, 10);
+    });
+
+    test('getMateriTitle returns recorded name or falls back to known title', () {
+      expect(
+        getMateriTitle(101, 'Besaran, Satuan, dan Pengukuran'),
+        'Besaran, Satuan, dan Pengukuran',
+      );
+      expect(
+        getMateriTitle(1, null),
+        'Gelombang dan Osilasi',
+      );
+      expect(
+        getMateriTitle(999, ''),
+        'Materi Fisika #999',
+      );
     });
   });
 }
