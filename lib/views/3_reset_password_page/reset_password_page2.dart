@@ -148,7 +148,7 @@ class _ResetPasswordPage2State extends State<ResetPasswordPage2> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: "phintar"),
+      appBar: CustomAppBar(title: "Phintar"),
       backgroundColor: AppTheme.backgroundPrimary,
       body: SafeArea(
         child: SingleChildScrollView(

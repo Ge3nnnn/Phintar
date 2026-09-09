@@ -25,23 +25,40 @@ class QuizQuestionModel {
     this.sortOrder = 0,
   });
 
-  /// Creates from a SQLite row map. [options] is a JSON-encoded string.
+  /// Creates from a map. [options] can be a List or JSON-encoded string.
   factory QuizQuestionModel.fromMap(Map<String, dynamic> map) {
     List<String> opts = [];
     if (map['options'] != null) {
-      final decoded = json.decode(map['options'] as String);
-      opts = (decoded as List<dynamic>).map((e) => e.toString()).toList();
+      final raw = map['options'];
+      if (raw is List) {
+        opts = raw.map((e) => e.toString()).toList();
+      } else if (raw is String && raw.isNotEmpty) {
+        try {
+          final decoded = json.decode(raw);
+          if (decoded is List) {
+            opts = decoded.map((e) => e.toString()).toList();
+          }
+        } catch (_) {
+          opts = [raw];
+        }
+      }
     }
 
     return QuizQuestionModel(
       id: map['id'] != null ? (map['id'] as num).toInt() : null,
-      quizId: (map['quiz_id'] as num).toInt(),
+      quizId: (map['quiz_id'] as num?)?.toInt() ??
+          (map['quizId'] as num?)?.toInt() ??
+          0,
       topic: map['topic'] as String?,
       question: map['question'] as String,
       options: opts,
-      correctIndex: (map['correct_index'] as num).toInt(),
+      correctIndex: (map['correct_index'] as num?)?.toInt() ??
+          (map['correctIndex'] as num?)?.toInt() ??
+          0,
       explanation: map['explanation'] as String?,
-      sortOrder: (map['sort_order'] as num?)?.toInt() ?? 0,
+      sortOrder: (map['sort_order'] as num?)?.toInt() ??
+          (map['sortOrder'] as num?)?.toInt() ??
+          0,
     );
   }
 
@@ -70,6 +87,21 @@ class QuizQuestionModel {
     );
   }
 
+  /// Converts to a Firestore map.
+  Map<String, dynamic> toFirestore() {
+    final map = <String, dynamic>{
+      'quiz_id': quizId,
+      'question': question,
+      'options': options,
+      'correct_index': correctIndex,
+      'sort_order': sortOrder,
+    };
+    if (id != null) map['id'] = id;
+    if (topic != null) map['topic'] = topic;
+    if (explanation != null) map['explanation'] = explanation;
+    return map;
+  }
+
   /// Converts to a SQLite row map. [options] is JSON-encoded.
   Map<String, dynamic> toMap() {
     final map = <String, dynamic>{
@@ -88,7 +120,7 @@ class QuizQuestionModel {
 
 /// Model for a quiz (collection of questions).
 ///
-/// [questions] are loaded separately via a JOIN or secondary query.
+/// [questions] can be embedded inline or loaded separately.
 class QuizModel {
   final int id;
   final String title;
@@ -108,17 +140,33 @@ class QuizModel {
     this.questions = const [],
   });
 
-  /// Creates from a SQLite row map (questions loaded separately).
+  /// Creates from a map. Supports inline questions or external list.
   factory QuizModel.fromMap(Map<String, dynamic> map,
       [List<QuizQuestionModel>? questions]) {
+    List<QuizQuestionModel> qList = questions ?? [];
+    if (qList.isEmpty && map['questions'] != null && map['questions'] is List) {
+      final quizId = (map['id'] as num?)?.toInt() ?? 0;
+      qList = (map['questions'] as List<dynamic>).map((e) {
+        final qMap = e as Map<String, dynamic>;
+        if (!qMap.containsKey('quiz_id') && !qMap.containsKey('quizId')) {
+          qMap['quiz_id'] = quizId;
+        }
+        return QuizQuestionModel.fromMap(qMap);
+      }).toList();
+    }
+
     return QuizModel(
       id: (map['id'] as num).toInt(),
       title: map['title'] as String,
       category: map['category'] as String?,
       description: map['description'] as String?,
-      timeLimitMinutes: (map['time_limit_minutes'] as num?)?.toInt() ?? 20,
-      sortOrder: (map['sort_order'] as num?)?.toInt() ?? 0,
-      questions: questions ?? [],
+      timeLimitMinutes: (map['time_limit_minutes'] as num?)?.toInt() ??
+          (map['timeLimitMinutes'] as num?)?.toInt() ??
+          20,
+      sortOrder: (map['sort_order'] as num?)?.toInt() ??
+          (map['sortOrder'] as num?)?.toInt() ??
+          0,
+      questions: qList,
     );
   }
 
@@ -152,6 +200,17 @@ class QuizModel {
       questions: questions,
     );
   }
+
+  /// Converts to a Firestore-friendly Map.
+  Map<String, dynamic> toFirestore() => {
+        'id': id,
+        'title': title,
+        'category': category,
+        'description': description,
+        'time_limit_minutes': timeLimitMinutes,
+        'sort_order': sortOrder,
+        'questions': questions.map((q) => q.toFirestore()).toList(),
+      };
 
   /// Converts to a SQLite row map (questions stored separately).
   Map<String, dynamic> toMap() => {

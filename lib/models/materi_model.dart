@@ -55,15 +55,26 @@ class MateriModel {
     required this.blocks,
   });
 
-  /// Creates a [MateriModel] from a SQLite row map.
-  /// [content_blocks] column is a JSON-encoded string.
+  /// Creates a [MateriModel] from a map.
+  /// [content_blocks] can be a List or JSON-encoded string.
   factory MateriModel.fromMap(Map<String, dynamic> map) {
     List<ContentBlock> blocks = [];
     if (map['content_blocks'] != null) {
-      final decoded = json.decode(map['content_blocks'] as String);
-      blocks = (decoded as List<dynamic>)
-          .map((e) => ContentBlock.fromJson(e as Map<String, dynamic>))
-          .toList();
+      final raw = map['content_blocks'];
+      if (raw is List) {
+        blocks = raw
+            .map((e) => ContentBlock.fromJson(e as Map<String, dynamic>))
+            .toList();
+      } else if (raw is String && raw.isNotEmpty) {
+        try {
+          final decoded = json.decode(raw);
+          if (decoded is List) {
+            blocks = decoded
+                .map((e) => ContentBlock.fromJson(e as Map<String, dynamic>))
+                .toList();
+          }
+        } catch (_) {}
+      }
     }
 
     return MateriModel(
@@ -109,6 +120,9 @@ class MateriModel {
       blocks: blocks,
     );
   }
+
+  /// Converts to a Firestore-friendly Map.
+  Map<String, dynamic> toFirestore() => toJson();
 
   /// Converts to a SQLite row map. [content_blocks] is JSON-encoded.
   Map<String, dynamic> toMap() => {

@@ -115,7 +115,7 @@ class _LoginPagePhintarState extends State<LoginPagePhintar> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "phintar",
+                      "Phintar",
                       style: AppTextStyle.judul.copyWith(fontSize: 48),
                     ),
                     SizedBox(height: 40),

@@ -148,7 +148,7 @@ class _RegisterScreenPhintarState extends State<RegisterScreenPhintar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(title: "phintar"),
+      appBar: const CustomAppBar(title: "Phintar"),
       backgroundColor: AppTheme.backgroundPrimary,
       body: SafeArea(
         child: SingleChildScrollView(
