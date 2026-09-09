@@ -1,4 +1,4 @@
-import 'package:Phintar/data/models/lab_model.dart';
+import 'package:Phintar/models/lab_model.dart';
 import 'package:Phintar/views/5_features/lab_page/simulations/pendulum_simulation.dart';
 import 'package:flutter/material.dart';
 

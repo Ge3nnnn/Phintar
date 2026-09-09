@@ -1,12 +1,10 @@
+import 'package:Phintar/services/firebase_auth_service.dart';
 import 'package:Phintar/widgets/app_button.dart';
 import 'package:Phintar/widgets/app_textfield.dart';
 import 'package:Phintar/constants/app_typografy.dart';
 import 'package:Phintar/widgets/app_bar.dart';
 import 'package:Phintar/constants/app_theme.dart';
-import 'package:Phintar/data/database/db_helper.dart';
-import 'package:Phintar/views/3_reset_password_page/reset_password_page2.dart';
 import 'package:flutter/material.dart';
-// Jika kamu menggunakan Firebase, import firebase auth/firestore di sini
 
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({super.key});
@@ -16,32 +14,24 @@ class ForgotPasswordPage extends StatefulWidget {
 }
 
 class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
-  // Pindahkan controller ke dalam State agar tidak di-rebuild terus menerus
   final TextEditingController emailC = TextEditingController();
-
-  // Key untuk memvalidasi form
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
-  // Variabel untuk mengatur state loading saat mengecek database
   bool isLoading = false;
-
-  // Variabel untuk menyimpan pesan error email
   String? emailError;
 
   @override
   void dispose() {
-    emailC
-        .dispose(); // Jangan lupa dispose controller untuk mencegah memory leak
+    emailC.dispose();
     super.dispose();
   }
 
-  // Fungsi untuk mengecek email
+  // Fungsi untuk mengirim email reset sandi via Firebase Auth
   void verifyEmail() async {
     final user = emailC.text.trim();
 
     if (user.isEmpty) {
       setState(() {
-        emailError = 'masukan email anda!';
+        emailError = 'Masukan email anda!';
       });
       return;
     }
@@ -52,36 +42,53 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     });
 
     try {
-      // Cek ke database apakah user terdaftar
-      bool isRegistered = await DBHelper().checkEmailExists(user);
+      await FirebaseAuthService().sendPasswordResetEmail(user);
 
       if (!mounted) return;
 
-      if (isRegistered) {
-        //  Jika terdaftar, arahkan ke page selanjutnya (Tahap 2 / Ubah Password)
-        // Kirim juga emailnya agar database tahu user mana yang mau di-update passwordnya
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ResetPasswordPage2(
-              email: user,
-            ), // Ganti dengan nama halaman tahap 2-mu
+      showDialog(
+        context: context,
+        builder: (dialogContext) => AlertDialog(
+          backgroundColor: AppTheme.backgroundSecondary,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+            side: const BorderSide(color: Color(0xFF334155)),
           ),
-        );
-      } else {
-        setState(() {
-          emailError = 'email belum terdaftar';
-        });
-      }
+          title: Row(
+            children: [
+              const Icon(Icons.mark_email_read_rounded, color: AppTheme.bottonColor),
+              const SizedBox(width: 10),
+              Text(
+                "Email Terkirim!",
+                style: AppTextStyle.dialogTitle,
+              ),
+            ],
+          ),
+          content: Text(
+            "Tautan untuk mengatur ulang kata sandi telah dikirim ke $user.\n\nSilakan periksa kotak masuk atau folder spam Anda.",
+            style: AppTextStyle.normalText,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(dialogContext);
+                Navigator.pop(context);
+              },
+              child: Text("Kembali ke Login", style: AppTextStyle.normalText2),
+            ),
+          ],
+        ),
+      );
     } catch (e) {
       if (mounted) {
+        final message = FirebaseAuthService.getErrorMessage(e);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              "Terjadi kesalahan: $e",
+              message,
               style: AppTextStyle.normalText,
             ),
-            backgroundColor: Colors.red,
+            backgroundColor: AppTheme.merah,
           ),
         );
       }
@@ -171,11 +178,11 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                       ),
                       SizedBox(height: 20), // Tambahan jarak
                       CustomElevatedButton(
-                        onPressed: isLoading
-                            ? () {}
-                            : verifyEmail, // Handle disabled state in verifyEmail or just empty func
+                        onPressed: isLoading ? () {} : verifyEmail,
                         width: double.infinity,
-                        text: "Lanjut Ubah Kata Sandi",
+                        text: isLoading
+                            ? "Mengirim..."
+                            : "Kirim Tautan Reset Sandi",
                       ),
                       SizedBox(height: 10),
                       Divider(color: AppTheme.textColor),

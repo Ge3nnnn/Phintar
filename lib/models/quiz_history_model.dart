@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 class QuizHistoryModel {
-  final int? id;
+  final String? id;
   final String userEmail;
   final int quizId;
   final double score;
@@ -28,13 +28,13 @@ class QuizHistoryModel {
     return map;
   }
 
-  factory QuizHistoryModel.fromMap(Map<String, dynamic> map) {
+  factory QuizHistoryModel.fromMap(Map<String, dynamic> map, {String? docId}) {
     return QuizHistoryModel(
-      id: map['id'] != null ? (map['id'] as num).toInt() : null,
+      id: docId ?? map['id']?.toString(),
       userEmail: (map['user_email'] as String?) ?? '',
-      quizId: (map['quiz_id'] as num).toInt(),
-      score: (map['score'] as num).toDouble(),
-      createdAt: map['created_at'] as String,
+      quizId: (map['quiz_id'] as num?)?.toInt() ?? 0,
+      score: (map['score'] as num?)?.toDouble() ?? 0.0,
+      createdAt: (map['created_at'] as String?) ?? DateTime.now().toIso8601String(),
     );
   }
 

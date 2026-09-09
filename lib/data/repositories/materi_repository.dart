@@ -1,4 +1,4 @@
-import '../models/materi_model.dart';
+import '../../models/materi_model.dart';
 import '../datasources/materi_local_source.dart';
 
 /// Repository for materi content.

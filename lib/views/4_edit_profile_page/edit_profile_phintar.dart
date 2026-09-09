@@ -4,9 +4,10 @@ import 'package:Phintar/widgets/app_textfield.dart';
 import 'package:Phintar/constants/app_theme.dart';
 import 'package:Phintar/constants/app_typografy.dart';
 import 'package:Phintar/widgets/app_bar.dart';
-import 'package:Phintar/data/database/db_helper.dart';
 import 'package:Phintar/widgets/extention/navigator.dart';
 import 'package:Phintar/models/preference_handler.dart';
+import 'package:Phintar/services/firebase_auth_service.dart';
+import 'package:Phintar/services/firestore_user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
@@ -213,16 +214,15 @@ class _EditProfilePhintarState extends State<EditProfilePhintar> {
       await PreferenceHandler.setUserPhoto(null);
     }
 
-    // Update di database jika email terdaftar
-    if (currentEmail.isNotEmpty) {
-      final db = await DBHelper().database;
-      await db.update(
-        'users',
-        {'nama': newName},
-        where: 'email = ?',
-        whereArgs: [currentEmail],
-      );
-    }
+    // Update profil di Firebase Auth dan Cloud Firestore
+    try {
+      final authService = FirebaseAuthService();
+      final user = authService.currentUser;
+      if (user != null) {
+        await authService.updateDisplayName(newName);
+        await FirestoreUserService().updateUserName(user.uid, newName);
+      }
+    } catch (_) {}
 
     if (!mounted) return;
 

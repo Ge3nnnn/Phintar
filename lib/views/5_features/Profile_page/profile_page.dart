@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:Phintar/constants/app_theme.dart';
 import 'package:Phintar/constants/app_typografy.dart';
+import 'package:Phintar/services/firebase_auth_service.dart';
 import 'package:Phintar/views/7_setting_page/settings_page.dart';
 import 'package:Phintar/widgets/app_bar.dart';
 import 'package:Phintar/widgets/extention/navigator.dart';
@@ -20,13 +21,20 @@ class ProfilePagePhintar extends StatefulWidget {
 class _ProfilePagePhintarState extends State<ProfilePagePhintar> {
   @override
   Widget build(BuildContext context) {
-    final userName = PreferenceHandler.userName;
-    final userEmail = PreferenceHandler.userEmail;
+    final currentUser = FirebaseAuthService().currentUser;
+    final userName = (currentUser?.displayName != null && currentUser!.displayName!.isNotEmpty)
+        ? currentUser.displayName!
+        : PreferenceHandler.userName;
+    final userEmail = (currentUser?.email != null && currentUser!.email!.isNotEmpty)
+        ? currentUser.email!
+        : PreferenceHandler.userEmail;
     final userPhoto = PreferenceHandler.userPhoto;
     final hasPhoto =
         userPhoto != null &&
         userPhoto.isNotEmpty &&
         File(userPhoto).existsSync();
+    final networkPhoto = currentUser?.photoURL;
+    final hasNetworkPhoto = networkPhoto != null && networkPhoto.isNotEmpty;
 
     return Scaffold(
       backgroundColor: AppTheme.backgroundPrimary,
@@ -68,11 +76,23 @@ class _ProfilePagePhintarState extends State<ProfilePagePhintar> {
                                 height: 60,
                                 fit: BoxFit.cover,
                               )
-                            : const Icon(
-                                Icons.person_rounded,
-                                color: AppTheme.bottonColor,
-                                size: 36,
-                              ),
+                            : hasNetworkPhoto
+                                ? Image.network(
+                                    networkPhoto,
+                                    width: 60,
+                                    height: 60,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (_, _, _) => const Icon(
+                                      Icons.person_rounded,
+                                      color: AppTheme.bottonColor,
+                                      size: 36,
+                                    ),
+                                  )
+                                : const Icon(
+                                    Icons.person_rounded,
+                                    color: AppTheme.bottonColor,
+                                    size: 36,
+                                  ),
                       ),
                     ),
                     const SizedBox(width: 16),

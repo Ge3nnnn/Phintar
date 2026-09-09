@@ -4,9 +4,10 @@ import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
 
-/// Default [FirebaseOptions] for use with your Firebase apps.
+/// Opsi konfigurasi default [FirebaseOptions] untuk menghubungkan aplikasi Flutter
+/// dengan proyek Firebase berdasarkan target platform (Web, Android, iOS, dll).
 ///
-/// Example:
+/// Contoh Penggunaan:
 /// ```dart
 /// import 'firebase_options.dart';
 /// // ...
@@ -15,6 +16,7 @@ import 'package:flutter/foundation.dart'
 /// );
 /// ```
 class DefaultFirebaseOptions {
+  /// Mengembalikan konfigurasi [FirebaseOptions] yang sesuai dengan platform target saat runtime.
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
       return web;
@@ -23,11 +25,20 @@ class DefaultFirebaseOptions {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        return ios;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for ios - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.macOS:
-        return macos;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for macos - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.windows:
-        return windows;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for windows - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -41,48 +52,19 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyAKRHyahTNdJo01aZOURPgsbGKiX5ViCY8',
-    appId: '1:130515174634:web:7570ff7d289e1a39d30393',
-    messagingSenderId: '130515174634',
-    projectId: 'phintar-edu-6cd66',
-    authDomain: 'phintar-edu-6cd66.firebaseapp.com',
-    storageBucket: 'phintar-edu-6cd66.firebasestorage.app',
-    measurementId: 'G-9K23GKRY3J',
+    apiKey: 'AIzaSyCQ0uYv724b_bonuk2ETFhdx8STzhJe1og',
+    appId: '1:737817094016:web:c6ff75e72cce901bf3c365',
+    messagingSenderId: '737817094016',
+    projectId: 'ppkd-b7-project',
+    authDomain: 'ppkd-b7-project.firebaseapp.com',
+    storageBucket: 'ppkd-b7-project.firebasestorage.app',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyA4DT-vj60_QT_CM_mxeP09IOdepAkOSCo',
-    appId: '1:130515174634:android:e18b05e0665eab00d30393',
-    messagingSenderId: '130515174634',
-    projectId: 'phintar-edu-6cd66',
-    storageBucket: 'phintar-edu-6cd66.firebasestorage.app',
-  );
-
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCNJJebxUcdQY1b5-WD3mi5PrAdLS-SP-g',
-    appId: '1:130515174634:ios:30cc08cf00dd0b40d30393',
-    messagingSenderId: '130515174634',
-    projectId: 'phintar-edu-6cd66',
-    storageBucket: 'phintar-edu-6cd66.firebasestorage.app',
-    iosBundleId: 'com.FKN.Phintar',
-  );
-
-  static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyCNJJebxUcdQY1b5-WD3mi5PrAdLS-SP-g',
-    appId: '1:130515174634:ios:30cc08cf00dd0b40d30393',
-    messagingSenderId: '130515174634',
-    projectId: 'phintar-edu-6cd66',
-    storageBucket: 'phintar-edu-6cd66.firebasestorage.app',
-    iosBundleId: 'com.FKN.Phintar',
-  );
-
-  static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyAKRHyahTNdJo01aZOURPgsbGKiX5ViCY8',
-    appId: '1:130515174634:web:6f7ffd8529875e5bd30393',
-    messagingSenderId: '130515174634',
-    projectId: 'phintar-edu-6cd66',
-    authDomain: 'phintar-edu-6cd66.firebaseapp.com',
-    storageBucket: 'phintar-edu-6cd66.firebasestorage.app',
-    measurementId: 'G-EYGD5YSF4C',
+    apiKey: 'AIzaSyD2772xBrQkv4gvEUTUtceKt_ZinU2VYhA',
+    appId: '1:737817094016:android:aa186ea12d3c4f0ff3c365',
+    messagingSenderId: '737817094016',
+    projectId: 'ppkd-b7-project',
+    storageBucket: 'ppkd-b7-project.firebasestorage.app',
   );
 }

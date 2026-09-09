@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../data/repositories/lab_repository.dart';
-import '../data/models/lab_model.dart';
+import '../models/lab_model.dart';
 
 /// Provider for lab simulation content state management.
 ///

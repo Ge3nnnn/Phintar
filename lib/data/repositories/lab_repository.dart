@@ -1,4 +1,4 @@
-import '../models/lab_model.dart';
+import '../../models/lab_model.dart';
 import '../datasources/lab_local_source.dart';
 
 /// Repository for lab simulation content.

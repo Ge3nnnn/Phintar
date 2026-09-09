@@ -1,12 +1,13 @@
+import 'package:Phintar/models/preference_handler.dart';
+import 'package:Phintar/services/firebase_auth_service.dart';
+import 'package:Phintar/widgets/bottom_nav/bottom_nav_bar_phintar.dart';
 import 'package:Phintar/widgets/app_textfield.dart';
 import 'package:Phintar/widgets/app_bar.dart';
 import 'package:Phintar/widgets/app_button.dart';
 import 'package:Phintar/constants/app_images.dart';
 import 'package:Phintar/constants/app_typografy.dart';
-import 'package:Phintar/data/database/db_helper.dart';
 import 'package:Phintar/constants/app_theme.dart';
 import 'package:Phintar/widgets/extention/navigator.dart';
-import 'package:Phintar/models/user_model_login.dart';
 import 'package:Phintar/views/1_loginpage/login_page_phintar.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
@@ -26,6 +27,7 @@ class _RegisterScreenPhintarState extends State<RegisterScreenPhintar> {
   final _confirmPasswordC = TextEditingController();
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -41,36 +43,78 @@ class _RegisterScreenPhintarState extends State<RegisterScreenPhintar> {
   // ---------------------------------------------------------------------------
 
   Future<void> _register() async {
-    final user = UserModelSQL(
-      email: _emailC.text.trim(),
-      password: _passwordC.text,
-      nama: _nameC.text.trim(),
-    );
-    final success = await DBHelper().registerUser(user);
+    if (!_formKey.currentState!.validate()) return;
 
-    if (!mounted) return;
+    setState(() => _isLoading = true);
 
-    if (success) {
-      _showSuccessDialog();
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Email sudah terdaftar!'),
-          backgroundColor: AppTheme.merah,
-        ),
+    try {
+      final name = _nameC.text.trim();
+      final email = _emailC.text.trim();
+      final password = _passwordC.text;
+
+      await FirebaseAuthService().registerWithEmailAndPassword(
+        name: name,
+        email: email,
+        password: password,
       );
+
+      // Simpan status dan sesi pengguna ke lokal Preferences
+      await PreferenceHandler.setLogin(true);
+      await PreferenceHandler.setUserName(name);
+      await PreferenceHandler.setUserEmail(email);
+
+      if (!mounted) return;
+      _showSuccessDialog();
+    } catch (e) {
+      if (!mounted) return;
+      final message = FirebaseAuthService.getErrorMessage(e);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message), backgroundColor: AppTheme.merah),
+      );
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _signUpWithGoogle() async {
+    setState(() => _isLoading = true);
+    try {
+      final cred = await FirebaseAuthService().signInWithGoogle();
+      if (!mounted) return;
+      if (cred != null) {
+        final user = cred.user;
+        final profile = user != null
+            ? await FirebaseAuthService().getUserDetails(user.uid)
+            : null;
+        final displayName = (profile != null && profile.name.isNotEmpty)
+            ? profile.name
+            : (user?.displayName ?? 'Pengguna Phintar');
+
+        await PreferenceHandler.setLogin(true);
+        await PreferenceHandler.setUserName(displayName);
+        await PreferenceHandler.setUserEmail(user?.email ?? '');
+        if (!mounted) return;
+        context.pushAndRemoveAll(const BottomNavBarPhintar());
+      }
+    } catch (e) {
+      if (!mounted) return;
+      final message = FirebaseAuthService.getErrorMessage(e);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message), backgroundColor: AppTheme.merah),
+      );
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 
   void _showSuccessDialog() {
-    final pageNavigator = Navigator.of(context);
-
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (dialogContext) => AlertDialog(
         backgroundColor: AppTheme.backgroundSecondary,
         title: Text(
-          "YEEAAYYY, ${_nameC.text} berhasil mendaftar!! 🎉🎉🎉🎉",
+          "YEEAAYYY, ${_nameC.text.trim()} berhasil mendaftar!! 🎉🎉🎉🎉",
           textAlign: TextAlign.center,
           style: AppTextStyle.normalText2,
         ),
@@ -79,7 +123,7 @@ class _RegisterScreenPhintarState extends State<RegisterScreenPhintar> {
           children: [
             Lottie.asset("assets/Animations/congraturation.json"),
             Text(
-              "Ayo mulai perjalanan sains ${_nameC.text}!!",
+              "Ayo mulai perjalanan sains ${_nameC.text.trim()}!!",
               style: AppTextStyle.normalText2,
             ),
           ],
@@ -88,9 +132,7 @@ class _RegisterScreenPhintarState extends State<RegisterScreenPhintar> {
           TextButton(
             onPressed: () {
               Navigator.pop(dialogContext);
-              pageNavigator.pushReplacement(
-                MaterialPageRoute(builder: (_) => const LoginPagePhintar()),
-              );
+              context.pushAndRemoveAll(const BottomNavBarPhintar());
             },
             child: Text("Mulai Sekarang", style: AppTextStyle.normalText2),
           ),
@@ -123,8 +165,6 @@ class _RegisterScreenPhintarState extends State<RegisterScreenPhintar> {
                 ),
                 const SizedBox(height: 20),
                 _buildFormCard(),
-                const SizedBox(height: 20),
-                _buildLoginLink(),
                 const SizedBox(height: 20),
               ],
             ),
@@ -232,14 +272,18 @@ class _RegisterScreenPhintarState extends State<RegisterScreenPhintar> {
             ),
             const SizedBox(height: 25),
             CustomElevatedButton(
-              text: "Daftar",
+              text: _isLoading ? "Mendaftarkan..." : "Daftar",
               width: double.infinity,
-              onPressed: () {
-                if (_formKey.currentState!.validate()) _register();
-              },
+              onPressed: _isLoading
+                  ? () {}
+                  : () {
+                      if (_formKey.currentState!.validate()) _register();
+                    },
             ),
             _buildDivider(),
             _buildSocialButtons(),
+            const SizedBox(height: 16),
+            _buildLoginLink(),
           ],
         ),
       ),
@@ -303,7 +347,7 @@ class _RegisterScreenPhintarState extends State<RegisterScreenPhintar> {
           child: CustomElevatedButton(
             iconAsset: AppImages.googleIcon,
             text: "Google",
-            onPressed: () {},
+            onPressed: _isLoading ? () {} : _signUpWithGoogle,
           ),
         ),
       ],

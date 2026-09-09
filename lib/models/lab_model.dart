@@ -33,13 +33,13 @@ class LabParameter {
   }
 
   Map<String, dynamic> toJson() => {
-        'key': key,
-        'label': label,
-        'unit': unit,
-        'min': min,
-        'max': max,
-        'defaultValue': defaultValue,
-      };
+    'key': key,
+    'label': label,
+    'unit': unit,
+    'min': min,
+    'max': max,
+    'defaultValue': defaultValue,
+  };
 }
 
 /// An experiment location/environment with its physical properties.
@@ -71,12 +71,12 @@ class LabEnvironment {
   }
 
   Map<String, dynamic> toJson() => {
-        'name': name,
-        'emoji': emoji,
-        'gravity': gravity,
-        'drag': drag,
-        'atmosphere': atmosphere,
-      };
+    'name': name,
+    'emoji': emoji,
+    'gravity': gravity,
+    'drag': drag,
+    'atmosphere': atmosphere,
+  };
 }
 
 /// Model for a virtual laboratory simulation.
@@ -163,16 +163,17 @@ class LabModel {
       title: json['title'] as String,
       subtitle: json['subtitle'] as String?,
       description: json['description'] as String?,
-      simType: (json['sim_type'] as String?) ??
+      simType:
+          (json['sim_type'] as String?) ??
           (json['simType'] as String?) ??
           'unknown',
       guideText:
           (json['guide_text'] as String?) ?? (json['guideText'] as String?),
-      iconName:
-          (json['icon_name'] as String?) ?? (json['iconName'] as String?),
+      iconName: (json['icon_name'] as String?) ?? (json['iconName'] as String?),
       parameters: params,
       environments: envs,
-      sortOrder: (json['sort_order'] as num?)?.toInt() ??
+      sortOrder:
+          (json['sort_order'] as num?)?.toInt() ??
           (json['sortOrder'] as num?)?.toInt() ??
           0,
     );
@@ -180,16 +181,15 @@ class LabModel {
 
   /// Converts to a SQLite row map.
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'title': title,
-        'subtitle': subtitle,
-        'description': description,
-        'sim_type': simType,
-        'guide_text': guideText,
-        'icon_name': iconName,
-        'parameters': json.encode(parameters.map((e) => e.toJson()).toList()),
-        'environments':
-            json.encode(environments.map((e) => e.toJson()).toList()),
-        'sort_order': sortOrder,
-      };
+    'id': id,
+    'title': title,
+    'subtitle': subtitle,
+    'description': description,
+    'sim_type': simType,
+    'guide_text': guideText,
+    'icon_name': iconName,
+    'parameters': json.encode(parameters.map((e) => e.toJson()).toList()),
+    'environments': json.encode(environments.map((e) => e.toJson()).toList()),
+    'sort_order': sortOrder,
+  };
 }

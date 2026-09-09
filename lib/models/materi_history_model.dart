@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 class MateriHistoryModel {
-  final int? id;
+  final String? id;
   final String userEmail;
   final int materiId;
   final String materiName;
@@ -31,14 +31,14 @@ class MateriHistoryModel {
     return map;
   }
 
-  factory MateriHistoryModel.fromMap(Map<String, dynamic> map) {
+  factory MateriHistoryModel.fromMap(Map<String, dynamic> map, {String? docId}) {
     return MateriHistoryModel(
-      id: map['id'] != null ? (map['id'] as num).toInt() : null,
+      id: docId ?? map['id']?.toString(),
       userEmail: (map['user_email'] as String?) ?? '',
-      materiId: (map['materi_id'] as num).toInt(),
-      materiName: map['materi_name'] as String,
-      durationSeconds: (map['duration_seconds'] as num).toInt(),
-      createdAt: map['created_at'] as String,
+      materiId: (map['materi_id'] as num?)?.toInt() ?? 0,
+      materiName: (map['materi_name'] as String?) ?? '',
+      durationSeconds: (map['duration_seconds'] as num?)?.toInt() ?? 0,
+      createdAt: (map['created_at'] as String?) ?? DateTime.now().toIso8601String(),
     );
   }
 

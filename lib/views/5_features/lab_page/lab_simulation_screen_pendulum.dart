@@ -3,7 +3,7 @@ import 'dart:math';
 
 import 'package:Phintar/constants/app_theme.dart';
 import 'package:Phintar/constants/app_typografy.dart';
-import 'package:Phintar/data/models/lab_model.dart';
+import 'package:Phintar/models/lab_model.dart';
 import 'package:Phintar/views/5_features/lab_page/simulations/sim_registry.dart';
 import 'package:Phintar/widgets/app_bar.dart';
 import 'package:flutter/material.dart';
@@ -62,7 +62,7 @@ class _LabSimulationScreenState extends State<LabSimulationScreen>
       duration: Duration(microseconds: ((_periode / 2) * 1000000).round()),
     );
     _animController.addStatusListener((status) {
-      if (!_isRunning) return;
+      if (!mounted || !_isRunning) return;
       if (status == AnimationStatus.completed) {
         _animController.reverse();
       } else if (status == AnimationStatus.dismissed) {
@@ -115,25 +115,31 @@ class _LabSimulationScreenState extends State<LabSimulationScreen>
       _animController.stop();
       _stopwatch.stop();
       _stopwatchTimer?.cancel();
+      setState(() => _isRunning = false);
     } else {
       _stopwatch.start();
       _stopwatchTimer = Timer.periodic(
         const Duration(milliseconds: 100),
         (_) => _elapsedNotifier.value = _stopwatch.elapsed,
       );
-      if (_animController.status == AnimationStatus.reverse) {
+      setState(() => _isRunning = true);
+
+      if (_animController.isCompleted) {
+        _animController.reverse();
+      } else if (_animController.isDismissed) {
+        _animController.forward();
+      } else if (_animController.status == AnimationStatus.reverse) {
         _animController.reverse();
       } else {
         _animController.forward();
       }
     }
-    setState(() => _isRunning = !_isRunning);
   }
 
   void _reset() {
     _animController.stop();
-    _animController.reset();
     _stopwatchTimer?.cancel();
+    _stopwatch.stop();
     _stopwatch.reset();
     _elapsedNotifier.value = Duration.zero;
 
@@ -147,6 +153,8 @@ class _LabSimulationScreenState extends State<LabSimulationScreen>
       };
       _updateAnimationConfig();
     });
+
+    _animController.reset();
   }
 
   String _formatElapsed(Duration d) {

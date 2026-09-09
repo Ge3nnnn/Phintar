@@ -1,4 +1,4 @@
-import '../models/quiz_model.dart';
+import '../../models/quiz_model.dart';
 import '../datasources/quiz_local_source.dart';
 
 /// Repository for quiz content.

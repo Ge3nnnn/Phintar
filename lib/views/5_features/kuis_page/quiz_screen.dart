@@ -1,8 +1,8 @@
 import 'package:Phintar/constants/app_theme.dart';
 import 'package:Phintar/constants/app_typografy.dart';
-import 'package:Phintar/data/database/db_quiz.dart';
-import 'package:Phintar/data/models/quiz_history_model.dart';
-import 'package:Phintar/data/models/quiz_model.dart';
+import 'package:Phintar/services/firestore_quiz_service.dart';
+import 'package:Phintar/models/quiz_history_model.dart';
+import 'package:Phintar/models/quiz_model.dart';
 import 'package:Phintar/models/preference_handler.dart';
 import 'package:Phintar/views/5_features/kuis_page/quiz_review_screen.dart';
 import 'package:Phintar/widgets/app_bar.dart';
@@ -210,13 +210,13 @@ class _QuizScreenState extends State<QuizScreen> {
     }
   }
 
-  /// Persists the quiz result (score percentage) to the local SQLite
-  /// database via [DatabaseHelperQuiz]. Uses upsert logic — if a
+  /// Persists the quiz result (score percentage) to Cloud Firestore
+  /// via [FirestoreQuizService]. Uses upsert logic — if a
   /// history row for this quiz already exists it gets updated.
   Future<void> _saveQuizHistory() async {
     final double percentage = (_score / _questions.length * 100)
         .roundToDouble();
-    await DatabaseHelperQuiz.instance.insertHistoryModel(
+    await FirestoreQuizService.instance.insertHistoryModel(
       QuizHistoryModel(
         userEmail: PreferenceHandler.userEmail,
         quizId: widget.quiz.id,

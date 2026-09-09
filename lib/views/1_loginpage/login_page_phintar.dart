@@ -1,7 +1,8 @@
+import 'package:Phintar/constants/app_images.dart';
+import 'package:Phintar/services/firebase_auth_service.dart';
 import 'package:Phintar/widgets/app_button.dart';
 import 'package:Phintar/widgets/app_textfield.dart';
 import 'package:Phintar/constants/app_typografy.dart';
-import 'package:Phintar/data/database/db_helper.dart';
 import 'package:Phintar/widgets/extention/navigator.dart';
 import 'package:Phintar/constants/app_theme.dart';
 import 'package:Phintar/models/preference_handler.dart';
@@ -18,13 +19,12 @@ class LoginPagePhintar extends StatefulWidget {
 }
 
 class _LoginPagePhintarState extends State<LoginPagePhintar> {
-  // 1. PINDAHKAN CONTROLLER & KEY KE SINI (Di luar fungsi build)
   final TextEditingController emailC = TextEditingController();
   final TextEditingController passwordC = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _obscurePassword = true;
+  bool _isLoading = false;
 
-  // 2. TAMBAHKAN DISPOSE UNTUK MENCEGAH MEMORY LEAK
   @override
   void dispose() {
     emailC.dispose();
@@ -32,30 +32,75 @@ class _LoginPagePhintarState extends State<LoginPagePhintar> {
     super.dispose();
   }
 
-  // 3. PINDAHKAN FUNGSI LOGIN KE SINI
   void login() async {
-    final user = emailC.text.trim();
+    final email = emailC.text.trim();
     final pass = passwordC.text;
 
-    // Memeriksa pencocokan kredensial email & password di database.
-    final pengguna = await DBHelper().loginUser(user, pass);
+    setState(() => _isLoading = true);
 
-    if (!mounted) return;
+    try {
+      final cred = await FirebaseAuthService().loginWithEmailAndPassword(
+        email: email,
+        password: pass,
+      );
 
-    if (pengguna != null) {
-      // Simpan status login dan data pengguna
-      await PreferenceHandler.setLogin(true);
-      await PreferenceHandler.setUserName(pengguna.nama);
-      await PreferenceHandler.setUserEmail(pengguna.email);
+      final user = cred.user;
+      if (user != null) {
+        final profile = await FirebaseAuthService().getUserDetails(user.uid);
+        final displayName = (profile != null && profile.name.isNotEmpty)
+            ? profile.name
+            : (user.displayName ?? 'Pengguna Phintar');
+
+        await PreferenceHandler.setLogin(true);
+        await PreferenceHandler.setUserName(displayName);
+        await PreferenceHandler.setUserEmail(user.email ?? email);
+
+        if (!mounted) return;
+        context.pushAndRemoveAll(const BottomNavBarPhintar());
+      }
+    } catch (e) {
       if (!mounted) return;
-      // Jika berhasil login, navigasi ke home page.
-      context.pushAndRemoveAll(const BottomNavBarPhintar());
-    } else {
+      final message = FirebaseAuthService.getErrorMessage(e);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Login gagal! Email atau Password salah.'),
+        SnackBar(
+          content: Text(message),
+          backgroundColor: AppTheme.merah,
         ),
       );
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  void signInWithGoogle() async {
+    setState(() => _isLoading = true);
+    try {
+      final cred = await FirebaseAuthService().signInWithGoogle();
+      if (cred != null && cred.user != null) {
+        final user = cred.user!;
+        final profile = await FirebaseAuthService().getUserDetails(user.uid);
+        final displayName = (profile != null && profile.name.isNotEmpty)
+            ? profile.name
+            : (user.displayName ?? 'Google User');
+
+        await PreferenceHandler.setLogin(true);
+        await PreferenceHandler.setUserName(displayName);
+        await PreferenceHandler.setUserEmail(user.email ?? '');
+
+        if (!mounted) return;
+        context.pushAndRemoveAll(const BottomNavBarPhintar());
+      }
+    } catch (e) {
+      if (!mounted) return;
+      final message = FirebaseAuthService.getErrorMessage(e);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(message),
+          backgroundColor: AppTheme.merah,
+        ),
+      );
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 
@@ -152,15 +197,17 @@ class _LoginPagePhintarState extends State<LoginPagePhintar> {
 
                     // Tombol Login
                     CustomElevatedButton(
-                      text: "Masuk",
+                      text: _isLoading ? "Memproses..." : "Masuk",
                       width: double.infinity,
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          login();
-                        }
-                      },
+                      onPressed: _isLoading
+                          ? () {}
+                          : () {
+                              if (_formKey.currentState!.validate()) {
+                                login();
+                              }
+                            },
                     ),
-                    const SizedBox(height: 30),
+                    const SizedBox(height: 25),
 
                     Row(
                       children: [
@@ -171,7 +218,6 @@ class _LoginPagePhintarState extends State<LoginPagePhintar> {
                           ),
                         ),
                         Padding(
-                          // 6. PERBAIKAN TYPO: EdgeInsetsGeometry -> EdgeInsets
                           padding: const EdgeInsets.symmetric(horizontal: 12),
                           child: const Text(
                             "atau",
@@ -190,6 +236,16 @@ class _LoginPagePhintarState extends State<LoginPagePhintar> {
                       ],
                     ),
                     const SizedBox(height: 20),
+
+                    // Tombol Masuk dengan Google
+                    CustomElevatedButton(
+                      text: "Masuk dengan Google",
+                      iconAsset: AppImages.googleIcon,
+                      width: double.infinity,
+                      backgroundColor: AppTheme.backgroundSecondary,
+                      onPressed: _isLoading ? () {} : signInWithGoogle,
+                    ),
+                    const SizedBox(height: 12),
 
                     // Tombol Buat Akun Baru
                     SizedBox(

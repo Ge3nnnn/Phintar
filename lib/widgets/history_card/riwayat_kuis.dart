@@ -1,6 +1,6 @@
 import 'package:Phintar/constants/app_theme.dart';
 import 'package:Phintar/constants/app_typografy.dart';
-import 'package:Phintar/data/database/db_quiz.dart';
+import 'package:Phintar/services/firestore_quiz_service.dart';
 import 'package:Phintar/providers/quiz_provider.dart';
 import 'package:Phintar/views/5_features/kuis_page/quiz_screen.dart';
 import 'package:Phintar/widgets/bottom_nav/bottom_nav_bar_phintar.dart';
@@ -49,7 +49,7 @@ class RiwayatKuisSectionState extends State<RiwayatKuisSection> {
 
   void refreshHistories() {
     setState(() {
-      _historiesFuture = DatabaseHelperQuiz.instance.getAllHistories();
+      _historiesFuture = FirestoreQuizService.instance.getAllHistories();
     });
     widget.onDataChanged?.call();
   }
@@ -75,7 +75,7 @@ class RiwayatKuisSectionState extends State<RiwayatKuisSection> {
   }
 
   // ─── 2. DELETE: Hapus Riwayat Tertentu ───
-  void _showDeleteConfirmDialog(int id, String quizName) {
+  void _showDeleteConfirmDialog(String id, String quizName) {
     showDialog(
       context: context,
       builder: (dialogContext) {
@@ -110,7 +110,7 @@ class RiwayatKuisSectionState extends State<RiwayatKuisSection> {
               ),
               onPressed: () async {
                 final messenger = ScaffoldMessenger.of(context);
-                await DatabaseHelperQuiz.instance.deleteHistory(id);
+                await FirestoreQuizService.instance.deleteHistory(id);
                 if (dialogContext.mounted) {
                   Navigator.pop(dialogContext);
                 }
@@ -283,7 +283,7 @@ class RiwayatKuisSectionState extends State<RiwayatKuisSection> {
                     const SizedBox(height: 10),
                 itemBuilder: (context, index) {
                   final item = data[index];
-                  final id = item['id'] as int;
+                  final id = item['id']?.toString() ?? '';
                   final score = (item['score'] as num).toDouble();
                   final quizId = item['quiz_id'] as int;
                   final dateString = item['created_at'] as String;

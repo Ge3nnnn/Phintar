@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:Phintar/firebase_options.dart';
 import 'package:Phintar/providers/lab_provider.dart';
 import 'package:Phintar/providers/materi_provider.dart';
@@ -13,12 +14,25 @@ import 'package:provider/provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await PreferenceHandler.init();
-  Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  } catch (e) {
+    // Firebase sudah aktif di native Android (misal saat Hot Restart)
+  }
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
+  bool get _isLoggedIn {
+    try {
+      if (FirebaseAuth.instance.currentUser != null) return true;
+    } catch (_) {}
+    return PreferenceHandler.isLogin;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +55,7 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
           scaffoldBackgroundColor: AppTheme.backgroundPrimary,
         ),
-        home: PreferenceHandler.isLogin
+        home: _isLoggedIn
             ? const BottomNavBarPhintar()
             : const LoginPagePhintar(),
       ),

@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:Phintar/data/models/lab_model.dart';
+import 'package:Phintar/models/lab_model.dart';
 
 /// Local datasource for lab simulation content.
 /// Loads simulation definitions from JSON seed asset.

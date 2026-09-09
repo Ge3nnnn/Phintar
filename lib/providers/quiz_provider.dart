@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../data/repositories/quiz_repository.dart';
-import '../data/models/quiz_model.dart';
+import '../models/quiz_model.dart';
 
 /// Provider for quiz content state management.
 ///

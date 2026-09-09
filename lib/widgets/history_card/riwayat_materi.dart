@@ -3,7 +3,7 @@ import 'package:Phintar/constants/app_typografy.dart';
 import 'package:Phintar/views/6_materi/Gelombang_dan_materi/gelombang_dan_osilasi_1.dart';
 import 'package:Phintar/widgets/bottom_nav/bottom_nav_bar_phintar.dart';
 import 'package:flutter/material.dart';
-import 'package:Phintar/data/database/db_materi.dart';
+import 'package:Phintar/services/firestore_materi_service.dart';
 
 /// Maps materi IDs to their display titles.
 final Map<int, String> kAvailableMateri = {1: 'Gelombang Osilasi'};
@@ -85,7 +85,7 @@ class RiwayatMateriSectionState extends State<RiwayatMateriSection> {
   /// the parent widget (e.g. profile page) that data changed.
   void refreshHistories() {
     setState(() {
-      _historiesFuture = DatabaseHelperMateri.instance.getAllHistories();
+      _historiesFuture = FirestoreMateriService.instance.getAllHistories();
     });
     widget.onDataChanged?.call();
   }
@@ -101,7 +101,8 @@ class RiwayatMateriSectionState extends State<RiwayatMateriSection> {
 
   /// Shows a confirmation dialog before deleting a specific history entry.
   /// On confirm, removes the row from the database and refreshes the list.
-  void _showDeleteConfirmDialog(int id, String materiName) {
+  // ─── 2. DELETE: Hapus Riwayat Tertentu ───
+  void _showDeleteConfirmDialog(String id, String materiName) {
     showDialog(
       context: context,
       builder: (dialogContext) {
@@ -136,7 +137,7 @@ class RiwayatMateriSectionState extends State<RiwayatMateriSection> {
               ),
               onPressed: () async {
                 final messenger = ScaffoldMessenger.of(context);
-                await DatabaseHelperMateri.instance.deleteHistory(id);
+                await FirestoreMateriService.instance.deleteHistory(id);
                 if (dialogContext.mounted) {
                   Navigator.pop(dialogContext);
                 }
@@ -308,7 +309,7 @@ class RiwayatMateriSectionState extends State<RiwayatMateriSection> {
                     const SizedBox(height: 10),
                 itemBuilder: (context, index) {
                   final item = data[index];
-                  final id = item['id'] as int;
+                  final id = item['id']?.toString() ?? '';
                   final materiId = item['materi_id'] as int;
                   final materiName = getMateriTitle(
                     materiId,

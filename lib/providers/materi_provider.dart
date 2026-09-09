@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../data/repositories/materi_repository.dart';
-import '../data/models/materi_model.dart';
+import '../models/materi_model.dart';
 
 /// Provider for materi content state management.
 ///

@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:Phintar/constants/app_theme.dart';
 import 'package:Phintar/constants/app_typografy.dart';
-import 'package:Phintar/data/database/db_materi.dart';
+import 'package:Phintar/services/firestore_materi_service.dart';
 import 'package:Phintar/models/preference_handler.dart';
 import 'package:Phintar/widgets/app_button.dart';
 import 'package:Phintar/widgets/bottom_nav/bottom_nav_bar_phintar.dart';
@@ -15,7 +15,7 @@ import 'package:video_player/video_player.dart';
 ///
 /// Displays introductory text and an embedded local video player
 /// for "Osilasi: Ritme Alam" (assets/Videos/Osilasi__Ritme_Alam.mp4).
-/// Records learning duration to the local database when the user
+/// Records learning duration to Cloud Firestore when the user
 /// leaves or completes the module.
 class Materi1Gelombang extends StatefulWidget {
   const Materi1Gelombang({super.key});
@@ -31,12 +31,12 @@ class _Materi1GelombangState extends State<Materi1Gelombang> {
   // Waktu mulai belajar dicatat saat halaman dibuka
   final DateTime _startTime = DateTime.now();
 
-  /// Saves how long the user spent on this page to the local SQLite
-  /// database. Uses [materiId] = 1 for this specific materi page.
+  /// Saves how long the user spent on this page to Cloud Firestore.
+  /// Uses [materiId] = 1 for this specific materi page.
   /// Duration is calculated from [_startTime] to now.
   Future<void> _saveMateriHistory() async {
     final durationSeconds = DateTime.now().difference(_startTime).inSeconds;
-    await DatabaseHelperMateri.instance.insertHistory(
+    await FirestoreMateriService.instance.insertHistory(
       userEmail: PreferenceHandler.userEmail,
       materiId: 1,
       materiName: 'Gelombang Osilasi',

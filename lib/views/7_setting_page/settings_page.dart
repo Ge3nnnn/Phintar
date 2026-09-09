@@ -1,3 +1,4 @@
+import 'package:Phintar/services/firebase_auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:Phintar/constants/app_theme.dart';
 import 'package:Phintar/constants/app_typografy.dart';
@@ -23,6 +24,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Future<void> _handleLogout() async {
+    await FirebaseAuthService().signOut();
     await PreferenceHandler.logOut();
     if (!mounted) return;
     context.pushAndRemoveAll(const LoginPagePhintar());

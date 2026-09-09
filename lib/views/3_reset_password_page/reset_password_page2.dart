@@ -3,7 +3,7 @@ import 'package:Phintar/widgets/app_textfield.dart';
 import 'package:Phintar/constants/app_theme.dart';
 import 'package:Phintar/constants/app_typografy.dart';
 import 'package:Phintar/widgets/app_bar.dart';
-import 'package:Phintar/data/database/db_helper.dart';
+import 'package:Phintar/services/firebase_auth_service.dart';
 import 'package:Phintar/widgets/extention/navigator.dart';
 
 import 'package:Phintar/views/1_loginpage/login_page_phintar.dart';
@@ -87,66 +87,56 @@ class _ResetPasswordPage2State extends State<ResetPasswordPage2> {
     });
 
     try {
-      // Menyimpan data pengguna ke database SQLite melalui DBHelper.
-      bool success = await DBHelper().updatePassword(widget.email, pass);
+      if (widget.isFromSettings) {
+        await FirebaseAuthService().updatePassword(pass);
+      } else {
+        await FirebaseAuthService().sendPasswordResetEmail(widget.email);
+      }
 
       if (!mounted) return;
 
-      // Menampilkan notifikasi SnackBar sesuai hasil pendaftaran.
-      if (success) {
-        final pageNavigator = Navigator.of(context);
-        showDialog(
-          context: context,
-          builder: (dialogContext) => AlertDialog(
-            backgroundColor: AppTheme.backgroundSecondary,
-            title: Text(
-              "Kata Sandi Berhasil Diubah!!",
-              textAlign: TextAlign.center,
-              style: AppTextStyle.normalText2,
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Lottie.asset("assets/Animations/succeed_change_pass.json"),
-              ],
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(dialogContext);
-                  if (widget.isFromSettings) {
-                    pageNavigator.pop();
-                  } else {
-                    pageNavigator.pushAndRemoveUntil(
-                      MaterialPageRoute(
-                        builder: (_) => const LoginPagePhintar(),
-                      ),
-                      (route) => false,
-                    );
-                  }
-                },
-                child: Text("Kembali", style: AppTextStyle.normalText2),
-              ),
+      final pageNavigator = Navigator.of(context);
+      showDialog(
+        context: context,
+        builder: (dialogContext) => AlertDialog(
+          backgroundColor: AppTheme.backgroundSecondary,
+          title: Text(
+            "Kata Sandi Berhasil Diubah!!",
+            textAlign: TextAlign.center,
+            style: AppTextStyle.normalText2,
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Lottie.asset("assets/Animations/succeed_change_pass.json"),
             ],
           ),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              "Kata sandi gagal diubah!!",
-              style: AppTextStyle.normalText,
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(dialogContext);
+                if (widget.isFromSettings) {
+                  pageNavigator.pop();
+                } else {
+                  pageNavigator.pushAndRemoveUntil(
+                    MaterialPageRoute(
+                      builder: (_) => const LoginPagePhintar(),
+                    ),
+                    (route) => false,
+                  );
+                }
+              },
+              child: Text("Kembali", style: AppTextStyle.normalText2),
             ),
-            backgroundColor: Colors.red,
-            duration: const Duration(seconds: 3),
-          ),
-        );
-      }
+          ],
+        ),
+      );
     } catch (e) {
       if (mounted) {
+        final message = FirebaseAuthService.getErrorMessage(e);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text("Terjadi kesalahan: $e"),
+            content: Text(message),
             backgroundColor: Colors.red,
           ),
         );

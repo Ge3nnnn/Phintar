@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:Phintar/constants/app_theme.dart';
-import 'package:Phintar/data/models/lab_model.dart';
+import 'package:Phintar/models/lab_model.dart';
 import 'package:flutter/material.dart';
 
 /// Pendulum simulation widget — extracted from labo_bandul_matematis.dart.
@@ -29,6 +29,8 @@ class PendulumSimulation extends StatelessWidget {
   double get _angle => parameters['angle'] ?? 30.0;
   double get _ropeLength => parameters['ropeLength'] ?? 1.0;
   double get _mass => parameters['mass'] ?? 1.0;
+  double get _angleRad =>
+      parameters['_animatedAngleRad'] ?? (_angle * pi / 180);
 
   /// Canvas height scales with rope length.
   double get _canvasHeight {
@@ -51,7 +53,7 @@ class PendulumSimulation extends StatelessWidget {
       ),
       child: CustomPaint(
         painter: _PendulumPainter(
-          angle: _angle * pi / 180, // static display angle
+          angle: _angleRad,
           ropeLengthM: _ropeLength,
           massaKg: _mass,
         ),
