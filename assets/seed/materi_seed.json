@@ -1,12 +1,337 @@
 [
   {
-    "id": 1,
-    "category": "Gelombang",
-    "title": "Pengantar Gelombang dan Osilasi",
-    "description": "Mempelajari dasar-dasar osilasi dengan sistem pendulum dan pegas",
+    "id": 101,
+    "grade": 10,
+    "category": "Pengukuran",
+    "title": "Besaran, Satuan, dan Pengukuran",
+    "description": "Memahami konsep besaran pokok, besaran turunan, dimensi, aturan angka penting, dan penggunaan alat ukur presisi.",
     "banner_url": "",
     "lottie_url": "",
     "sort_order": 1,
+    "content_blocks": [
+      {
+        "type": "subtitle",
+        "content": "1.1 Besaran Pokok dan Besaran Turunan"
+      },
+      {
+        "type": "text",
+        "content": "Dalam fisika, besaran adalah segala sesuatu yang dapat diukur dan dinyatakan dengan angka serta memiliki satuan. Besaran pokok adalah besaran yang satuannya telah ditetapkan terlebih dahulu dan tidak diturunkan dari besaran lain. Terdapat 7 besaran pokok dalam Sistem Internasional (SI): Panjang (meter), Massa (kilogram), Waktu (sekon), Suhu (Kelvin), Kuat Arus Listrik (Ampere), Intensitas Cahaya (kandela), dan Jumlah Zat (mol).\n\nSementara itu, besaran turunan adalah besaran yang diturunkan dari satu atau lebih besaran pokok, seperti Kecepatan (m/s), Percepatan (m/s²), Gaya (Newton = kg·m/s²), dan Energi (Joule = kg·m²/s²)."
+      },
+      {
+        "type": "subtitle",
+        "content": "1.2 Dimensi Besaran Fisika"
+      },
+      {
+        "type": "text",
+        "content": "Dimensi suatu besaran menunjukkan bagaimana besaran tersebut tersusun dari besaran-besaran pokok. Notasi dimensi besaran pokok dinyatakan dengan huruf kapital dalam kurung siku, misalnya [L] untuk panjang, [M] untuk massa, dan [T] untuk waktu."
+      },
+      {
+        "type": "formula",
+        "content": "[Gaya] = [M][L][T]⁻²\n[Energi] = [M][L]²[T]⁻²\n[Tekanan] = [M][L]⁻¹[T]⁻²"
+      },
+      {
+        "type": "subtitle",
+        "content": "1.3 Alat Ukur Panjang Presisi"
+      },
+      {
+        "type": "text",
+        "content": "Pengukuran yang teliti membutuhkan instrumen yang tepat. Jangka sorong memiliki ketelitian hingga 0,01 cm (0,1 mm) yang cocok untuk mengukur diameter dalam, diameter luar, dan kedalaman tabung. Untuk ketelitian yang lebih tinggi, Mikrometer Sekrup digunakan dengan tingkat ketelitian mencapai 0,01 mm (0,001 cm), sangat ideal untuk mengukur ketebalan kawat atau plat tipis."
+      },
+      {
+        "type": "subtitle",
+        "content": "1.4 Aturan Angka Penting"
+      },
+      {
+        "type": "text",
+        "content": "Angka penting adalah semua angka yang diperoleh dari hasil pengukuran, termasuk angka pasti dan satu angka taksiran terakhir. Aturan umum: semua angka bukan nol adalah angka penting, angka nol di antara angka bukan nol adalah angka penting, dan angka nol di sebelah kanan tanda desimal pada bilangan desimal merupakan angka penting."
+      }
+    ]
+  },
+  {
+    "id": 102,
+    "grade": 10,
+    "category": "Kinematika",
+    "title": "Kinematika Gerak Lurus (GLB & GLBB)",
+    "description": "Mempelajari karakteristik gerak benda tanpa meninjau penyebabnya: GLB, GLBB, dan Gerak Vertikal / Jatuh Bebas.",
+    "banner_url": "",
+    "lottie_url": "",
+    "sort_order": 2,
+    "content_blocks": [
+      {
+        "type": "subtitle",
+        "content": "2.1 Posisi, Perpindahan, dan Jarak"
+      },
+      {
+        "type": "text",
+        "content": "Jarak adalah total panjang lintasan yang ditempuh benda dan bernilai skalar (selalu positif). Sedangkan perpindahan adalah perubahan posisi benda dari titik awal ke titik akhir dan merupakan besaran vektor (memiliki nilai dan arah).\n\nKelajuan merupakan jarak dibagi waktu tempuh (skalar), sedangkan kecepatan adalah perpindahan dibagi selang waktu (vektor)."
+      },
+      {
+        "type": "subtitle",
+        "content": "2.2 Gerak Lurus Beraturan (GLB)"
+      },
+      {
+        "type": "text",
+        "content": "GLB adalah gerak suatu benda pada lintasan lurus dengan kecepatan konstan (tetap) setiap saat. Karena kecepatannya tetap, percepatan benda sama dengan nol (a = 0)."
+      },
+      {
+        "type": "formula",
+        "content": "s = v · t\nv = s / t"
+      },
+      {
+        "type": "subtitle",
+        "content": "2.3 Gerak Lurus Berubah Beraturan (GLBB)"
+      },
+      {
+        "type": "text",
+        "content": "GLBB adalah gerak lurus dengan percepatan konstan (a = konstan). Kecepatan benda berubah secara teratur setiap detiknya. Tiga persamaan utama GLBB adalah:"
+      },
+      {
+        "type": "formula",
+        "content": "vt = v₀ + a · t\ns = v₀ · t + ½ · a · t²\nvt² = v₀² + 2 · a · s"
+      },
+      {
+        "type": "subtitle",
+        "content": "2.4 Gerak Jatuh Bebas (GJB)"
+      },
+      {
+        "type": "text",
+        "content": "Gerak jatuh bebas merupakan bentuk khusus GLBB vertikal ke bawah tanpa kecepatan awal (v₀ = 0) dan hanya dipengaruhi oleh percepatan gravitasi bumi (g). Waktu yang dibutuhkan untuk mencapai tanah dari ketinggian h dirumuskan sebagai:"
+      },
+      {
+        "type": "formula",
+        "content": "t = √(2h / g)\nvt = √(2gh)"
+      }
+    ]
+  },
+  {
+    "id": 103,
+    "grade": 10,
+    "category": "Kinematika",
+    "title": "Gerak Parabola dan Gerak Melingkar",
+    "description": "Analisis gerak dua dimensi: perpaduan GLB dan GLBB pada lintasan parabola serta gerak melingkar beraturan.",
+    "banner_url": "",
+    "lottie_url": "",
+    "sort_order": 3,
+    "content_blocks": [
+      {
+        "type": "subtitle",
+        "content": "3.1 Karakteristik Gerak Parabola"
+      },
+      {
+        "type": "text",
+        "content": "Gerak parabola (gerak peluru) merupakan perpaduan antara dua gerak lurus yang saling tegak lurus secara simultan:\n1. Sumbu Horizontal (X): Mengalami GLB dengan kecepatan tetap vx = v₀ cos θ.\n2. Sumbu Vertikal (Y): Mengalami GLBB dengan percepatan gravitasi vy = v₀ sin θ - gt."
+      },
+      {
+        "type": "subtitle",
+        "content": "3.2 Titik Tertinggi dan Jangkauan Maksimum"
+      },
+      {
+        "type": "text",
+        "content": "Saat mencapai titik tertinggi, kecepatan vertikal benda sama dengan nol (vy = 0). Rumus tinggi maksimum (H_maks) dan jarak mendatar terjauh (X_maks) dengan sudut elevasi θ adalah:"
+      },
+      {
+        "type": "formula",
+        "content": "H_maks = (v₀² · sin² θ) / (2g)\nX_maks = (v₀² · sin 2θ) / g"
+      },
+      {
+        "type": "subtitle",
+        "content": "3.3 Gerak Melingkar Beraturan (GMB)"
+      },
+      {
+        "type": "text",
+        "content": "GMB adalah gerak partikel mengitari lintasan lingkaran dengan kelajuan linier dan kecepatan sudut (ω) konstan. Meskipun kelajuannya tetap, arah kecepatannya selalu berubah tegak lurus jari-jari sehingga selalu timbul percepatan sentripetal menuju pusat lingkaran."
+      },
+      {
+        "type": "formula",
+        "content": "v = ω · r\nas = v² / r = ω² · r"
+      }
+    ]
+  },
+  {
+    "id": 104,
+    "grade": 10,
+    "category": "Hukum Newton",
+    "title": "Hukum Newton tentang Gerak",
+    "description": "Menjelaskan dinamika penyebab gerak benda: kelembaman, hubungan gaya dan percepatan, serta aksi-reaksi.",
+    "banner_url": "",
+    "lottie_url": "",
+    "sort_order": 4,
+    "content_blocks": [
+      {
+        "type": "subtitle",
+        "content": "4.1 Hukum I Newton (Hukum Kelembaman)"
+      },
+      {
+        "type": "text",
+        "content": "Jika resultan gaya yang bekerja pada suatu benda sama dengan nol, benda yang awalnya diam akan tetap diam, dan benda yang awalnya bergerak lurus beraturan akan tetap bergerak dengan kecepatan konstan.\n\nSifat benda yang mempertahankan keadaannya ini disebut inersia atau kelembaman."
+      },
+      {
+        "type": "formula",
+        "content": "ΣF = 0  (Hukum I Newton)"
+      },
+      {
+        "type": "subtitle",
+        "content": "4.2 Hukum II Newton"
+      },
+      {
+        "type": "text",
+        "content": "Percepatan yang dialami oleh suatu benda sebanding lurus dengan resultan gaya yang bekerja padanya dan berbanding terbalik dengan massa kelembaman benda tersebut. Arah percepatan selalu searah dengan resultan gayanya."
+      },
+      {
+        "type": "formula",
+        "content": "ΣF = m · a\na = ΣF / m"
+      },
+      {
+        "type": "subtitle",
+        "content": "4.3 Hukum III Newton (Aksi-Reaksi)"
+      },
+      {
+        "type": "text",
+        "content": "Setiap kali benda pertama memberikan gaya aksi pada benda kedua, maka benda kedua akan memberikan gaya reaksi yang besarnya sama tetapi berlawanan arah pada benda pertama. Pasangan gaya aksi-reaksi selalu bekerja pada dua benda yang berbeda dan tidak saling meniadakan."
+      },
+      {
+        "type": "formula",
+        "content": "F_aksi = -F_reaksi"
+      },
+      {
+        "type": "subtitle",
+        "content": "4.4 Gaya Gesek (Statis dan Kinetis)"
+      },
+      {
+        "type": "text",
+        "content": "Gaya gesek bekerja berlawanan dengan kecenderungan arah gerak benda pada permukaan kontak. Gaya gesek statis (fs) menahan benda agar tidak bergerak hingga mencapai batas maksimum fs_maks = μs · N. Jika gaya dorong melampaui batas ini, benda akan bergerak dan mengalami gaya gesek kinetis fk = μk · N."
+      },
+      {
+        "type": "formula",
+        "content": "fs_maks = μs · N  (Benda Tepat Akan Bergerak)\nfk = μk · N  (Benda Sudah Bergerak)"
+      }
+    ]
+  },
+  {
+    "id": 105,
+    "grade": 10,
+    "category": "Usaha & Energi",
+    "title": "Usaha dan Hukum Kekekalan Energi",
+    "description": "Konsep usaha mekanik, energi kinetik, energi potensial gravitasi, serta kekekalan energi mekanik dalam kehidupan nyata.",
+    "banner_url": "",
+    "lottie_url": "",
+    "sort_order": 5,
+    "content_blocks": [
+      {
+        "type": "subtitle",
+        "content": "5.1 Definisi Usaha (Work)"
+      },
+      {
+        "type": "text",
+        "content": "Usaha dalam fisika didefinisikan sebagai hasil kali antara besar gaya yang bekerja pada benda dengan besarnya perpindahan yang searah dengan gaya tersebut. Jika gaya F membentuk sudut θ terhadap arah perpindahan s, maka usaha dirumuskan sebagai:"
+      },
+      {
+        "type": "formula",
+        "content": "W = F · s · cos θ"
+      },
+      {
+        "type": "subtitle",
+        "content": "5.2 Energi Kinetik dan Hubungan Usaha-Energi"
+      },
+      {
+        "type": "text",
+        "content": "Energi kinetik (Ek) adalah energi yang dimiliki benda karena gerakannya (kelajuannya). Teorema usaha-energi menyatakan bahwa usaha total yang dilakukan pada suatu benda sama dengan perubahan energi kinetik benda tersebut."
+      },
+      {
+        "type": "formula",
+        "content": "Ek = ½ · m · v²\nW = ΔEk = ½ · m(vt² - v₀²)"
+      },
+      {
+        "type": "subtitle",
+        "content": "5.3 Energi Potensial Gravitasi"
+      },
+      {
+        "type": "text",
+        "content": "Energi potensial gravitasi adalah energi yang tersimpan pada benda akibat posisinya di dalam medan gravitasi. Untuk benda bermassa m pada ketinggian h di atas acuan:"
+      },
+      {
+        "type": "formula",
+        "content": "Ep = m · g · h"
+      },
+      {
+        "type": "subtitle",
+        "content": "5.4 Hukum Kekekalan Energi Mekanik"
+      },
+      {
+        "type": "text",
+        "content": "Jika pada suatu sistem hanya bekerja gaya-gaya konservatif (seperti gaya gravitasi dan gaya pegas tanpa adanya gesekan), maka total energi mekanik (jumlah energi kinetik dan potensial) selalu kekal/konstan."
+      },
+      {
+        "type": "formula",
+        "content": "Em = Ek + Ep = konstan\nEk₁ + Ep₁ = Ek₂ + Ep₂"
+      }
+    ]
+  },
+  {
+    "id": 106,
+    "grade": 10,
+    "category": "Momentum",
+    "title": "Momentum, Impuls, dan Tumbukan",
+    "description": "Kuantitas gerak benda, teorema impuls-momentum, serta analisis berbagai jenis tumbukan (elastis dan inelastis).",
+    "banner_url": "",
+    "lottie_url": "",
+    "sort_order": 6,
+    "content_blocks": [
+      {
+        "type": "subtitle",
+        "content": "6.1 Konsep Momentum dan Impuls"
+      },
+      {
+        "type": "text",
+        "content": "Momentum (p) merupakan ukuran kesukaran untuk menghentikan suatu benda yang sedang bergerak, didefinisikan sebagai hasil kali massa benda dengan kecepatannya (besaran vektor).\n\nImpuls (I) adalah hasil kali gaya yang bekerja pada benda dengan selang waktu yang sangat singkat selama gaya tersebut bekerja."
+      },
+      {
+        "type": "formula",
+        "content": "p = m · v\nI = F · Δt"
+      },
+      {
+        "type": "subtitle",
+        "content": "6.2 Teorema Impuls-Momentum"
+      },
+      {
+        "type": "text",
+        "content": "Impuls yang bekerja pada suatu benda sama dengan perubahan momentum yang dialami benda tersebut. Konsep ini diaplikasikan pada teknologi keselamatan airbag mobil dan bantalan helm untuk memperpanjang waktu kontak (Δt) sehingga gaya impak (F) berkurang drastis."
+      },
+      {
+        "type": "formula",
+        "content": "I = Δp = m(vt - v₀)"
+      },
+      {
+        "type": "subtitle",
+        "content": "6.3 Hukum Kekekalan Momentum"
+      },
+      {
+        "type": "text",
+        "content": "Pada peristiwa tumbukan atau ledakan tertutup di mana tidak ada gaya luar yang bekerja pada sistem (ΣF_eksternal = 0), jumlah momentum sistem sebelum tumbukan sama persis dengan jumlah momentum sistem setelah tumbukan."
+      },
+      {
+        "type": "formula",
+        "content": "m₁ · v₁ + m₂ · v₂ = m₁ · v₁' + m₂ · v₂'"
+      },
+      {
+        "type": "subtitle",
+        "content": "6.4 Jenis-Jenis Tumbukan"
+      },
+      {
+        "type": "text",
+        "content": "Koefisien restitusi (e) mengukur keelastisan tumbukan (0 ≤ e ≤ 1):\n1. Tumbukan Lenting Sempurna (e = 1): Berlaku hukum kekekalan momentum dan kekekalan energi kinetik.\n2. Tumbukan Lenting Sebagian (0 < e < 1): Berlaku kekekalan momentum, namun terjadi kehilangan sebagian energi kinetik menjadi panas/bunyi.\n3. Tumbukan Tidak Lenting Sama Sekali (e = 0): Setelah bertumbukan, kedua benda menyatu dan bergerak bersama dengan kecepatan yang sama (v₁' = v₂')."
+      }
+    ]
+  },
+  {
+    "id": 1,
+    "grade": 10,
+    "category": "Gelombang",
+    "title": "Gelombang dan Osilasi",
+    "description": "Simulasi eksperimen Bandul Matematis & fenomena osilasi fisika dasar.",
+    "banner_url": "",
+    "lottie_url": "",
+    "sort_order": 7,
     "content_blocks": [
       {
         "type": "subtitle",
@@ -14,30 +339,1007 @@
       },
       {
         "type": "text",
-        "content": "Kita mulai mempelajari osilasi dengan sistem sederhana pendulum dan pegas. Meskipun sistem ini mungkin terlihat sangat mendasar, konsep yang terlibat memiliki banyak aplikasi dalam kehidupan nyata.\n\nSebagai contoh, Gedung Comcast di Philadelphia, Pennsylvania, berdiri setinggi sekitar 305 meter (1000 kaki). Karena gedung dibangun semakin tinggi, gedung tersebut dapat bertindak sebagai pendulum fisik terbalik, dengan lantai atas berosilasi karena aktivitas seismik dan angin yang berfluktuasi.\n\nDi Gedung Comcast, peredam massa tertala digunakan untuk mengurangi osilasi. Dipasang di puncak gedung adalah peredam massa kolom cairan tertala, yang terdiri dari reservoir air berkapasitas 300.000 galon. Tangki berbentuk U ini memungkinkan air berosilasi bebas pada frekuensi yang cocok dengan frekuensi alami gedung. Peredaman disediakan dengan menyetel tingkat turbulensi dalam air yang bergerak menggunakan sekat."
+        "content": "Osilasi merupakan gerak bolak-balik di sekitar titik kesetimbangan. Salah satu contoh paling klasik adalah sistem bandul matematis (simple pendulum), di mana periode ayunan hanya dipengaruhi oleh panjang tali dan percepatan gravitasi."
+      },
+      {
+        "type": "subtitle",
+        "content": "1.2 Periode dan Frekuensi Bandul Matematis"
+      },
+      {
+        "type": "formula",
+        "content": "T = 2π √(L / g)\nf = 1 / T = (1 / 2π) √(g / L)"
+      },
+      {
+        "type": "subtitle",
+        "content": "1.3 Karakteristik Gelombang Mekanik"
+      },
+      {
+        "type": "text",
+        "content": "Gelombang adalah getaran yang merambat dan mentransfer energi dari satu titik ke titik lain tanpa memindahkan partikel mediumnya secara permanen. Hubungan antara cepat rambat gelombang (v), panjang gelombang (λ), dan frekuensi (f) dinyatakan sebagai:"
+      },
+      {
+        "type": "formula",
+        "content": "v = λ · f\nv = λ / T"
       }
     ]
   },
   {
-    "id": 2,
-    "category": "Gelombang",
-    "title": "Visualisasi Gelombang Harmonik",
-    "description": "Dalam modul ini, kita akan mengeksplorasi bagaimana fungsi trigonometri membentuk dasar dari deskripsi fisik gelombang.",
+    "id": 201,
+    "grade": 11,
+    "category": "Dinamika Rotasi",
+    "title": "Dinamika Rotasi dan Kesetimbangan Benda Tegar",
+    "description": "Mempelajari torsi (momen gaya), momen inersia berbagai benda tegar, hukum kekekalan momentum sudut, serta syarat kesetimbangan statis.",
+    "banner_url": "",
+    "lottie_url": "",
+    "sort_order": 1,
+    "content_blocks": [
+      {
+        "type": "subtitle",
+        "content": "1.1 Momen Gaya (Torsi)"
+      },
+      {
+        "type": "text",
+        "content": "Momen gaya atau torsi (τ) adalah ukuran keefektifan gaya yang bekerja pada suatu benda untuk memutar benda tersebut terhadap poros rotasi. Torsi merupakan besaran vektor yang bernilai maksimum saat gaya tegak lurus lengan beban."
+      },
+      {
+        "type": "formula",
+        "content": "τ = r · F · sin θ\nτ = I · α"
+      },
+      {
+        "type": "subtitle",
+        "content": "1.2 Momen Inersia Berbagai Benda Tegar"
+      },
+      {
+        "type": "text",
+        "content": "Momen inersia (I) adalah ukuran kelembaman suatu benda terhadap perubahan gerak rotasi. Semakin jauh sebaran massa dari sumbu putar, semakin besar momen inersianya."
+      },
+      {
+        "type": "formula",
+        "content": "Silinder Pejal: I = ½ · m · R²\nBola Pejal: I = ⅖ · m · R²\nBatang Homogen (Pusat): I = ¹/₁₂ · m · L²\nBatang Homogen (Ujung): I = ⅓ · m · L²"
+      },
+      {
+        "type": "subtitle",
+        "content": "1.3 Hukum Kekekalan Momentum Sudut"
+      },
+      {
+        "type": "text",
+        "content": "Jika tidak ada torsi eksternal yang bekerja pada sistem (Στ = 0), maka momentum sudut total sistem selalu konstan. Fenomena ini dimanfaatkan oleh penari balet untuk mempercepat putaran dengan merapatkan tangannya."
+      },
+      {
+        "type": "formula",
+        "content": "L = I · ω\nI₁ · ω₁ = I₂ · ω₂"
+      },
+      {
+        "type": "subtitle",
+        "content": "1.4 Syarat Kesetimbangan Benda Tegar"
+      },
+      {
+        "type": "text",
+        "content": "Suatu benda tegar berada dalam kesetimbangan statis sempurna jika tidak mengalami percepatan translasi maupun rotasi secara serentak."
+      },
+      {
+        "type": "formula",
+        "content": "ΣFx = 0  ;  ΣFy = 0  (Translasi)\nΣτ = 0  (Rotasi)"
+      }
+    ]
+  },
+  {
+    "id": 202,
+    "grade": 11,
+    "category": "Elastisitas",
+    "title": "Elastisitas dan Hukum Hooke",
+    "description": "Analisis sifat elastis bahan: tegangan, regangan, modulus Young, perilaku pegas, dan susunan pegas seri-paralel.",
     "banner_url": "",
     "lottie_url": "",
     "sort_order": 2,
     "content_blocks": [
       {
         "type": "subtitle",
-        "content": "1.2 Visualisasi Gelombang Harmonik"
-      },
-      {
-        "type": "youtube",
-        "content": "qRv4oJzK240"
+        "content": "2.1 Tegangan, Regangan, dan Modulus Young"
       },
       {
         "type": "text",
-        "content": "Dalam modul ini, kita akan mengeksplorasi bagaimana fungsi trigonometri membentuk dasar dari deskripsi fisik gelombang. Perambatan gelombang harmonik bukan sekadar gerakan naik-turun, melainkan transfer energi melalui medium tanpa perpindahan massa permanen. Perhatikan bagaimana amplitudo dan frekuensi saling berinteraksi dalam simulasi video di atas."
+        "content": "Elastisitas adalah sifat bahan yang memungkinkannya kembali ke bentuk awal setelah gaya deformasi dihilangkan. Tegangan (stress, σ) menyatakan gaya per satuan luas, sedangkan regangan (strain, e) menyatakan pertambahan panjang relatif."
+      },
+      {
+        "type": "formula",
+        "content": "σ = F / A  (Tegangan)\ne = ΔL / L₀  (Regangan)\nY = σ / e = (F · L₀) / (A · ΔL)  (Modulus Young)"
+      },
+      {
+        "type": "subtitle",
+        "content": "2.2 Hukum Hooke dan Gaya Pemulih"
+      },
+      {
+        "type": "text",
+        "content": "Dalam batas elastisitas bahan, pertambahan panjang pegas (Δx) berbanding lurus dengan gaya tarik (F) yang mengenainya. Pegas memberikan gaya pemulih ke arah yang berlawanan."
+      },
+      {
+        "type": "formula",
+        "content": "F = k · Δx\nF_pemulih = -k · Δx"
+      },
+      {
+        "type": "subtitle",
+        "content": "2.3 Energi Potensial Pegas"
+      },
+      {
+        "type": "text",
+        "content": "Usaha untuk menarik atau menekan pegas dari posisi setimbang tersimpan dalam bentuk energi potensial elastis pegas."
+      },
+      {
+        "type": "formula",
+        "content": "Ep = ½ · k · (Δx)²\nEp = ½ · F · Δx"
+      },
+      {
+        "type": "subtitle",
+        "content": "2.4 Kombinasi Susunan Pegas"
+      },
+      {
+        "type": "text",
+        "content": "Susunan pegas seri membagi beban sehingga konstanta total mengecil, sedangkan susunan pegas paralel memperkuat kekakuan sistem sehingga konstanta penggantinya saling menjumlahkan."
+      },
+      {
+        "type": "formula",
+        "content": "1/k_seri = 1/k₁ + 1/k₂ + 1/k₃\nk_paralel = k₁ + k₂ + k₃"
+      }
+    ]
+  },
+  {
+    "id": 203,
+    "grade": 11,
+    "category": "Fluida Statis",
+    "title": "Fluida Statis (Hidrostatika)",
+    "description": "Menyelidiki fluida dalam kondisi diam: tekanan hidrostatis, hukum Pascal, gaya apung Archimedes, serta tegangan permukaan.",
+    "banner_url": "",
+    "lottie_url": "",
+    "sort_order": 3,
+    "content_blocks": [
+      {
+        "type": "subtitle",
+        "content": "3.1 Tekanan Hidrostatis dan Tekanan Mutlak"
+      },
+      {
+        "type": "text",
+        "content": "Tekanan hidrostatis adalah tekanan yang dialami titik di dalam zat cair akibat berat zat cair di atasnya. Tekanan mutlak (total) memperhitungkan tekanan atmosfer di permukaan (P₀ ≈ 10⁵ Pa)."
+      },
+      {
+        "type": "formula",
+        "content": "Ph = ρ · g · h\nP_total = P₀ + ρ · g · h"
+      },
+      {
+        "type": "subtitle",
+        "content": "3.2 Hukum Pascal pada Bejana Berhubungan"
+      },
+      {
+        "type": "text",
+        "content": "Tekanan yang diberikan pada zat cair dalam ruang tertutup akan diteruskan secara merata ke segala arah tanpa berkurang. Prinsip ini menjadi basis teknologi dongkrak hidrolik dan rem mobil."
+      },
+      {
+        "type": "formula",
+        "content": "P₁ = P₂\nF₁ / A₁ = F₂ / A₂\nF₂ = F₁ · (A₂ / A₁)"
+      },
+      {
+        "type": "subtitle",
+        "content": "3.3 Hukum Archimedes dan Gaya Apung"
+      },
+      {
+        "type": "text",
+        "content": "Benda yang dicelupkan ke dalam fluida mengalami gaya ke atas (gaya apung) yang sama besar dengan berat fluida yang dipindahkan.\n\nKondisi benda:\n1. Terapung: ρ_benda < ρ_fluida\n2. Melayang: ρ_benda = ρ_fluida\n3. Tenggelam: ρ_benda > ρ_fluida"
+      },
+      {
+        "type": "formula",
+        "content": "Fa = ρ_fluida · V_tercelup · g\nW_semu = W_udara - Fa"
+      },
+      {
+        "type": "subtitle",
+        "content": "3.4 Tegangan Permukaan dan Gejala Kapilaritas"
+      },
+      {
+        "type": "text",
+        "content": "Tegangan permukaan adalah kecenderungan cairan menjaga luas permukaannya sekecil mungkin. Kapilaritas adalah naik atau turunnya permukaan zat cair dalam pipa sempit akibat gaya kohesi dan adhesi."
+      },
+      {
+        "type": "formula",
+        "content": "γ = F / (2L)  (Tegangan Permukaan)\nh = (2γ · cos θ) / (ρ · g · r)  (Kenaikan Kapiler)"
+      }
+    ]
+  },
+  {
+    "id": 204,
+    "grade": 11,
+    "category": "Fluida Dinamis",
+    "title": "Fluida Dinamis (Hidrodinamika)",
+    "description": "Menganalisis aliran fluida ideal: debit aliran, asas kontinuitas, persamaan Bernoulli, teorema Torricelli, dan gaya angkat pesawat.",
+    "banner_url": "",
+    "lottie_url": "",
+    "sort_order": 4,
+    "content_blocks": [
+      {
+        "type": "subtitle",
+        "content": "4.1 Sifat Fluida Ideal dan Debit Aliran"
+      },
+      {
+        "type": "text",
+        "content": "Fluida ideal memiliki sifat: tidak termampatkan (massa jenis tetap), tidak kental (tanpa gesekan internal), aliran tunak/laminar, dan tidak berotasi. Debit (Q) mengukur laju volume cairan per satuan waktu."
+      },
+      {
+        "type": "formula",
+        "content": "Q = V / t\nQ = A · v"
+      },
+      {
+        "type": "subtitle",
+        "content": "4.2 Asas Kontinuitas Aliran"
+      },
+      {
+        "type": "text",
+        "content": "Massa fluida yang masuk ke dalam suatu tabung arus sama dengan massa fluida yang keluar. Pada bagian pipa yang menyempit, kecepatan aliran fluida pasti meningkat."
+      },
+      {
+        "type": "formula",
+        "content": "Q₁ = Q₂\nA₁ · v₁ = A₂ · v₂"
+      },
+      {
+        "type": "subtitle",
+        "content": "4.3 Asas dan Persamaan Bernoulli"
+      },
+      {
+        "type": "text",
+        "content": "Berdasarkan kekekalan energi fluida, jika kecepatan aliran bertambah pada ketinggian yang sama, maka tekanan statis fluida tersebut akan menurun secara proporsional."
+      },
+      {
+        "type": "formula",
+        "content": "P + ½ · ρ · v² + ρ · g · h = konstan\nP₁ + ½ · ρ · v₁² + ρ · g · h₁ = P₂ + ½ · ρ · v₂² + ρ · g · h₂"
+      },
+      {
+        "type": "subtitle",
+        "content": "4.4 Teorema Torricelli dan Tangki Bocor"
+      },
+      {
+        "type": "text",
+        "content": "Kelajuan zat cair yang memancar keluar dari lubang kebocoran kecil setara dengan kelajuan gerak jatuh bebas dari ketinggian permukaan air ke lubang."
+      },
+      {
+        "type": "formula",
+        "content": "v = √(2 · g · h)\nx_jangkauan = 2 · √(h · (H - h))\nt_jatuh = √(2(H - h) / g)"
+      },
+      {
+        "type": "subtitle",
+        "content": "4.5 Gaya Angkat Sayap Pesawat"
+      },
+      {
+        "type": "text",
+        "content": "Profil aerofoil sayap membuat udara di atas sayap bergerak lebih cepat dibanding di bawah sayap (v_atas > v_bawah), menciptakan perbedaan tekanan yang menghasilkan gaya angkat total ke atas."
+      },
+      {
+        "type": "formula",
+        "content": "F_angkat = (P_bawah - P_atas) · A\nF_angkat = ½ · ρ · (v_atas² - v_bawah²) · A"
+      }
+    ]
+  },
+  {
+    "id": 205,
+    "grade": 11,
+    "category": "Suhu & Kalor",
+    "title": "Suhu, Kalor, dan Perpindahan Kalor",
+    "description": "Konsep energi termal: konversi termometer, kalor jenis dan laten, asas Black, pemuaian zat padat/cair/gas, serta konduksi-konveksi-radiasi.",
+    "banner_url": "",
+    "lottie_url": "",
+    "sort_order": 5,
+    "content_blocks": [
+      {
+        "type": "subtitle",
+        "content": "5.1 Konsep Suhu dan Konversi Termometer"
+      },
+      {
+        "type": "text",
+        "content": "Suhu menunjukkan derajat panas suatu zat yang mencerminkan energi kinetik rata-rata molekulnya. Skala termometer utama meliputi Celcius, Reamur, Fahrenheit, dan satuan SI mutlak Kelvin."
+      },
+      {
+        "type": "formula",
+        "content": "C : R : (F - 32) = 5 : 4 : 9\nT(Kelvin) = T(°C) + 273,15"
+      },
+      {
+        "type": "subtitle",
+        "content": "5.2 Kalor Sensibel dan Kalor Laten"
+      },
+      {
+        "type": "text",
+        "content": "Kalor (Q) adalah perpindahan energi akibat perbedaan suhu. Kalor sensibel menaikkan/menurunkan suhu benda, sementara kalor laten diserap atau dilepaskan untuk perubahan fasa tanpa perubahan suhu."
+      },
+      {
+        "type": "formula",
+        "content": "Q = m · c · ΔT  (Perubahan Suhu)\nQ = m · L  (Perubahan Wujud)"
+      },
+      {
+        "type": "subtitle",
+        "content": "5.3 Asas Black (Kekekalan Energi Kalor)"
+      },
+      {
+        "type": "text",
+        "content": "Pada percampuran dua sistem terisolasi, kalor yang dilepas oleh zat yang suhunya lebih tinggi sama persis dengan kalor yang diserap oleh zat yang suhunya lebih rendah sampai tercapai suhu akhir (Tc)."
+      },
+      {
+        "type": "formula",
+        "content": "Q_lepas = Q_terima\nm₁ · c₁ · (T₁ - Tc) = m₂ · c₂ · (Tc - T₂)"
+      },
+      {
+        "type": "subtitle",
+        "content": "5.4 Pemuaian Termal Zat"
+      },
+      {
+        "type": "text",
+        "content": "Kenaikan suhu memicu kenaikan getaran atomik zat sehingga menyebabkan pemuaian dimensi panjang, luas, maupun volume."
+      },
+      {
+        "type": "formula",
+        "content": "ΔL = L₀ · α · ΔT  (Muai Panjang)\nΔA = A₀ · β · ΔT  (β = 2α)\nΔV = V₀ · γ · ΔT  (γ = 3α)"
+      },
+      {
+        "type": "subtitle",
+        "content": "5.5 Mekanisme Perpindahan Kalor"
+      },
+      {
+        "type": "text",
+        "content": "Perpindahan kalor berlangsung lewat konduksi (rambatan molekuler zat padat), konveksi (aliran fluida), dan radiasi elektromagnetik (foton tanpa perantara medium)."
+      },
+      {
+        "type": "formula",
+        "content": "H_konduksi = (k · A · ΔT) / L\nH_konveksi = h · A · ΔT\nH_radiasi = e · σ · A · T⁴  (Stefan-Boltzmann)"
+      }
+    ]
+  },
+  {
+    "id": 206,
+    "grade": 11,
+    "category": "Gas & Termo",
+    "title": "Teori Kinetik Gas Ideal",
+    "description": "Menjelaskan sifat makroskopis gas berdasarkan perilaku mikroskopis molekul: persamaan gas ideal, tekanan kinetik, dan teorema ekipartisi energi.",
+    "banner_url": "",
+    "lottie_url": "",
+    "sort_order": 6,
+    "content_blocks": [
+      {
+        "type": "subtitle",
+        "content": "6.1 Persamaan Umum Gas Ideal"
+      },
+      {
+        "type": "text",
+        "content": "Gas ideal tersusun atas partikel-partikel bermassa yang bergerak acak di dalam wadah, tumbukan antar partikel bersifat elastis sempurna, dan volume partikel diabaikan terhadap volume wadah."
+      },
+      {
+        "type": "formula",
+        "content": "P · V = n · R · T\nP · V = N · k · T\n(P₁ · V₁) / T₁ = (P₂ · V₂) / T₂"
+      },
+      {
+        "type": "subtitle",
+        "content": "6.2 Tekanan dan Energi Kinetik Gas"
+      },
+      {
+        "type": "text",
+        "content": "Tekanan gas pada dinding wadah dihasilkan dari momentum tumbukan partikel gas. Energi kinetik translasi rata-rata satu molekul gas berbanding lurus dengan suhu mutlaknya."
+      },
+      {
+        "type": "formula",
+        "content": "P = ⅓ · (N / V) · m · (v_rms)²\nEk = ³/₂ · k · T"
+      },
+      {
+        "type": "subtitle",
+        "content": "6.3 Kecepatan Efektif Molekul Gas (RMS)"
+      },
+      {
+        "type": "text",
+        "content": "Kecepatan efektif (root-mean-square) merepresentasikan kecepatan rata-rata partikel gas yang bergerak dalam 3 sumbu dimensi ruang bebas."
+      },
+      {
+        "type": "formula",
+        "content": "v_rms = √(3 · k · T / m₀)\nv_rms = √(3 · R · T / M_molar)"
+      },
+      {
+        "type": "subtitle",
+        "content": "6.4 Teorema Ekipartisi Energi dan Energi Dalam"
+      },
+      {
+        "type": "text",
+        "content": "Setiap derajat kebebasan molekul menyumbangkan energi sebesar ½ kT. Energi dalam total (U) merupakan akumulasi energi seluruh molekul gas di dalam sistem."
+      },
+      {
+        "type": "formula",
+        "content": "U = N · Ek = f · ½ · N · k · T\nGas Monoatomik: U = ³/₂ · n · R · T\nGas Diatomik (Suhu Sedang): U = ⁵/₂ · n · R · T"
+      }
+    ]
+  },
+  {
+    "id": 207,
+    "grade": 11,
+    "category": "Gas & Termo",
+    "title": "Termodinamika dan Mesin Kalor",
+    "description": "Mempelajari hukum I & II termodinamika, kerja mekanik gas dalam berbagai proses siklus, serta efisiensi maksimum siklus Carnot.",
+    "banner_url": "",
+    "lottie_url": "",
+    "sort_order": 7,
+    "content_blocks": [
+      {
+        "type": "subtitle",
+        "content": "7.1 Usaha (Kerja) oleh Gas Ideal"
+      },
+      {
+        "type": "text",
+        "content": "Usaha dilakukan gas saat terjadi ekspansi atau kompresi volume. Pada grafik P-V, usaha setara dengan luas area di bawah kurva lintasan proses."
+      },
+      {
+        "type": "formula",
+        "content": "W = ∫ P dV\nProses Isobarik: W = P · (V₂ - V₁)"
+      },
+      {
+        "type": "subtitle",
+        "content": "7.2 Empat Proses Termodinamika Utama"
+      },
+      {
+        "type": "text",
+        "content": "1. Isobarik: Tekanan tetap (W = P · ΔV).\n2. Isokhorik: Volume tetap (W = 0, Q = ΔU).\n3. Isotermal: Suhu tetap (ΔU = 0, W = Q = nRT ln(V₂/V₁)).\n4. Adiabatik: Tanpa pertukaran kalor (Q = 0, W = -ΔU)."
+      },
+      {
+        "type": "formula",
+        "content": "Isobarik: W = P · ΔV\nIsotermal: W = n · R · T · ln(V₂ / V₁)\nAdiabatik: P₁ · V₁^γ = P₂ · V₂^γ"
+      },
+      {
+        "type": "subtitle",
+        "content": "7.3 Hukum I Termodinamika"
+      },
+      {
+        "type": "text",
+        "content": "Energi tidak dapat diciptakan maupun dimusnahkan. Kalor yang diserap oleh sistem dipakai untuk menambah energi dalam serta menghasilkan kerja luar."
+      },
+      {
+        "type": "formula",
+        "content": "Q = ΔU + W\nΔU = Q - W"
+      },
+      {
+        "type": "subtitle",
+        "content": "7.4 Siklus Carnot dan Efisiensi Mesin Kalor"
+      },
+      {
+        "type": "text",
+        "content": "Mesin Carnot merupakan mesin reversibel ideal yang beroperasi di antara dua suhu penampung. Efisiensinya merupakan batas efisiensi teoritis tertinggi dari segala mesin kalor."
+      },
+      {
+        "type": "formula",
+        "content": "W = Q₁ - Q₂\nη = (W / Q₁) × 100%\nη_Carnot = (1 - (T₂ / T₁)) × 100%"
+      }
+    ]
+  },
+  {
+    "id": 208,
+    "grade": 11,
+    "category": "Gelombang & Bunyi",
+    "title": "Gelombang Mekanik dan Akustik Bunyi",
+    "description": "Karakteristik gelombang berjalan dan tegak, hukum dawai Melde, efek Doppler, serta intensitas dan taraf intensitas desibel bunyi.",
+    "banner_url": "",
+    "lottie_url": "",
+    "sort_order": 8,
+    "content_blocks": [
+      {
+        "type": "subtitle",
+        "content": "8.1 Persamaan Gelombang Berjalan"
+      },
+      {
+        "type": "text",
+        "content": "Gelombang berjalan merambat dengan amplitudo tetap di setiap titik medium. Simpangan sinusoidal gelombang bergantung pada posisi x dan waktu t."
+      },
+      {
+        "type": "formula",
+        "content": "y = ± A · sin(ωt ∓ kx)\nω = 2π · f = 2π / T\nk = 2π / λ\nv = ω / k = λ · f"
+      },
+      {
+        "type": "subtitle",
+        "content": "8.2 Cepat Rambat pada Dawai (Hukum Melde)"
+      },
+      {
+        "type": "text",
+        "content": "Cepat rambat gelombang transversal pada dawai bergantung pada gaya tegangan tali (F) serta massa jenis linier dawai (μ = m/L)."
+      },
+      {
+        "type": "formula",
+        "content": "v = √(F / μ)\nμ = m / L = ρ · A"
+      },
+      {
+        "type": "subtitle",
+        "content": "8.3 Efek Doppler Gelombang Bunyi"
+      },
+      {
+        "type": "text",
+        "content": "Pergeseran frekuensi bunyi terdeteksi saat sumber bunyi dan pendengar saling bergerak mendekat atau menjauh di udara."
+      },
+      {
+        "type": "formula",
+        "content": "fp = ((v ± vp) / (v ∓ vs)) · fs\nvp (+) jika pendengar mendekat\nvs (+) jika sumber menjauh"
+      },
+      {
+        "type": "subtitle",
+        "content": "8.4 Intensitas dan Taraf Intensitas Bunyi (dB)"
+      },
+      {
+        "type": "text",
+        "content": "Taraf intensitas bunyi mengukur tingkat kenyaringan yang dirasakan telinga manusia dalam skala logaritmik decibel (dB) dengan intensitas ambang I₀ = 10⁻¹² W/m²."
+      },
+      {
+        "type": "formula",
+        "content": "I = P / (4π · r²)\nTI = 10 · log(I / I₀)\nTI_total = TI₁ + 10 · log(n)\nTI₂ = TI₁ - 20 · log(r₂ / r₁)"
+      }
+    ]
+  },
+  {
+    "id": 301,
+    "grade": 12,
+    "category": "Listrik Dinamis",
+    "title": "Rangkaian Arus Searah (Listrik DC)",
+    "description": "Menganalisis hukum Ohm, hambatan jenis kawat penghantar, hukum I dan II Kirchhoff, serta perhitungan energi dan daya listrik.",
+    "banner_url": "",
+    "lottie_url": "",
+    "sort_order": 1,
+    "content_blocks": [
+      {
+        "type": "subtitle",
+        "content": "1.1 Kuat Arus Listrik dan Hukum Ohm"
+      },
+      {
+        "type": "text",
+        "content": "Kuat arus listrik (I) didefinisikan sebagai laju aliran muatan listrik (Q) yang menembus penampang kawat tiap satuan waktu. Hukum Ohm menyatakan bahwa besar arus listrik yang mengalir melalui konduktor sebanding lurus dengan beda potensial (tegangan) di ujung-ujungnya selama suhunya konstan."
+      },
+      {
+        "type": "formula",
+        "content": "I = Q / t\nV = I · R\nR = ρ · (L / A)"
+      },
+      {
+        "type": "subtitle",
+        "content": "1.2 Susunan Hambatan Seri dan Paralel"
+      },
+      {
+        "type": "text",
+        "content": "Pada rangkaian seri, arus yang mengalir melalui setiap resistor sama besar dan hambatannya saling menjumlahkan. Pada rangkaian paralel, beda potensial pada masing-masing cabang adalah sama dan hambatan penggantinya mengecil."
+      },
+      {
+        "type": "formula",
+        "content": "R_seri = R₁ + R₂ + R₃\n1/R_paralel = 1/R₁ + 1/R₂ + 1/R₃"
+      },
+      {
+        "type": "subtitle",
+        "content": "1.3 Hukum Kirchhoff (I & II)"
+      },
+      {
+        "type": "text",
+        "content": "Hukum I Kirchhoff (KCL): Jumlah arus yang masuk ke suatu titik percabangan sama dengan jumlah arus yang keluar. Hukum II Kirchhoff (KVL): Pada suatu rangkaian tertutup (loop), jumlah aljabar gaya gerak listrik (GGL) dan penurunan tegangan (IR) sama dengan nol."
+      },
+      {
+        "type": "formula",
+        "content": "ΣI_masuk = ΣI_keluar  (Hukum I Kirchhoff)\nΣε + Σ(I · R) = 0  (Hukum II Kirchhoff)"
+      },
+      {
+        "type": "subtitle",
+        "content": "1.4 Energi dan Daya Listrik"
+      },
+      {
+        "type": "text",
+        "content": "Energi listrik (W) yang diserap oleh peralatan listrik diubah menjadi bentuk energi lain (panas, cahaya, gerak). Daya listrik (P) adalah laju energi yang dikonsumsi per detik."
+      },
+      {
+        "type": "formula",
+        "content": "W = V · I · t = I² · R · t = (V² / R) · t\nP = W / t = V · I = I² · R = V² / R"
+      }
+    ]
+  },
+  {
+    "id": 302,
+    "grade": 12,
+    "category": "Listrik Statis",
+    "title": "Listrik Statis (Elektrostatika)",
+    "description": "Konsep muatan listrik, gaya elektrostatis Coulomb, kuat medan listrik, hukum Gauss, potensial listrik, dan prinsip kerja kapasitor.",
+    "banner_url": "",
+    "lottie_url": "",
+    "sort_order": 2,
+    "content_blocks": [
+      {
+        "type": "subtitle",
+        "content": "2.1 Hukum Coulomb dan Gaya Elektrostatik"
+      },
+      {
+        "type": "text",
+        "content": "Dua muatan listrik tak sejenis akan saling tarik-menarik dan muatan sejenis akan tolak-menolak dengan gaya yang sebanding dengan hasil kali kedua muatan dan berbanding terbalik dengan kuadrat jarak antar muatan."
+      },
+      {
+        "type": "formula",
+        "content": "F = k · (q₁ · q₂) / r²\nk = 1 / (4π · ε₀) ≈ 9 × 10⁹ N·m²/C²"
+      },
+      {
+        "type": "subtitle",
+        "content": "2.2 Kuat Medan Listrik dan Hukum Gauss"
+      },
+      {
+        "type": "text",
+        "content": "Medan listrik (E) adalah daerah di sekitar muatan yang masih mengalami pengaruh gaya elektrostatis. Arah garis gaya listrik selalu keluar dari muatan positif dan masuk ke muatan negatif. Hukum Gauss menyatakan fluks listrik total yang menembus permukaan tertutup sebanding dengan muatan terlingkup."
+      },
+      {
+        "type": "formula",
+        "content": "E = F / q = k · q / r²\nΦ = E · A · cos θ = q_enclosed / ε₀"
+      },
+      {
+        "type": "subtitle",
+        "content": "2.3 Potensial dan Energi Potensial Listrik"
+      },
+      {
+        "type": "text",
+        "content": "Potensial listrik (V) adalah besaran skalar yang menyatakan usaha per satuan muatan yang dibutuhkan untuk memindahkan muatan uji dari jarak tak terhingga ke suatu titik."
+      },
+      {
+        "type": "formula",
+        "content": "V = k · q / r\nEp = k · (q₁ · q₂) / r = q · V\nW = q · ΔV = q · (V₂ - V₁)"
+      },
+      {
+        "type": "subtitle",
+        "content": "2.4 Kapasitor dan Kapasitansi"
+      },
+      {
+        "type": "text",
+        "content": "Kapasitor adalah komponen elektronika yang berfungsi menyimpan energi dalam bentuk medan listrik. Kapasitansi keping sejajar bergantung pada luas keping (A), jarak antar keping (d), dan permitivitas bahan dielektrik (εr)."
+      },
+      {
+        "type": "formula",
+        "content": "C = Q / V\nC = εr · ε₀ · (A / d)\nEnergi Tersimpan: W = ½ · C · V² = ½ · Q · V = ½ · Q² / C"
+      }
+    ]
+  },
+  {
+    "id": 303,
+    "grade": 12,
+    "category": "Kemagnetan",
+    "title": "Medan Magnetik dan Gaya Lorentz",
+    "description": "Eksplorasi medan magnet di sekitar kawat berarus, hukum Biot-Savart, kaidah tangan kanan, serta gaya magnetik Lorentz pada muatan dan kawat.",
+    "banner_url": "",
+    "lottie_url": "",
+    "sort_order": 3,
+    "content_blocks": [
+      {
+        "type": "subtitle",
+        "content": "3.1 Medan Magnet di Sekitar Kawat Berarus (Biot-Savart)"
+      },
+      {
+        "type": "text",
+        "content": "Arus listrik yang mengalir melalui konduktor selalu membangkitkan medan magnet (B) di sekelilingnya (percobaan Oersted). Arah medan magnet ditentukan menggunakan kaidah tangan kanan."
+      },
+      {
+        "type": "formula",
+        "content": "Kawat Lurus Panjang: B = (μ₀ · I) / (2π · a)\nPusat Kawat Melingkar (N lilitan): B = (μ₀ · I · N) / (2a)\nμ₀ = 4π × 10⁻⁷ T·m/A"
+      },
+      {
+        "type": "subtitle",
+        "content": "3.2 Solenoida dan Toroida"
+      },
+      {
+        "type": "text",
+        "content": "Solenoida adalah kumparan kawat panjang berulir rapat dengan medan magnet homogen di dalamnya. Toroida adalah solenoida yang dilengkungkan hingga membentuk lingkaran tertutup."
+      },
+      {
+        "type": "formula",
+        "content": "Pusat Solenoida: B = μ₀ · n · I = (μ₀ · N · I) / L\nUjung Solenoida: B = ½ · μ₀ · n · I\nSumbu Toroida: B = (μ₀ · N · I) / (2π · r)"
+      },
+      {
+        "type": "subtitle",
+        "content": "3.3 Gaya Lorentz pada Kawat Berarus"
+      },
+      {
+        "type": "text",
+        "content": "Kawat berarus listrik yang ditempatkan di dalam medan magnet eksternal akan mengalami gaya magnetik yang disebut Gaya Lorentz dengan arah tegak lurus bidang arus dan medan."
+      },
+      {
+        "type": "formula",
+        "content": "F = B · I · L · sin θ"
+      },
+      {
+        "type": "subtitle",
+        "content": "3.4 Gaya Lorentz pada Partikel Bermuatan Bergerak"
+      },
+      {
+        "type": "text",
+        "content": "Muatan titik q yang bergerak dengan kelajuan v menembus medan magnet B akan membelok membentuk lintasan melingkar beraturan jika sudut datangnya tegak lurus."
+      },
+      {
+        "type": "formula",
+        "content": "F = q · v · B · sin θ\nJari-jari Lintasan: R = (m · v) / (q · B)"
+      },
+      {
+        "type": "subtitle",
+        "content": "3.5 Gaya Antara Dua Kawat Sejajar Berarus"
+      },
+      {
+        "type": "text",
+        "content": "Dua kawat lurus sejajar yang dialiri arus searah akan saling tarik-menarik, sedangkan jika dialiri arus berlawanan arah akan saling tolak-menolak."
+      },
+      {
+        "type": "formula",
+        "content": "F / L = (μ₀ · I₁ · I₂) / (2π · a)"
+      }
+    ]
+  },
+  {
+    "id": 304,
+    "grade": 12,
+    "category": "Induksi & AC",
+    "title": "Induksi Elektromagnetik & Rangkaian AC",
+    "description": "Fluks magnetik, hukum Faraday, hukum Lenz, induktansi diri, transformator, serta analisis impedansi rangkaian RLC arus bolak-balik.",
+    "banner_url": "",
+    "lottie_url": "",
+    "sort_order": 4,
+    "content_blocks": [
+      {
+        "type": "subtitle",
+        "content": "4.1 Fluks Magnetik dan Hukum Faraday"
+      },
+      {
+        "type": "text",
+        "content": "Fluks magnetik (Φ) mengukur jumlah garis medan magnet yang menembus luasan bidang secara tegak lurus. Perubahan fluks magnetik terhadap waktu di dalam loop kawat akan menginduksi timbulnya Gaya Gerak Listrik (GGL)."
+      },
+      {
+        "type": "formula",
+        "content": "Φ = B · A · cos θ\nε = -N · (dΦ / dt) = -N · (ΔΦ / Δt)"
+      },
+      {
+        "type": "subtitle",
+        "content": "4.2 Hukum Lenz dan Kawat Bergerak"
+      },
+      {
+        "type": "text",
+        "content": "Hukum Lenz menyatakan bahwa arah arus induksi selalu melawan perubahan fluks magnetik penyebabnya. Untuk konduktor yang memotong medan magnet dengan kelajuan v:"
+      },
+      {
+        "type": "formula",
+        "content": "ε = B · L · v · sin θ"
+      },
+      {
+        "type": "subtitle",
+        "content": "4.3 Transformator (Trafo)"
+      },
+      {
+        "type": "text",
+        "content": "Transformator bekerja berdasarkan induksi timbal balik untuk mengubah level tegangan AC tanpa mengubah frekuensi daya listrik."
+      },
+      {
+        "type": "formula",
+        "content": "Vp / Vs = Np / Ns = Is / Ip  (Trafo Ideal)\nη = (Vs · Is) / (Vp · Ip) × 100%  (Efisiensi)"
+      },
+      {
+        "type": "subtitle",
+        "content": "4.4 Rangkaian R-L-C Seri Arus Bolak-Balik"
+      },
+      {
+        "type": "text",
+        "content": "Pada rangkaian AC, gabungan hambatan resistor (R), reaktansi induktif (XL), dan reaktansi kapasitif (XC) membentuk total hambatan yang disebut Impedansi (Z)."
+      },
+      {
+        "type": "formula",
+        "content": "X_L = ω · L = 2π · f · L\nX_C = 1 / (ω · C) = 1 / (2π · f · C)\nZ = √(R² + (X_L - X_C)²)\nI_ef = V_ef / Z"
+      },
+      {
+        "type": "subtitle",
+        "content": "4.5 Resonansi Rangkaian RLC"
+      },
+      {
+        "type": "text",
+        "content": "Keadaan resonansi tercapai saat XL = XC, sehingga impedansi bernilai minimum setara R dan arus mencapai amplitudo puncak."
+      },
+      {
+        "type": "formula",
+        "content": "X_L = X_C\nf₀ = 1 / (2π √(L · C))"
+      }
+    ]
+  },
+  {
+    "id": 305,
+    "grade": 12,
+    "category": "Gelombang EM",
+    "title": "Radiasi Gelombang Elektromagnetik",
+    "description": "Karakteristik gelombang transversal medan listrik dan magnet, spektrum gelombang elektromagnetik dari radio hingga sinar gamma, serta intensitas radiasi.",
+    "banner_url": "",
+    "lottie_url": "",
+    "sort_order": 5,
+    "content_blocks": [
+      {
+        "type": "subtitle",
+        "content": "5.1 Teori Hipotesis Maxwell"
+      },
+      {
+        "type": "text",
+        "content": "Perambatan medan listrik dan medan magnet yang saling tegak lurus merambat di ruang hampa sebagai gelombang transversal dengan kelajuan cahaya c konstan."
+      },
+      {
+        "type": "formula",
+        "content": "c = 1 / √(μ₀ · ε₀) ≈ 3 × 10⁸ m/s\nc = λ · f\nE = c · B"
+      },
+      {
+        "type": "subtitle",
+        "content": "5.2 Spektrum Gelombang Elektromagnetik"
+      },
+      {
+        "type": "text",
+        "content": "Urutan spektrum dari energi terendah ke tertinggi:\n1. Gelombang Radio (penyiaran dan telekomunikasi)\n2. Gelombang Mikro (radar dan oven microwave)\n3. Inframerah (terapi medis dan sensor)\n4. Cahaya Tampak (spektrum warna pelangi)\n5. Ultraviolet (radiasi matahari dan disinfeksi)\n6. Sinar-X (radiografi tulang dan kristalografi)\n7. Sinar Gamma (terapi radiasi kanker dan reaksi inti)"
+      },
+      {
+        "type": "formula",
+        "content": "E_foton = h · f = (h · c) / λ"
+      },
+      {
+        "type": "subtitle",
+        "content": "5.3 Vektor Poynting dan Intensitas Radiasi"
+      },
+      {
+        "type": "text",
+        "content": "Vektor Poynting (S) mendeskripsikan laju energi yang dipancarkan oleh gelombang elektromagnetik per satuan luas bidang rambat."
+      },
+      {
+        "type": "formula",
+        "content": "I = S_rata-rata = (E_maks · B_maks) / (2 · μ₀) = (E_maks)² / (2 · μ₀ · c)"
+      }
+    ]
+  },
+  {
+    "id": 306,
+    "grade": 12,
+    "category": "Fisika Modern",
+    "title": "Teori Relativitas Khusus Einstein",
+    "description": "Postulat relativitas khusus, transformasi Lorentz, dilatasi waktu, kontraksi panjang, massa relativistik, dan kesetaraan massa-energi E = mc².",
+    "banner_url": "",
+    "lottie_url": "",
+    "sort_order": 6,
+    "content_blocks": [
+      {
+        "type": "subtitle",
+        "content": "6.1 Postulat Relativitas Khusus"
+      },
+      {
+        "type": "text",
+        "content": "Einstein merumuskan bahwa hukum fisika berlaku identik di semua kerangka inersial, dan kelajuan cahaya c di ruang hampa adalah besaran mutlak bernilai sama untuk semua pengamat."
+      },
+      {
+        "type": "subtitle",
+        "content": "6.2 Faktor Lorentz (γ)"
+      },
+      {
+        "type": "text",
+        "content": "Pada gerak mendekati laju cahaya, persamaan gerak dikoreksi dengan faktor Lorentz gamma yang bernilai lebih besar dari satu."
+      },
+      {
+        "type": "formula",
+        "content": "γ = 1 / √(1 - (v / c)²)"
+      },
+      {
+        "type": "subtitle",
+        "content": "6.3 Dilatasi Waktu dan Kontraksi Panjang"
+      },
+      {
+        "type": "text",
+        "content": "Waktu berjalan lebih lambat bagi pengamat yang bergerak relatif, sedangkan panjang benda searah arah gerak tampak mengerut bagi pengamat diam."
+      },
+      {
+        "type": "formula",
+        "content": "Δt = γ · Δt₀ = Δt₀ / √(1 - (v / c)²)\nL = L₀ / γ = L₀ · √(1 - (v / c)²)"
+      },
+      {
+        "type": "subtitle",
+        "content": "6.4 Massa, Momentum, dan Kesetaraan Energi"
+      },
+      {
+        "type": "text",
+        "content": "Massa relativistik membesar seiring laju benda. Materi memiliki energi diam E₀ yang setara dengan massanya (E = mc²)."
+      },
+      {
+        "type": "formula",
+        "content": "m = γ · m₀\np = γ · m₀ · v\nEnergi Diam: E₀ = m₀ · c²\nEnergi Total: E = γ · m₀ · c² = E₀ + Ek\nEk = (γ - 1) · m₀ · c²\nE² = (p · c)² + (m₀ · c²)²"
+      }
+    ]
+  },
+  {
+    "id": 307,
+    "grade": 12,
+    "category": "Fisika Modern",
+    "title": "Konsep Foton dan Fisika Kuantum",
+    "description": "Radiasi benda hitam, hukum pergeseran Wien, teori kuantum Planck, efek fotolistrik, efek Compton, serta dualisme gelombang-partikel de Broglie.",
+    "banner_url": "",
+    "lottie_url": "",
+    "sort_order": 7,
+    "content_blocks": [
+      {
+        "type": "subtitle",
+        "content": "7.1 Radiasi Benda Hitam dan Hukum Wien"
+      },
+      {
+        "type": "text",
+        "content": "Daya pancar radiasi sebanding dengan T⁴ (Stefan-Boltzmann). Panjang gelombang pancaran maksimum bergeser ke arah gelombang lebih pendek saat suhu meningkat (Hukum Wien)."
+      },
+      {
+        "type": "formula",
+        "content": "I = e · σ · T⁴  (σ ≈ 5,67 × 10⁻⁸ W/m²K⁴)\nλ_maks · T = C  (C ≈ 2,898 × 10⁻³ m·K)"
+      },
+      {
+        "type": "subtitle",
+        "content": "7.2 Teori Foton Max Planck"
+      },
+      {
+        "type": "text",
+        "content": "Radiasi elektromagnetik dipancarkan dan diserap dalam paket-paket energi diskrit (kuantum) yang disebut foton."
+      },
+      {
+        "type": "formula",
+        "content": "E = h · f = (h · c) / λ\nh ≈ 6,63 × 10⁻³⁴ J·s"
+      },
+      {
+        "type": "subtitle",
+        "content": "7.3 Efek Fotolistrik"
+      },
+      {
+        "type": "text",
+        "content": "Pelepasan elektron dari logam saat disinari cahaya dengan frekuensi melampaui frekuensi ambang f₀. Menjadi bukti definitif sifat partikel dari cahaya."
+      },
+      {
+        "type": "formula",
+        "content": "Ek_maks = h · f - W₀ = e · V₀\nW₀ = h · f₀  (Fungsi Kerja Logam)"
+      },
+      {
+        "type": "subtitle",
+        "content": "7.4 Hamburan Compton dan Panjang Gelombang de Broglie"
+      },
+      {
+        "type": "text",
+        "content": "Hamburan sinar-X oleh elektron membuktikan foton memiliki momentum p = h/λ. Sebaliknya, de Broglie mengajukan bahwa materi bermassa yang bergerak juga memiliki sifat gelombang."
+      },
+      {
+        "type": "formula",
+        "content": "Δλ = λ' - λ = (h / (m_e · c)) · (1 - cos θ)\nλ_deBroglie = h / p = h / (m · v)"
+      }
+    ]
+  },
+  {
+    "id": 308,
+    "grade": 12,
+    "category": "Fisika Inti",
+    "title": "Fisika Inti dan Radioaktivitas",
+    "description": "Struktur nukleus atom, defek massa, energi ikat inti, hukum peluruhan radioaktif, waktu paruh, serta reaksi fisi dan fusi nuklir.",
+    "banner_url": "",
+    "lottie_url": "",
+    "sort_order": 8,
+    "content_blocks": [
+      {
+        "type": "subtitle",
+        "content": "8.1 Struktur Inti dan Energi Ikat"
+      },
+      {
+        "type": "text",
+        "content": "Nukleus tersusun atas proton dan neutron. Selisih massa antara konstituen bebas dengan massa inti terikat disebut defek massa (Δm), yang terkonversi menjadi energi ikat perekat inti."
+      },
+      {
+        "type": "formula",
+        "content": "Δm = [Z · m_p + (A - Z) · m_n] - m_inti\nE_ikat = Δm · 931,5 MeV"
+      },
+      {
+        "type": "subtitle",
+        "content": "8.2 Peluruhan Radioaktif dan Waktu Paruh"
+      },
+      {
+        "type": "text",
+        "content": "Inti tidak stabil meluruh dengan memancarkan partikel alfa (inti He), beta (elektron/positron), atau radiasi foton gamma. Waktu paruh mengukur durasi hingga separuh sampel meluruh."
+      },
+      {
+        "type": "formula",
+        "content": "N_t = N₀ · (½)^(t / T_½)\nA = λ · N\nλ = 0,693 / T_½"
+      },
+      {
+        "type": "subtitle",
+        "content": "8.3 Reaksi Fisi dan Fusi Nuklir"
+      },
+      {
+        "type": "text",
+        "content": "Reaksi Fisi: Pembelahan inti berat (seperti U-235) menjadi inti-inti lebih ringan disertai pelepasan energi luar biasa. Reaksi Fusi: Penggabungan inti-inti sangat ringan (seperti hidrogen) menghasilkan energi bintang."
+      },
+      {
+        "type": "formula",
+        "content": "²₁H + ³₁H → ⁴₂He + ¹₀n + 17,6 MeV  (Reaksi Fusi)\n²³⁵₉₂U + ¹₀n → ¹⁴¹₅₆Ba + ⁹²₃₆Kr + 3 ¹₀n + Energi  (Reaksi Fisi)"
       }
     ]
   }

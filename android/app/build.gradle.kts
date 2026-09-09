@@ -25,9 +25,8 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    defaultConfig {
-        signingConfigs {
-     if (keystoreProperties.isNotEmpty()) {
+    signingConfigs {
+        if (keystoreProperties.isNotEmpty()) {
             create("release") {
                 keyAlias = keystoreProperties["keyAlias"] as String
                 keyPassword = keystoreProperties["keyPassword"] as String
@@ -35,6 +34,9 @@ android {
                 storePassword = keystoreProperties["storePassword"] as String
             }
         }
+    }
+
+    defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.FKN.phintar"
         // You can update the following values to match your application needs.
@@ -52,8 +54,6 @@ android {
             signingConfig = signingConfigs.getByName("release")
         }
     }
-}
-
 }
 
 kotlin {

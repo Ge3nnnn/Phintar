@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import '../data/repositories/materi_repository.dart';
 import '../models/materi_model.dart';
+import '../services/materi_service.dart';
 
-/// Provider for materi content state management.
-///
-/// Loads all materi from SQLite and provides filtering/lookup methods.
-/// UI listens via `context.watch<MateriProvider>()`.
+/// Provider untuk manajemen state konten materi pembelajaran
+/// yang terintegrasi langsung dengan Firebase Cloud Firestore via [MateriService].
 class MateriProvider extends ChangeNotifier {
-  final MateriRepository _repository = MateriRepository();
+  final MateriService _service = MateriService.instance;
 
   List<MateriModel> _materiList = [];
   bool _isLoading = false;
@@ -17,12 +15,12 @@ class MateriProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get error => _error;
 
-  /// Loads all materi from database. Called once on app startup.
+  /// Memuat seluruh materi dari Cloud Firestore.
   Future<void> loadMateri() async {
     _isLoading = true;
     notifyListeners();
     try {
-      _materiList = await _repository.getAllMateri();
+      _materiList = await _service.getAllMateri();
       _error = null;
     } catch (e) {
       _error = e.toString();
@@ -31,7 +29,7 @@ class MateriProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Finds a specific materi by ID.
+  /// Mencari materi spesifik berdasarkan ID.
   MateriModel? getMateriById(int id) {
     try {
       return _materiList.firstWhere((m) => m.id == id);
@@ -40,12 +38,12 @@ class MateriProvider extends ChangeNotifier {
     }
   }
 
-  /// Filters materi by category name.
+  /// Memfilter materi berdasarkan nama kategori.
   List<MateriModel> filterByCategory(String category) {
     return _materiList.where((m) => m.category == category).toList();
   }
 
-  /// Gets distinct categories from loaded materi.
+  /// Mengambil daftar kategori unik dari materi yang telah dimuat.
   List<String> get categories {
     return _materiList.map((m) => m.category).toSet().toList();
   }

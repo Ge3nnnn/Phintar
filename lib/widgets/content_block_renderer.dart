@@ -1,9 +1,10 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 import 'package:phintar/constants/app_theme.dart';
 import 'package:phintar/constants/app_typografy.dart';
 import 'package:phintar/models/materi_model.dart';
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:lottie/lottie.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 /// Reusable widget that renders a single [ContentBlock] based on its type.
@@ -55,7 +56,7 @@ class ContentBlockRenderer extends StatelessWidget {
         );
 
       case 'formula':
-        return _buildFormulaCard(block.content);
+        return _buildFormulaCard(context, block.content);
 
       case 'lottie':
         return Padding(
@@ -105,46 +106,234 @@ class ContentBlockRenderer extends StatelessWidget {
     );
   }
 
-  /// Styled card for physics formulas.
-  Widget _buildFormulaCard(String formula) {
+  /// Formats raw math / LaTeX strings into clear, human-readable physics notation.
+  static String formatFormula(String raw) {
+    String f = raw;
+
+    // Normalisasi newline
+    f = f.replaceAll(r'\n', '\n');
+    f = f.replaceAll(r'\\', '\n');
+
+    // LaTeX tokens ke simbol Unicode
+    f = f.replaceAll(r'\cdot', ' · ');
+    f = f.replaceAll(r'\times', ' × ');
+    f = f.replaceAll(r'\Sigma', 'Σ');
+    f = f.replaceAll(r'\theta', 'θ');
+    f = f.replaceAll(r'\pi', 'π');
+    f = f.replaceAll(r'\Delta', 'Δ');
+    f = f.replaceAll(r'\mu', 'μ');
+    f = f.replaceAll(r'\lambda', 'λ');
+    f = f.replaceAll(r'\omega', 'ω');
+    f = f.replaceAll(r'\alpha', 'α');
+    f = f.replaceAll(r'\beta', 'β');
+    f = f.replaceAll(r'\quad', '   ');
+    f = f.replaceAll(r'\qquad', '     ');
+
+    // RegEx \text{...} -> ...
+    f = f.replaceAllMapped(RegExp(r'\\text\{([^}]+)\}'), (m) => m[1] ?? '');
+
+    // RegEx \vec{...} -> ...
+    f = f.replaceAllMapped(RegExp(r'\\vec\{([^}]+)\}'), (m) => m[1] ?? '');
+    f = f.replaceAll(r'\vec', '');
+
+    // RegEx \sqrt{\frac{a}{b}} -> √(a / b)
+    f = f.replaceAllMapped(
+      RegExp(r'\\sqrt\{\\frac\{([^}]+)\}\{([^}]+)\}\}'),
+      (m) => '√(${m[1]} / ${m[2]})',
+    );
+
+    // RegEx \sqrt{a} -> √(a)
+    f = f.replaceAllMapped(RegExp(r'\\sqrt\{([^}]+)\}'), (m) => '√(${m[1]})');
+    f = f.replaceAll(r'\sqrt', '√');
+
+    // Pecahan umum
+    f = f.replaceAll(r'\frac{1}{2}', '½');
+    f = f.replaceAll(r'\frac{1}{4}', '¼');
+    f = f.replaceAll(r'\frac{3}{4}', '¾');
+
+    // Pecahan generic \frac{a}{b} -> (a / b)
+    f = f.replaceAllMapped(
+      RegExp(r'\\frac\{([^}]+)\}\{([^}]+)\}'),
+      (m) => '(${m[1]} / ${m[2]})',
+    );
+
+    // Subscripts
+    f = f.replaceAll('_0', '₀');
+    f = f.replaceAll('_1', '₁');
+    f = f.replaceAll('_2', '₂');
+    f = f.replaceAll('_t', 'ₜ');
+    f = f.replaceAll('_k', 'ₖ');
+    f = f.replaceAll('_s', 'ₛ');
+    f = f.replaceAll('_p', 'ₚ');
+    f = f.replaceAll('_m', 'ₘ');
+    f = f.replaceAll('_x', 'ₓ');
+    f = f.replaceAll('_y', 'ᵧ');
+    f = f.replaceAll('_{max}', ' (maks)');
+    f = f.replaceAll('_{maks}', ' (maks)');
+
+    // Superscripts
+    f = f.replaceAll('^2', '²');
+    f = f.replaceAll('^3', '³');
+    f = f.replaceAll('^-1', '⁻¹');
+    f = f.replaceAll('^-2', '⁻²');
+
+    return f.trim();
+  }
+
+  /// Styled card for physics formulas with clean math typography and copy action.
+  Widget _buildFormulaCard(BuildContext context, String rawFormula) {
+    final cleanedFormula = formatFormula(rawFormula);
+    final lines = cleanedFormula
+        .split('\n')
+        .map((l) => l.trim())
+        .where((l) => l.isNotEmpty)
+        .toList();
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Container(
         width: double.infinity,
-        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: AppTheme.primaryTranslucent,
-          borderRadius: BorderRadius.circular(12),
+          color: AppTheme.backgroundSecondary,
+          borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: AppTheme.bottonColor.withValues(alpha: 0.3),
+            color: AppTheme.bottonColor.withValues(alpha: 0.35),
+            width: 1.2,
           ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.25),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
         ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Row(
-              children: [
-                Icon(Icons.functions, color: AppTheme.bottonColor, size: 16),
-                const SizedBox(width: 6),
-                Text(
-                  'Rumus',
-                  style: AppTextStyle.smallText.copyWith(
-                    color: AppTheme.bottonColor,
-                    fontWeight: FontWeight.bold,
-                  ),
+            // ── Header Bar ──────────────────────────────────────────
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
+              decoration: BoxDecoration(
+                color: AppTheme.primaryTranslucent,
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(15),
+                  topRight: Radius.circular(15),
                 ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Text(
-              formula,
-              style: GoogleFonts.outfit(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: AppTheme.putih,
-                height: 1.6,
               ),
-              textAlign: TextAlign.center,
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      color: AppTheme.bottonColor.withValues(alpha: 0.2),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: const Icon(
+                      Icons.functions_rounded,
+                      color: AppTheme.bottonColor,
+                      size: 16,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Rumus Fisika',
+                    style: AppTextStyle.smallText.copyWith(
+                      color: AppTheme.bottonColor,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                  const Spacer(),
+                  InkWell(
+                    borderRadius: BorderRadius.circular(8),
+                    onTap: () {
+                      Clipboard.setData(ClipboardData(text: cleanedFormula));
+                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Row(
+                            children: const [
+                              Icon(
+                                Icons.check_circle,
+                                color: AppTheme.putih,
+                                size: 16,
+                              ),
+                              SizedBox(width: 8),
+                              Text('Rumus disalin ke clipboard!'),
+                            ],
+                          ),
+                          backgroundColor: AppTheme.progressColor,
+                          duration: const Duration(seconds: 1),
+                        ),
+                      );
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(
+                            Icons.copy_rounded,
+                            color: AppTheme.textColor,
+                            size: 14,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            'Salin',
+                            style: AppTextStyle.smallText.copyWith(
+                              color: AppTheme.textColor,
+                              fontSize: 11,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // ── Formula Content Lines ───────────────────────────────
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+              child: Column(
+                children: lines.map((line) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4.0),
+                    child: Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 14,
+                        vertical: 11,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppTheme.backgroundPrimary.withValues(
+                          alpha: 0.7,
+                        ),
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          color: AppTheme.borderColor.withValues(alpha: 0.4),
+                        ),
+                      ),
+                      child: SelectableText(
+                        line,
+                        style: GoogleFonts.outfit(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: AppTheme.putih,
+                          letterSpacing: 0.3,
+                          height: 1.4,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
             ),
           ],
         ),
