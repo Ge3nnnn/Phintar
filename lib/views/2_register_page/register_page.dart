@@ -79,20 +79,18 @@ class _RegisterScreenPhintarState extends State<RegisterScreenPhintar> {
   Future<void> _signUpWithGoogle() async {
     setState(() => _isLoading = true);
     try {
-      final cred = await FirebaseAuthService().signInWithGoogle();
+      final cred = await FirebaseAuthService().registerWithGoogle();
       if (!mounted) return;
-      if (cred != null) {
-        final user = cred.user;
-        final profile = user != null
-            ? await FirebaseAuthService().getUserDetails(user.uid)
-            : null;
+      if (cred != null && cred.user != null) {
+        final user = cred.user!;
+        final profile = await FirebaseAuthService().getUserDetails(user.uid);
         final displayName = (profile != null && profile.name.isNotEmpty)
             ? profile.name
-            : (user?.displayName ?? 'Pengguna phintar');
+            : (user.displayName ?? 'Pengguna phintar');
 
         await PreferenceHandler.setLogin(true);
         await PreferenceHandler.setUserName(displayName);
-        await PreferenceHandler.setUserEmail(user?.email ?? '');
+        await PreferenceHandler.setUserEmail(user.email ?? '');
         if (!mounted) return;
         context.pushAndRemoveAll(const BottomNavBarPhintar());
       }
@@ -346,7 +344,8 @@ class _RegisterScreenPhintarState extends State<RegisterScreenPhintar> {
         Expanded(
           child: CustomElevatedButton(
             iconAsset: AppImages.googleIcon,
-            text: "Google",
+            text: "Daftar dengan Google",
+            backgroundColor: AppTheme.backgroundSecondary,
             onPressed: _isLoading ? () {} : _signUpWithGoogle,
           ),
         ),

@@ -1,5 +1,5 @@
-import '../../models/quiz_model.dart';
-import '../datasources/quiz_local_source.dart';
+import 'package:phintar/data/datasources/quiz_local_source.dart';
+import 'package:phintar/models/quiz_model.dart';
 
 /// Repository for quiz content.
 class QuizRepository {

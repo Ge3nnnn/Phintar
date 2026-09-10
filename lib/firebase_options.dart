@@ -52,19 +52,20 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyCQ0uYv724b_bonuk2ETFhdx8STzhJe1og',
-    appId: '1:737817094016:web:c6ff75e72cce901bf3c365',
-    messagingSenderId: '737817094016',
-    projectId: 'ppkd-b7-project',
-    authDomain: 'ppkd-b7-project.firebaseapp.com',
-    storageBucket: 'ppkd-b7-project.firebasestorage.app',
+    apiKey: 'AIzaSyAKRHyahTNdJo01aZOURPgsbGKiX5ViCY8',
+    appId: '1:130515174634:web:6f7ffd8529875e5bd30393',
+    messagingSenderId: '130515174634',
+    projectId: 'phintar-edu-6cd66',
+    authDomain: 'phintar-edu-6cd66.firebaseapp.com',
+    storageBucket: 'phintar-edu-6cd66.firebasestorage.app',
+    measurementId: 'G-EYGD5YSF4C',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyD2772xBrQkv4gvEUTUtceKt_ZinU2VYhA',
-    appId: '1:737817094016:android:aa186ea12d3c4f0ff3c365',
-    messagingSenderId: '737817094016',
-    projectId: 'ppkd-b7-project',
-    storageBucket: 'ppkd-b7-project.firebasestorage.app',
+    apiKey: 'AIzaSyA4DT-vj60_QT_CM_mxeP09IOdepAkOSCo',
+    appId: '1:130515174634:android:e18b05e0665eab00d30393',
+    messagingSenderId: '130515174634',
+    projectId: 'phintar-edu-6cd66',
+    storageBucket: 'phintar-edu-6cd66.firebasestorage.app',
   );
 }

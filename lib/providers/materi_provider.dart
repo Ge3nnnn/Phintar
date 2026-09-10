@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../models/materi_model.dart';
-import '../services/materi_service.dart';
+import 'package:phintar/models/materi_model.dart';
+import 'package:phintar/services/materi_service.dart';
 
 /// Provider untuk manajemen state konten materi pembelajaran
 /// yang terintegrasi langsung dengan Firebase Cloud Firestore via [MateriService].

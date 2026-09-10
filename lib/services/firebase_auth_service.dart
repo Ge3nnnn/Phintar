@@ -1,14 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:phintar/models/firebase_model/user_models.dart';
+import 'package:phintar/services/google_sign_in.dart';
 
 /// Service khusus untuk mengelola otentikasi Firebase (Email/Password & Google Sign In)
 /// serta sinkronisasi data profil pengguna ke Cloud Firestore.
 class FirebaseAuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
+
+  static const String _webClientId =
+      '130515174634-fhj1i24ovbqpvnrsh6t2pt56bn9m7h3i.apps.googleusercontent.com';
+
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+    clientId: kIsWeb ? _webClientId : null,
+    serverClientId: _webClientId,
+  );
 
   /// Referensi ke koleksi `users` di Cloud Firestore.
   CollectionReference<Map<String, dynamic>> get _usersRef =>
@@ -57,33 +66,36 @@ class FirebaseAuthService {
 
   /// Melakukan login menggunakan akun Google. Jika pengguna baru, data profil akan disimpan ke Firestore.
   Future<UserCredential?> signInWithGoogle() async {
+    // Bersihkan sesi lokal Google Sign-In sebelumnya agar dialog pemilihan akun selalu muncul
+    try {
+      await _googleSignIn.signOut();
+    } catch (_) {}
+
     final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
     if (googleUser == null) return null; // Pengguna membatalkan proses sign in
 
     final GoogleSignInAuthentication googleAuth =
         await googleUser.authentication;
 
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
-
-    final userCredential = await _auth.signInWithCredential(credential);
-    final user = userCredential.user;
-
-    if (user != null) {
-      final doc = await _usersRef.doc(user.uid).get();
-      if (!doc.exists) {
-        await _saveUserData(
-          user: user,
-          name: user.displayName ?? 'Google User',
-          email: user.email ?? '',
-        );
-      }
+    final String? idToken = googleAuth.idToken;
+    if (idToken == null && googleAuth.accessToken == null) {
+      throw FirebaseAuthException(
+        code: 'invalid-credential',
+        message:
+            'Gagal mendapatkan token autentikasi Google. Pastikan SHA-1 sudah terdaftar di Firebase Console.',
+      );
     }
 
-    return userCredential;
+    return await firebaseAuthWithGoogle(
+      idToken: idToken ?? '',
+      accessToken: googleAuth.accessToken,
+    );
   }
+
+  /// Melakukan registrasi menggunakan akun Google.
+  /// Berfungsi identik dengan [signInWithGoogle] karena Firebase menangani
+  /// registrasi dan login Google melalui credential yang sama.
+  Future<UserCredential?> registerWithGoogle() => signInWithGoogle();
 
   /// Mengirimkan tautan reset kata sandi ke email pengguna.
   Future<void> sendPasswordResetEmail(String email) async {
@@ -131,15 +143,19 @@ class FirebaseAuthService {
     required User user,
     required String name,
     required String email,
+    String photoUrl = '',
   }) async {
     final userModelFirebase = UserModelFirebase(
       uid: user.uid,
       name: name,
       email: email,
+      photoUrl: photoUrl.isNotEmpty ? photoUrl : (user.photoURL ?? ''),
       createdAt: DateTime.now(),
     );
 
-    await _usersRef.doc(user.uid).set(userModelFirebase.toMap());
+    await _usersRef
+        .doc(user.uid)
+        .set(userModelFirebase.toMap(), SetOptions(merge: true));
   }
 
   /// Mengonversi exception Firebase Auth menjadi pesan Bahasa Indonesia yang mudah dipahami.
@@ -165,10 +181,28 @@ class FirebaseAuthService {
           return 'Koneksi internet bermasalah. Periksa koneksi Anda.';
         case 'requires-recent-login':
           return 'Demi keamanan, silakan keluar dan masuk kembali sebelum mengubah kata sandi.';
+        case 'account-exists-with-different-credential':
+          return 'Akun sudah terdaftar dengan metode masuk lain. Silakan masuk menggunakan metode yang sesuai.';
+        case 'operation-not-allowed':
+          return 'Metode masuk ini (Google) belum diaktifkan di Firebase Console (Authentication > Sign-in method).';
         default:
           return error.message ??
               'Terjadi kesalahan otentikasi. Silakan coba lagi.';
       }
+    }
+    final errStr = error.toString();
+    if (errStr.contains('network_error') ||
+        errStr.contains('ApiException: 7')) {
+      return 'Koneksi internet bermasalah. Periksa koneksi Anda.';
+    }
+    if (errStr.contains('ApiException: 10') ||
+        errStr.contains('developer_error') ||
+        errStr.contains('DEVELOPER_ERROR')) {
+      return 'Google Sign-In gagal (Error 10 / DEVELOPER_ERROR): SHA-1 fingerprint keystore belum didaftarkan di Firebase Console untuk package com.FKN.Phintar.';
+    }
+    if (errStr.contains('ApiException: 12500') ||
+        errStr.contains('sign_in_failed')) {
+      return 'Gagal masuk dengan Google (Error 12500). Pastikan Google provider aktif di Firebase Console dan Support Email sudah dipilih.';
     }
     return error.toString();
   }

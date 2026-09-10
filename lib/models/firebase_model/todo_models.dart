@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'firestore_helper.dart';
+import 'package:phintar/models/firebase_model/firestore_helper.dart';
 
 part 'todo_models.g.dart';
 

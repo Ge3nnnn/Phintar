@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'firestore_helper.dart';
+import 'package:phintar/models/firebase_model/firestore_helper.dart';
 
 part 'user_models.g.dart';
 
@@ -22,11 +22,16 @@ class UserModelFirebase {
   @JsonKey(fromJson: dateTimeFromJson, toJson: dateTimeToJson)
   final DateTime createdAt;
 
+  /// URL foto profil pengguna (misalnya dari akun Google).
+  @JsonKey(defaultValue: '')
+  final String photoUrl;
+
   UserModelFirebase({
     required this.uid,
     required this.name,
     required this.email,
     required this.createdAt,
+    this.photoUrl = '',
   });
 
   /// Mengonversi Map JSON menjadi objek [UserModelFirebase].
@@ -42,4 +47,21 @@ class UserModelFirebase {
 
   /// Alias method [toJson] untuk menyimpan data ke dokumen Firestore.
   Map<String, dynamic> toMap() => toJson();
+
+  /// Membuat salinan [UserModelFirebase] dengan beberapa field yang diperbarui.
+  UserModelFirebase copyWith({
+    String? uid,
+    String? name,
+    String? email,
+    DateTime? createdAt,
+    String? photoUrl,
+  }) {
+    return UserModelFirebase(
+      uid: uid ?? this.uid,
+      name: name ?? this.name,
+      email: email ?? this.email,
+      createdAt: createdAt ?? this.createdAt,
+      photoUrl: photoUrl ?? this.photoUrl,
+    );
+  }
 }

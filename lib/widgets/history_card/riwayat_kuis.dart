@@ -245,7 +245,7 @@ class RiwayatKuisSectionState extends State<RiwayatKuisSection> {
                         await Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) =>
-                                const BottomNavBarPhintar(initialIndex: 2),
+                                BottomNavBarPhintar(initialIndex: 2),
                           ),
                         );
                         refreshHistories();

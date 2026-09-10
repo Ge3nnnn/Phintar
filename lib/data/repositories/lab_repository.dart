@@ -1,5 +1,5 @@
-import '../../models/lab_model.dart';
-import '../datasources/lab_local_source.dart';
+import 'package:phintar/data/datasources/lab_local_source.dart';
+import 'package:phintar/models/lab_model.dart';
 
 /// Repository for lab simulation content.
 class LabRepository {

@@ -12,6 +12,7 @@ UserModelFirebase _$UserModelFirebaseFromJson(Map<String, dynamic> json) =>
       name: json['name'] as String? ?? '',
       email: json['email'] as String? ?? '',
       createdAt: dateTimeFromJson(json['createdAt']),
+      photoUrl: json['photoUrl'] as String? ?? '',
     );
 
 Map<String, dynamic> _$UserModelFirebaseToJson(UserModelFirebase instance) =>
@@ -20,4 +21,5 @@ Map<String, dynamic> _$UserModelFirebaseToJson(UserModelFirebase instance) =>
       'name': instance.name,
       'email': instance.email,
       'createdAt': dateTimeToJson(instance.createdAt),
+      'photoUrl': instance.photoUrl,
     };

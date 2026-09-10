@@ -31,7 +31,12 @@ class FirestoreUserService {
 
   /// Memperbarui nama pengguna di dokumen Firestore.
   Future<void> updateUserName(String uid, String name) async {
-    await _usersRef.doc(uid).update({'name': name});
+    await _usersRef.doc(uid).set({'name': name}, SetOptions(merge: true));
+  }
+
+  /// Memperbarui URL foto profil pengguna di dokumen Firestore.
+  Future<void> updateUserPhoto(String uid, String photoUrl) async {
+    await _usersRef.doc(uid).set({'photoUrl': photoUrl}, SetOptions(merge: true));
   }
 
   /// Menyimpan atau menimpa data pengguna di dokumen Firestore.
