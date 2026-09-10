@@ -46,8 +46,9 @@ Future<UserCredential> firebaseAuthWithGoogle({
     );
 
     // 2. Sign-in ke Firebase dengan credential
-    final UserCredential userCredential =
-        await _auth.signInWithCredential(credential);
+    final UserCredential userCredential = await _auth.signInWithCredential(
+      credential,
+    );
 
     // 3. State jika login berhasil (task.isSuccessful -> val user = auth.currentUser)
     final User? user = _auth.currentUser ?? userCredential.user;
@@ -155,8 +156,7 @@ Future<void> _syncUserProfileToFirestore(User user) async {
       // Jika belum ada photoUrl di Firestore tetapi ada di akun Google, perbarui
       final data = doc.data();
       if (data != null &&
-          (data['photoUrl'] == null ||
-              (data['photoUrl'] as String).isEmpty) &&
+          (data['photoUrl'] == null || (data['photoUrl'] as String).isEmpty) &&
           user.photoURL != null &&
           user.photoURL!.isNotEmpty) {
         await usersRef.doc(user.uid).set({

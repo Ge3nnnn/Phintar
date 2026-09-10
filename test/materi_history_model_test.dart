@@ -192,6 +192,40 @@ void main() {
         'Materi Fisika #999',
       );
     });
+
+    test('formatDuration formats seconds into proper text representation', () {
+      expect(formatDuration(45), '45 detik');
+      expect(formatDuration(120), '2 menit');
+      expect(formatDuration(125), '2 menit 5 detik');
+      expect(formatDuration(3600), '1 jam');
+      expect(formatDuration(3665), '1 jam 1 menit');
+    });
+
+    test('Sorting by longest duration orders materials descending', () {
+      final items = [
+        {'materi_id': 1, 'duration_seconds': 120, 'created_at': '2026-09-01T10:00:00Z'},
+        {'materi_id': 2, 'duration_seconds': 500, 'created_at': '2026-09-02T10:00:00Z'},
+        {'materi_id': 3, 'duration_seconds': 30, 'created_at': '2026-09-03T10:00:00Z'},
+        {'materi_id': 4, 'duration_seconds': 900, 'created_at': '2026-09-04T10:00:00Z'},
+      ];
+
+      items.sort((a, b) {
+        final durA = (a['duration_seconds'] as num?)?.toInt() ?? 0;
+        final durB = (b['duration_seconds'] as num?)?.toInt() ?? 0;
+        if (durB != durA) {
+          return durB.compareTo(durA);
+        }
+        final dateA = a['created_at']?.toString() ?? '';
+        final dateB = b['created_at']?.toString() ?? '';
+        return dateB.compareTo(dateA);
+      });
+
+      final top3 = items.take(3).toList();
+      expect(top3.length, 3);
+      expect(top3[0]['materi_id'], 4); // 900s
+      expect(top3[1]['materi_id'], 2); // 500s
+      expect(top3[2]['materi_id'], 1); // 120s
+    });
   });
 }
 

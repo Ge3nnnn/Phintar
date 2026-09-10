@@ -190,15 +190,11 @@ class FirebaseAuthService {
               'Terjadi kesalahan otentikasi. Silakan coba lagi.';
       }
     }
+    // pesannya ada disisni
     final errStr = error.toString();
     if (errStr.contains('network_error') ||
         errStr.contains('ApiException: 7')) {
       return 'Koneksi internet bermasalah. Periksa koneksi Anda.';
-    }
-    if (errStr.contains('ApiException: 10') ||
-        errStr.contains('developer_error') ||
-        errStr.contains('DEVELOPER_ERROR')) {
-      return 'Google Sign-In gagal (Error 10 / DEVELOPER_ERROR): SHA-1 fingerprint keystore belum didaftarkan di Firebase Console untuk package com.FKN.Phintar.';
     }
     if (errStr.contains('ApiException: 12500') ||
         errStr.contains('sign_in_failed')) {

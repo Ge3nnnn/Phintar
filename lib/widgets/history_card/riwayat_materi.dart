@@ -5,6 +5,7 @@ import 'package:phintar/views/6_materi/dynamic_materi_page.dart';
 import 'package:phintar/widgets/bottom_nav/bottom_nav_bar_phintar.dart';
 import 'package:flutter/material.dart';
 import 'package:phintar/services/firestore_materi_service.dart';
+import 'package:phintar/views/5_features/Profile_page/all_riwayat_materi_page.dart';
 
 /// Maps materi IDs to their display titles.
 final Map<int, String> kAvailableMateri = {1: 'Gelombang dan Osilasi'};
@@ -107,9 +108,7 @@ class RiwayatMateriSectionState extends State<RiwayatMateriSection> {
 
       if (materi != null) {
         await Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (_) => DynamicMateriPage(materi: materi),
-          ),
+          MaterialPageRoute(builder: (_) => DynamicMateriPage(materi: materi)),
         );
         refreshHistories();
       } else {
@@ -232,6 +231,21 @@ class RiwayatMateriSectionState extends State<RiwayatMateriSection> {
 
         final data = snapshot.data ?? [];
 
+        // Sort by duration descending, secondary sort by created_at descending
+        final sortedData = List<Map<String, dynamic>>.from(data);
+        sortedData.sort((a, b) {
+          final durA = (a['duration_seconds'] as num?)?.toInt() ?? 0;
+          final durB = (b['duration_seconds'] as num?)?.toInt() ?? 0;
+          if (durB != durA) {
+            return durB.compareTo(durA);
+          }
+          final dateA = a['created_at']?.toString() ?? '';
+          final dateB = b['created_at']?.toString() ?? '';
+          return dateB.compareTo(dateA);
+        });
+
+        final displayData = sortedData.take(3).toList();
+
         // Header Section with Content
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -270,6 +284,44 @@ class RiwayatMateriSectionState extends State<RiwayatMateriSection> {
                     ),
                   ],
                 ),
+                if (data.length > 3)
+                  TextButton(
+                    onPressed: () async {
+                      await Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const AllRiwayatMateriPage(),
+                        ),
+                      );
+                      refreshHistories();
+                    },
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                      minimumSize: Size.zero,
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'Lihat Semua',
+                          style: TextStyle(
+                            color: AppTheme.bottonColor,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        SizedBox(width: 4),
+                        Icon(
+                          Icons.arrow_forward_ios_rounded,
+                          size: 12,
+                          color: AppTheme.bottonColor,
+                        ),
+                      ],
+                    ),
+                  ),
               ],
             ),
             const SizedBox(height: 8),
@@ -341,11 +393,11 @@ class RiwayatMateriSectionState extends State<RiwayatMateriSection> {
               ListView.separated(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                itemCount: data.length,
+                itemCount: displayData.length,
                 separatorBuilder: (context, index) =>
                     const SizedBox(height: 10),
                 itemBuilder: (context, index) {
-                  final item = data[index];
+                  final item = displayData[index];
                   final id = item['id']?.toString() ?? '';
                   final materiId = item['materi_id'] as int;
                   final materiName = getMateriTitle(
@@ -378,7 +430,9 @@ class RiwayatMateriSectionState extends State<RiwayatMateriSection> {
                             Container(
                               padding: const EdgeInsets.all(10),
                               decoration: BoxDecoration(
-                                color: AppTheme.bottonColor.withValues(alpha: 0.15),
+                                color: AppTheme.bottonColor.withValues(
+                                  alpha: 0.15,
+                                ),
                                 shape: BoxShape.circle,
                               ),
                               child: const Icon(
@@ -443,7 +497,9 @@ class RiwayatMateriSectionState extends State<RiwayatMateriSection> {
                                       ? 'Cukup'
                                       : 'Sebentar',
                                   style: TextStyle(
-                                    color: durationColor.withValues(alpha: 0.85),
+                                    color: durationColor.withValues(
+                                      alpha: 0.85,
+                                    ),
                                     fontSize: 10,
                                     fontWeight: FontWeight.w600,
                                   ),
@@ -462,7 +518,9 @@ class RiwayatMateriSectionState extends State<RiwayatMateriSection> {
                               color: AppTheme.backgroundSecondary,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
-                                side: const BorderSide(color: Color(0xFF334155)),
+                                side: const BorderSide(
+                                  color: Color(0xFF334155),
+                                ),
                               ),
                               onSelected: (value) {
                                 if (value == 'continue') {
