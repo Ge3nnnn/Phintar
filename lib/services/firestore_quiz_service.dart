@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:phintar/models/preference_handler.dart';
 import 'package:phintar/models/quiz_history_model.dart';
 
 /// Layanan untuk mengelola riwayat pengerjaan kuis pada Cloud Firestore (koleksi `quiz_histories`).
@@ -24,7 +23,7 @@ class FirestoreQuizService {
     if (authEmail != null && authEmail.isNotEmpty) {
       return authEmail;
     }
-    return PreferenceHandler.userEmail;
+    return '';
   }
 
   /// Menyimpan atau memperbarui hasil kuis pengguna (upsert per kuis & per email).

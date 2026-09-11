@@ -5,7 +5,6 @@ import 'package:phintar/widgets/app_textfield.dart';
 import 'package:phintar/constants/app_typografy.dart';
 import 'package:phintar/widgets/extention/navigator.dart';
 import 'package:phintar/constants/app_theme.dart';
-import 'package:phintar/models/preference_handler.dart';
 import 'package:phintar/widgets/bottom_nav/bottom_nav_bar_phintar.dart';
 import 'package:phintar/views/2_register_page/register_page.dart';
 import 'package:phintar/views/3_reset_password_page/reset_password_page.dart';
@@ -46,15 +45,6 @@ class _LoginPagePhintarState extends State<LoginPagePhintar> {
 
       final user = cred.user;
       if (user != null) {
-        final profile = await FirebaseAuthService().getUserDetails(user.uid);
-        final displayName = (profile != null && profile.name.isNotEmpty)
-            ? profile.name
-            : (user.displayName ?? 'Pengguna phintar');
-
-        await PreferenceHandler.setLogin(true);
-        await PreferenceHandler.setUserName(displayName);
-        await PreferenceHandler.setUserEmail(user.email ?? email);
-
         if (!mounted) return;
         context.pushAndRemoveAll(const BottomNavBarPhintar());
       }
@@ -74,16 +64,6 @@ class _LoginPagePhintarState extends State<LoginPagePhintar> {
     try {
       final cred = await FirebaseAuthService().signInWithGoogle();
       if (cred != null && cred.user != null) {
-        final user = cred.user!;
-        final profile = await FirebaseAuthService().getUserDetails(user.uid);
-        final displayName = (profile != null && profile.name.isNotEmpty)
-            ? profile.name
-            : (user.displayName ?? 'Google User');
-
-        await PreferenceHandler.setLogin(true);
-        await PreferenceHandler.setUserName(displayName);
-        await PreferenceHandler.setUserEmail(user.email ?? '');
-
         if (!mounted) return;
         context.pushAndRemoveAll(const BottomNavBarPhintar());
       }
@@ -125,11 +105,14 @@ class _LoginPagePhintarState extends State<LoginPagePhintar> {
                       controller: emailC,
                       hintText: 'Masukan email anda',
                       prefixIcon: Icons.email_outlined,
+                      keyboardType: TextInputType.emailAddress,
                       validator: (value) {
-                        if (value == null || value.isEmpty) {
+                        if (value == null || value.trim().isEmpty) {
                           return "Email tidak boleh kosong";
-                        } else if (!value.contains('@')) {
-                          return "Email tidak valid";
+                        } else if (!FirebaseAuthService.isValidEmail(
+                          value.trim(),
+                        )) {
+                          return "Format email tidak valid (contoh: nama@email.com)";
                         }
                         return null;
                       },

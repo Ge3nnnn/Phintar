@@ -1,4 +1,3 @@
-import 'package:phintar/models/preference_handler.dart';
 import 'package:phintar/services/firebase_auth_service.dart';
 import 'package:phintar/widgets/bottom_nav/bottom_nav_bar_phintar.dart';
 import 'package:phintar/widgets/app_textfield.dart';
@@ -58,11 +57,6 @@ class _RegisterScreenPhintarState extends State<RegisterScreenPhintar> {
         password: password,
       );
 
-      // Simpan status dan sesi pengguna ke lokal Preferences
-      await PreferenceHandler.setLogin(true);
-      await PreferenceHandler.setUserName(name);
-      await PreferenceHandler.setUserEmail(email);
-
       if (!mounted) return;
       _showSuccessDialog();
     } catch (e) {
@@ -82,15 +76,6 @@ class _RegisterScreenPhintarState extends State<RegisterScreenPhintar> {
       final cred = await FirebaseAuthService().registerWithGoogle();
       if (!mounted) return;
       if (cred != null && cred.user != null) {
-        final user = cred.user!;
-        final profile = await FirebaseAuthService().getUserDetails(user.uid);
-        final displayName = (profile != null && profile.name.isNotEmpty)
-            ? profile.name
-            : (user.displayName ?? 'Pengguna phintar');
-
-        await PreferenceHandler.setLogin(true);
-        await PreferenceHandler.setUserName(displayName);
-        await PreferenceHandler.setUserEmail(user.email ?? '');
         if (!mounted) return;
         context.pushAndRemoveAll(const BottomNavBarPhintar());
       }
@@ -210,8 +195,10 @@ class _RegisterScreenPhintarState extends State<RegisterScreenPhintar> {
               icon: Icons.mail_outline,
               keyboardType: TextInputType.emailAddress,
               validator: (v) {
-                if (v == null || v.isEmpty) return "Email tidak boleh kosong";
-                if (!v.contains('@')) return "Email tidak valid";
+                if (v == null || v.trim().isEmpty) return "Email tidak boleh kosong";
+                if (!FirebaseAuthService.isValidEmail(v.trim())) {
+                  return "Format email tidak valid (contoh: nama@email.com)";
+                }
                 return null;
               },
             ),

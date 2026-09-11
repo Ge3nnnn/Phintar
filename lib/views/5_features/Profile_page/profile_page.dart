@@ -1,11 +1,9 @@
-import 'dart:io';
 import 'package:phintar/constants/app_theme.dart';
 import 'package:phintar/constants/app_typografy.dart';
 import 'package:phintar/services/firebase_auth_service.dart';
 import 'package:phintar/views/7_setting_page/settings_page.dart';
 import 'package:phintar/widgets/app_bar.dart';
 import 'package:phintar/widgets/extention/navigator.dart';
-import 'package:phintar/models/preference_handler.dart';
 import 'package:phintar/widgets/history_card/riwayat_kuis.dart';
 import 'package:phintar/widgets/history_card/riwayat_materi.dart';
 
@@ -26,16 +24,8 @@ class _ProfilePagePhintarState extends State<ProfilePagePhintar> {
         (currentUser?.displayName != null &&
             currentUser!.displayName!.isNotEmpty)
         ? currentUser.displayName!
-        : PreferenceHandler.userName;
-    final userEmail =
-        (currentUser?.email != null && currentUser!.email!.isNotEmpty)
-        ? currentUser.email!
-        : PreferenceHandler.userEmail;
-    final userPhoto = PreferenceHandler.userPhoto;
-    final hasPhoto =
-        userPhoto != null &&
-        userPhoto.isNotEmpty &&
-        File(userPhoto).existsSync();
+        : 'Pengguna phintar';
+    final userEmail = currentUser?.email ?? '';
     final networkPhoto = currentUser?.photoURL;
     final hasNetworkPhoto = networkPhoto != null && networkPhoto.isNotEmpty;
 
@@ -72,14 +62,7 @@ class _ProfilePagePhintarState extends State<ProfilePagePhintar> {
                         ),
                       ),
                       child: ClipOval(
-                        child: hasPhoto
-                            ? Image.file(
-                                File(userPhoto),
-                                width: 60,
-                                height: 60,
-                                fit: BoxFit.cover,
-                              )
-                            : hasNetworkPhoto
+                        child: hasNetworkPhoto
                             ? Image.network(
                                 networkPhoto,
                                 width: 60,

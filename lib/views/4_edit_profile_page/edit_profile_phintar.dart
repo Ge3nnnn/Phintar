@@ -5,13 +5,10 @@ import 'package:phintar/constants/app_theme.dart';
 import 'package:phintar/constants/app_typografy.dart';
 import 'package:phintar/widgets/app_bar.dart';
 import 'package:phintar/widgets/extention/navigator.dart';
-import 'package:phintar/models/preference_handler.dart';
 import 'package:phintar/services/firebase_auth_service.dart';
 import 'package:phintar/services/firestore_user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:path/path.dart' as p;
 
 class EditProfilePhintar extends StatefulWidget {
   const EditProfilePhintar({super.key});
@@ -26,23 +23,14 @@ class _EditProfilePhintarState extends State<EditProfilePhintar> {
   late TextEditingController _emailController;
   bool _isLoading = false;
   File? _imageFile;
-  bool _isNewImageSelected = false;
-  bool _isPhotoDeleted = false;
   final ImagePicker _picker = ImagePicker();
 
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController(text: PreferenceHandler.userName);
-    _emailController = TextEditingController(text: PreferenceHandler.userEmail);
-
-    final savedPhotoPath = PreferenceHandler.userPhoto;
-    if (savedPhotoPath != null && savedPhotoPath.isNotEmpty) {
-      final file = File(savedPhotoPath);
-      if (file.existsSync()) {
-        _imageFile = file;
-      }
-    }
+    final user = FirebaseAuthService().currentUser;
+    _nameController = TextEditingController(text: user?.displayName ?? '');
+    _emailController = TextEditingController(text: user?.email ?? '');
   }
 
   @override
@@ -65,8 +53,6 @@ class _EditProfilePhintarState extends State<EditProfilePhintar> {
       if (pickedFile != null) {
         setState(() {
           _imageFile = File(pickedFile.path);
-          _isNewImageSelected = true;
-          _isPhotoDeleted = false;
         });
       }
     } catch (e) {
@@ -84,8 +70,6 @@ class _EditProfilePhintarState extends State<EditProfilePhintar> {
     Navigator.of(context).pop();
     setState(() {
       _imageFile = null;
-      _isNewImageSelected = false;
-      _isPhotoDeleted = true;
     });
   }
 
@@ -97,10 +81,7 @@ class _EditProfilePhintarState extends State<EditProfilePhintar> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (context) {
-        final hasImage =
-            _imageFile != null ||
-            (!_isPhotoDeleted &&
-                (PreferenceHandler.userPhoto?.isNotEmpty ?? false));
+        final hasImage = _imageFile != null;
 
         return SafeArea(
           child: Padding(
@@ -166,53 +147,6 @@ class _EditProfilePhintarState extends State<EditProfilePhintar> {
     });
 
     final newName = _nameController.text.trim();
-    final currentEmail = PreferenceHandler.userEmail;
-
-    // Simpan ke SharedPreferences
-    await PreferenceHandler.setUserName(newName);
-
-    // Simpan foto profil secara permanen ke dokumen aplikasi jika ada foto baru
-    if (_imageFile != null && _isNewImageSelected) {
-      try {
-        final appDir = await getApplicationDocumentsDirectory();
-        final ext = p.extension(_imageFile!.path).isNotEmpty
-            ? p.extension(_imageFile!.path)
-            : '.jpg';
-        final safeEmail = currentEmail.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '_');
-        final fileName =
-            'profile_${safeEmail}_${DateTime.now().millisecondsSinceEpoch}$ext';
-        final savedFile = await _imageFile!.copy('${appDir.path}/$fileName');
-
-        // Hapus file foto lama jika ada
-        final oldPhoto = PreferenceHandler.userPhoto;
-        if (oldPhoto != null &&
-            oldPhoto.isNotEmpty &&
-            oldPhoto != savedFile.path) {
-          final oldFile = File(oldPhoto);
-          if (await oldFile.exists()) {
-            try {
-              await oldFile.delete();
-            } catch (_) {}
-          }
-        }
-
-        await PreferenceHandler.setUserPhoto(savedFile.path);
-      } catch (e) {
-        // Fallback simpan path asli jika gagal meng-copy
-        await PreferenceHandler.setUserPhoto(_imageFile!.path);
-      }
-    } else if (_isPhotoDeleted) {
-      final oldPhoto = PreferenceHandler.userPhoto;
-      if (oldPhoto != null && oldPhoto.isNotEmpty) {
-        final oldFile = File(oldPhoto);
-        if (await oldFile.exists()) {
-          try {
-            await oldFile.delete();
-          } catch (_) {}
-        }
-      }
-      await PreferenceHandler.setUserPhoto(null);
-    }
 
     // Update profil di Firebase Auth dan Cloud Firestore
     try {

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:phintar/constants/app_theme.dart';
 import 'package:phintar/constants/app_typografy.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:phintar/models/materi_model.dart';
-import 'package:phintar/models/preference_handler.dart';
 import 'package:phintar/services/firestore_materi_service.dart';
 import 'package:phintar/widgets/app_bar.dart';
 import 'package:phintar/widgets/content_block_renderer.dart';
@@ -35,7 +35,7 @@ class _DynamicMateriPageState extends State<DynamicMateriPage> {
     // Catat jika pengguna membaca minimal 3 detik
     if (durationSeconds >= 3) {
       await FirestoreMateriService.instance.insertHistory(
-        userEmail: PreferenceHandler.userEmail,
+        userEmail: FirebaseAuth.instance.currentUser?.email,
         materiId: widget.materi.id,
         materiName: widget.materi.title,
         durationSeconds: durationSeconds,
@@ -63,7 +63,7 @@ class _DynamicMateriPageState extends State<DynamicMateriPage> {
         backgroundColor: AppTheme.backgroundPrimary,
         appBar: CustomAppBar2(
           title: materi.title,
-          prefixIcon: Icons.arrow_back_ios_new,
+          prefixIcon: Icons.arrow_back,
           onPrefixIconTap: () {
             _saveHistory();
             Navigator.of(context).pop();

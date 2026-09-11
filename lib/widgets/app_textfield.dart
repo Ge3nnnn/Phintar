@@ -1,5 +1,6 @@
-import 'package:phintar/constants/app_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:phintar/constants/app_theme.dart';
 import 'package:phintar/constants/app_typografy.dart';
 
 class CustomTextFields extends StatelessWidget {
@@ -12,6 +13,11 @@ class CustomTextFields extends StatelessWidget {
   final String? errorText;
   final ValueChanged<String>? onChanged;
   final Widget? suffixIcon;
+  final int? maxLength;
+  final TextAlign textAlign;
+  final TextStyle? style;
+  final List<TextInputFormatter>? inputFormatters;
+  final bool showCounter;
 
   const CustomTextFields({
     super.key,
@@ -24,6 +30,11 @@ class CustomTextFields extends StatelessWidget {
     this.errorText,
     this.onChanged,
     this.suffixIcon,
+    this.maxLength,
+    this.textAlign = TextAlign.start,
+    this.style,
+    this.inputFormatters,
+    this.showCounter = false,
   });
 
   @override
@@ -34,32 +45,33 @@ class CustomTextFields extends StatelessWidget {
       obscureText: obscureText,
       keyboardType: keyboardType,
       onChanged: onChanged,
-      style: const TextStyle(color: Colors.white), // Warna teks inputan
+      maxLength: maxLength,
+      textAlign: textAlign,
+      inputFormatters: inputFormatters,
+      style: style ?? const TextStyle(color: Colors.white), // Warna teks inputan
       decoration: InputDecoration(
+        counterText: showCounter ? null : '',
         errorText: errorText,
         errorStyle: AppTextStyle.warningText,
         hintText: hintText,
         hintStyle: AppTextStyle.normalText,
         prefixIcon: Icon(prefixIcon, color: AppTheme.textColor),
         suffixIcon: suffixIcon,
-        // 1. Padding di dalam TextField agar luas dan tidak mepet
         contentPadding: const EdgeInsets.symmetric(
-          vertical: 18, // Slightly more vertical padding for breathing room
+          vertical: 18,
           horizontal: 16,
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(color: AppTheme.borderColor, width: 1.5),
         ),
-        // kalo mode nulis
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: const BorderSide(
             color: AppTheme.bottonColor,
             width: 2,
-          ), // Botton color highlight on focus
+          ),
         ),
-        // jika Error
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: const BorderSide(color: AppTheme.merah, width: 1.5),
@@ -71,7 +83,7 @@ class CustomTextFields extends StatelessWidget {
         filled: true,
         fillColor: AppTheme.backgroundTertiary.withValues(
           alpha: 0.3,
-        ), // Subtle translucent background
+        ),
       ),
     );
   }

@@ -25,15 +25,12 @@ class ContentBlock {
     );
   }
 
-  Map<String, dynamic> toJson() => {
-        'type': type,
-        'content': content,
-      };
+  Map<String, dynamic> toJson() => {'type': type, 'content': content};
 }
 
 /// Model for a learning material (materi) entry.
 ///
-/// Content is stored as a JSON-encoded list of [ContentBlock]s in SQLite,
+/// Content is stored as a list of [ContentBlock]s in Cloud Firestore,
 /// enabling rich, multi-section pages without schema changes.
 class MateriModel {
   final int id;
@@ -125,12 +122,14 @@ class MateriModel {
       title: json['title'] as String,
       category: (json['category'] as String?) ?? '',
       description: json['description'] as String?,
-      bannerUrl: (json['banner_url'] as String?) ??
+      bannerUrl:
+          (json['banner_url'] as String?) ??
           (json['bannerUrl'] as String?) ??
           '',
       lottieUrl:
           (json['lottie_url'] as String?) ?? (json['lottieUrl'] as String?),
-      sortOrder: (json['sort_order'] as num?)?.toInt() ??
+      sortOrder:
+          (json['sort_order'] as num?)?.toInt() ??
           (json['sortOrder'] as num?)?.toInt() ??
           0,
       grade: grade,
@@ -160,14 +159,20 @@ class MateriModel {
     if (rawBlocks != null) {
       if (rawBlocks is List) {
         blocks = rawBlocks
-            .map((e) => ContentBlock.fromJson(Map<String, dynamic>.from(e as Map)))
+            .map(
+              (e) => ContentBlock.fromJson(Map<String, dynamic>.from(e as Map)),
+            )
             .toList();
       } else if (rawBlocks is String && rawBlocks.isNotEmpty) {
         try {
           final decoded = json.decode(rawBlocks);
           if (decoded is List) {
             blocks = decoded
-                .map((e) => ContentBlock.fromJson(Map<String, dynamic>.from(e as Map)))
+                .map(
+                  (e) => ContentBlock.fromJson(
+                    Map<String, dynamic>.from(e as Map),
+                  ),
+                )
                 .toList();
           }
         } catch (_) {}
@@ -181,12 +186,14 @@ class MateriModel {
       title: (data['title'] as String?) ?? '',
       category: (data['category'] as String?) ?? '',
       description: data['description'] as String?,
-      bannerUrl: (data['banner_url'] as String?) ??
+      bannerUrl:
+          (data['banner_url'] as String?) ??
           (data['bannerUrl'] as String?) ??
           '',
       lottieUrl:
           (data['lottie_url'] as String?) ?? (data['lottieUrl'] as String?),
-      sortOrder: (data['sort_order'] as num?)?.toInt() ??
+      sortOrder:
+          (data['sort_order'] as num?)?.toInt() ??
           (data['sortOrder'] as num?)?.toInt() ??
           0,
       grade: grade,
@@ -196,39 +203,26 @@ class MateriModel {
 
   /// Converts to a Firestore-friendly Map.
   Map<String, dynamic> toFirestore() => {
-        'id': id,
-        'title': title,
-        'category': category,
-        'description': description,
-        'banner_url': bannerUrl,
-        'lottie_url': lottieUrl,
-        'sort_order': sortOrder,
-        'grade': grade,
-        'content_blocks': blocks.map((e) => e.toJson()).toList(),
-      };
-
-  /// Converts to a SQLite row map. [content_blocks] is JSON-encoded.
-  Map<String, dynamic> toMap() => {
-        'id': id,
-        'title': title,
-        'category': category,
-        'description': description,
-        'banner_url': bannerUrl,
-        'lottie_url': lottieUrl,
-        'sort_order': sortOrder,
-        'grade': grade,
-        'content_blocks': json.encode(blocks.map((e) => e.toJson()).toList()),
-      };
+    'id': id,
+    'title': title,
+    'category': category,
+    'description': description,
+    'banner_url': bannerUrl,
+    'lottie_url': lottieUrl,
+    'sort_order': sortOrder,
+    'grade': grade,
+    'content_blocks': blocks.map((e) => e.toJson()).toList(),
+  };
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'title': title,
-        'category': category,
-        'description': description,
-        'banner_url': bannerUrl,
-        'lottie_url': lottieUrl,
-        'sort_order': sortOrder,
-        'grade': grade,
-        'content_blocks': blocks.map((e) => e.toJson()).toList(),
-      };
+    'id': id,
+    'title': title,
+    'category': category,
+    'description': description,
+    'banner_url': bannerUrl,
+    'lottie_url': lottieUrl,
+    'sort_order': sortOrder,
+    'grade': grade,
+    'content_blocks': blocks.map((e) => e.toJson()).toList(),
+  };
 }

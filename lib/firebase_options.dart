@@ -35,10 +35,7 @@ class DefaultFirebaseOptions {
           'you can reconfigure this by running the FlutterFire CLI again.',
         );
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -67,5 +64,15 @@ class DefaultFirebaseOptions {
     messagingSenderId: '130515174634',
     projectId: 'phintar-edu-6cd66',
     storageBucket: 'phintar-edu-6cd66.firebasestorage.app',
+  );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyAKRHyahTNdJo01aZOURPgsbGKiX5ViCY8',
+    appId: '1:130515174634:web:6f7ffd8529875e5bd30393',
+    messagingSenderId: '130515174634',
+    projectId: 'phintar-edu-6cd66',
+    authDomain: 'phintar-edu-6cd66.firebaseapp.com',
+    storageBucket: 'phintar-edu-6cd66.firebasestorage.app',
+    measurementId: 'G-EYGD5YSF4C',
   );
 }

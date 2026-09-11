@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "130515174634-008c0at7bvjn6a0m1970mfimm0eclij9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.FKN.Phintar",
+            "certificate_hash": "65cbfbf579859200f8768c1c52374eba28d0dbc1"
+          }
+        },
+        {
           "client_id": "130515174634-46l94fh3rj1i91qlcvne48mplt657tjv.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -30,7 +38,15 @@
           }
         },
         {
-          "client_id": "130515174634-fhj1i24ovbqpvnrsh6t2pt56bn9m7h3i.apps.googleusercontent.com",
+          "client_id": "130515174634-v0tv1s7r6bm1kqjrobf3n3k406voj6ha.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.FKN.Phintar",
+            "certificate_hash": "d350faa27add63a48e56313bba654dcb74b4a44d"
+          }
+        },
+        {
+          "client_id": "130515174634-76huh53iml29geqk3f558qaahjhujg9e.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -43,7 +59,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "130515174634-fhj1i24ovbqpvnrsh6t2pt56bn9m7h3i.apps.googleusercontent.com",
+              "client_id": "130515174634-76huh53iml29geqk3f558qaahjhujg9e.apps.googleusercontent.com",
               "client_type": 3
             },
             {

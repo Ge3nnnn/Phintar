@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart' show kIsWeb, debugPrint;
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:phintar/models/firebase_model/user_models.dart';
 import 'package:phintar/services/google_sign_in.dart';
@@ -32,36 +32,133 @@ class FirebaseAuthService {
   /// Mendapatkan User ID (UID) dari pengguna yang sedang login saat ini.
   String? get currentUserId => _auth.currentUser?.uid;
 
-  /// Mendaftarkan pengguna baru dengan email & password, kemudian menyimpan profilnya ke Firestore.
+  /// Memeriksa apakah format alamat email valid berdasarkan pola standar regex.
+  static bool isValidEmail(String email) {
+    final emailRegex = RegExp(
+      r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+    );
+    return emailRegex.hasMatch(email.trim());
+  }
+
+  /// Memeriksa apakah email sudah terdaftar di basis data pengguna Firestore `users`.
+  Future<bool> isEmailRegistered(String email) async {
+    final cleanEmail = email.trim();
+    if (cleanEmail.isEmpty || !isValidEmail(cleanEmail)) {
+      return false;
+    }
+
+    try {
+      // Periksa kecocokan email asli
+      final snapshot = await _usersRef
+          .where('email', isEqualTo: cleanEmail)
+          .limit(1)
+          .get();
+      if (snapshot.docs.isNotEmpty) {
+        return true;
+      }
+
+      // Periksa dengan format huruf kecil jika sebelumnya tersimpan lowercase
+      final snapshotLower = await _usersRef
+          .where('email', isEqualTo: cleanEmail.toLowerCase())
+          .limit(1)
+          .get();
+      if (snapshotLower.docs.isNotEmpty) {
+        return true;
+      }
+
+      return false;
+    } catch (e) {
+      debugPrint('[FirebaseAuthService] Gagal memeriksa email di Firestore: $e');
+      // Jika terjadi kesalahan akses/koneksi, kembalikan true sebagai fallback agar tidak memblokir pengguna
+      return true;
+    }
+  }
+
+  /// Mendaftarkan pengguna baru dengan email & password yang valid,
+  /// kemudian langsung mendaftarkan dan menyimpan data profilnya ke Firebase Firestore.
   Future<UserCredential> registerWithEmailAndPassword({
     required String name,
     required String email,
     required String password,
   }) async {
+    final trimmedEmail = email.trim();
+    if (trimmedEmail.isEmpty || !isValidEmail(trimmedEmail)) {
+      throw FirebaseAuthException(
+        code: 'invalid-email',
+        message:
+            'Format alamat email tidak valid. Pastikan format email benar (contoh: nama@email.com).',
+      );
+    }
+
+    if (password.isEmpty) {
+      throw FirebaseAuthException(
+        code: 'weak-password',
+        message: 'Kata sandi tidak boleh kosong.',
+      );
+    }
+
+    if (password.length < 6) {
+      throw FirebaseAuthException(
+        code: 'weak-password',
+        message: 'Kata sandi terlalu lemah. Gunakan minimal 6 karakter.',
+      );
+    }
+
     final userCredential = await _auth.createUserWithEmailAndPassword(
-      email: email.trim(),
+      email: trimmedEmail,
       password: password,
     );
 
     final user = userCredential.user;
     if (user != null) {
-      await user.updateDisplayName(name);
-      await user.reload();
-      await _saveUserData(user: user, name: name, email: email.trim());
+      try {
+        await user.updateDisplayName(name.trim());
+        await user.reload();
+      } catch (e) {
+        debugPrint('Warning updateDisplayName: $e');
+      }
+
+      // Langsung daftarkan data profil pengguna ke Cloud Firestore
+      await _saveUserData(user: user, name: name.trim(), email: trimmedEmail);
     }
 
     return userCredential;
   }
 
-  /// Melakukan login dengan email dan password.
+  /// Melakukan login dengan email dan password yang valid.
+  /// Setelah login berhasil, data profil pengguna dipastikan terdaftar di Firestore.
   Future<UserCredential> loginWithEmailAndPassword({
     required String email,
     required String password,
   }) async {
-    return await _auth.signInWithEmailAndPassword(
-      email: email.trim(),
+    final trimmedEmail = email.trim();
+    if (trimmedEmail.isEmpty || !isValidEmail(trimmedEmail)) {
+      throw FirebaseAuthException(
+        code: 'invalid-email',
+        message:
+            'Format alamat email tidak valid. Pastikan format email benar (contoh: nama@email.com).',
+      );
+    }
+
+    if (password.isEmpty) {
+      throw FirebaseAuthException(
+        code: 'wrong-password',
+        message: 'Kata sandi tidak boleh kosong.',
+      );
+    }
+
+    final userCredential = await _auth.signInWithEmailAndPassword(
+      email: trimmedEmail,
       password: password,
     );
+
+    final user = userCredential.user;
+    if (user != null) {
+      // Pastikan data pengguna juga terdaftar di database Firestore jika belum ada
+      await _ensureUserDataExists(user: user, fallbackEmail: trimmedEmail);
+    }
+
+    return userCredential;
   }
 
   /// Melakukan login menggunakan akun Google. Jika pengguna baru, data profil akan disimpan ke Firestore.
@@ -99,7 +196,83 @@ class FirebaseAuthService {
 
   /// Mengirimkan tautan reset kata sandi ke email pengguna.
   Future<void> sendPasswordResetEmail(String email) async {
-    await _auth.sendPasswordResetEmail(email: email.trim());
+    final trimmedEmail = email.trim();
+    if (trimmedEmail.isEmpty || !isValidEmail(trimmedEmail)) {
+      throw FirebaseAuthException(
+        code: 'invalid-email',
+        message:
+            'Format alamat email tidak valid. Pastikan format email benar (contoh: nama@email.com).',
+      );
+    }
+    await _auth.sendPasswordResetEmail(email: trimmedEmail);
+  }
+
+  /// Mengekstrak kode verifikasi aksi (oobCode) jika pengguna menempelkan tautan lengkap Firebase,
+  /// atau mengembalikan kode bersih jika pengguna memasukkan kodenya secara langsung.
+  static String extractActionCode(String input) {
+    final trimmed = input.trim();
+    if (trimmed.isEmpty) return '';
+
+    // Jika pengguna menempelkan URL lengkap Firebase (contoh: https://...?oobCode=XXXXX&apiKey=...)
+    if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+      try {
+        final uri = Uri.parse(trimmed);
+        final code = uri.queryParameters['oobCode'];
+        if (code != null && code.isNotEmpty) {
+          return code.trim();
+        }
+      } catch (_) {}
+    }
+
+    // Jika mengandung substring oobCode=
+    if (trimmed.contains('oobCode=')) {
+      final match = RegExp(r'oobCode=([a-zA-Z0-9_-]+)').firstMatch(trimmed);
+      if (match != null && match.group(1) != null) {
+        return match.group(1)!.trim();
+      }
+    }
+
+    return trimmed;
+  }
+
+  /// Memverifikasi kode reset kata sandi ke Firebase Authentication.
+  /// Mengembalikan email pengguna yang berhak jika kode valid dan belum kedaluwarsa.
+  Future<String> verifyPasswordResetCode(String codeOrUrl) async {
+    final code = extractActionCode(codeOrUrl);
+    if (code.isEmpty) {
+      throw FirebaseAuthException(
+        code: 'invalid-action-code',
+        message: 'Kode atau tautan verifikasi tidak boleh kosong.',
+      );
+    }
+    return await _auth.verifyPasswordResetCode(code);
+  }
+
+  /// Mengonfirmasi pembaruan kata sandi baru ke Firebase Authentication menggunakan kode reset.
+  Future<void> confirmPasswordReset({
+    required String codeOrUrl,
+    required String newPassword,
+  }) async {
+    final code = extractActionCode(codeOrUrl);
+    if (code.isEmpty) {
+      throw FirebaseAuthException(
+        code: 'invalid-action-code',
+        message: 'Kode atau tautan verifikasi tidak boleh kosong.',
+      );
+    }
+
+    final pass = newPassword.trim();
+    if (pass.length < 6) {
+      throw FirebaseAuthException(
+        code: 'weak-password',
+        message: 'Kata sandi baru minimal harus terdiri dari 6 karakter.',
+      );
+    }
+
+    await _auth.confirmPasswordReset(
+      code: code,
+      newPassword: pass,
+    );
   }
 
   /// Memperbarui nama tampilan (displayName) pengguna di Firebase Auth.
@@ -123,9 +296,13 @@ class FirebaseAuthService {
 
   /// Mengambil data rincian profil pengguna dari dokumen Firestore berdasarkan UID.
   Future<UserModelFirebase?> getUserDetails(String uid) async {
-    final doc = await _usersRef.doc(uid).get();
-    if (doc.exists && doc.data() != null) {
-      return UserModelFirebase.fromMap(doc.data()!);
+    try {
+      final doc = await _usersRef.doc(uid).get();
+      if (doc.exists && doc.data() != null) {
+        return UserModelFirebase.fromMap(doc.data()!);
+      }
+    } catch (e) {
+      debugPrint('Warning getUserDetails: $e');
     }
     return null;
   }
@@ -138,24 +315,58 @@ class FirebaseAuthService {
     await _auth.signOut();
   }
 
-  /// Helper internal untuk menyimpan data profil pengguna baru ke Firestore.
+  /// Memastikan data profil pengguna sudah terdaftar di Firestore koleksi `users`.
+  /// Jika belum ada dokumennya, maka akan otomatis dibuatkan.
+  Future<void> _ensureUserDataExists({
+    required User user,
+    required String fallbackEmail,
+  }) async {
+    try {
+      final doc = await _usersRef.doc(user.uid).get();
+      if (!doc.exists || doc.data() == null) {
+        final email = (user.email != null && user.email!.isNotEmpty)
+            ? user.email!
+            : fallbackEmail;
+        final name = (user.displayName != null && user.displayName!.isNotEmpty)
+            ? user.displayName!
+            : (email.contains('@')
+                  ? email.split('@').first
+                  : 'Pengguna Phintar');
+
+        await _saveUserData(
+          user: user,
+          name: name,
+          email: email,
+          photoUrl: user.photoURL ?? '',
+        );
+      }
+    } catch (e) {
+      debugPrint('Warning _ensureUserDataExists: $e');
+    }
+  }
+
+  /// Helper internal untuk menyimpan atau memperbarui data profil pengguna ke Firestore.
   Future<void> _saveUserData({
     required User user,
     required String name,
     required String email,
     String photoUrl = '',
   }) async {
-    final userModelFirebase = UserModelFirebase(
-      uid: user.uid,
-      name: name,
-      email: email,
-      photoUrl: photoUrl.isNotEmpty ? photoUrl : (user.photoURL ?? ''),
-      createdAt: DateTime.now(),
-    );
+    try {
+      final userModelFirebase = UserModelFirebase(
+        uid: user.uid,
+        name: name,
+        email: email,
+        photoUrl: photoUrl.isNotEmpty ? photoUrl : (user.photoURL ?? ''),
+        createdAt: DateTime.now(),
+      );
 
-    await _usersRef
-        .doc(user.uid)
-        .set(userModelFirebase.toMap(), SetOptions(merge: true));
+      await _usersRef
+          .doc(user.uid)
+          .set(userModelFirebase.toMap(), SetOptions(merge: true));
+    } catch (e) {
+      debugPrint('Warning _saveUserData to Firestore: $e');
+    }
   }
 
   /// Mengonversi exception Firebase Auth menjadi pesan Bahasa Indonesia yang mudah dipahami.
@@ -163,14 +374,15 @@ class FirebaseAuthService {
     if (error is FirebaseAuthException) {
       switch (error.code) {
         case 'user-not-found':
-          return 'Akun dengan email tersebut tidak ditemukan.';
+          return 'Akun dengan email tersebut tidak ditemukan. Silakan periksa kembali email atau daftar akun baru.';
         case 'wrong-password':
+          return 'Kata sandi yang Anda masukkan salah. Silakan coba lagi.';
         case 'invalid-credential':
-          return 'Email atau kata sandi yang Anda masukkan salah.';
+          return 'Email atau kata sandi yang Anda masukkan salah. Pastikan email sudah terdaftar dan kata sandi benar.';
         case 'email-already-in-use':
-          return 'Email ini sudah terdaftar. Silakan gunakan email lain atau masuk.';
+          return 'Email ini sudah terdaftar. Silakan gunakan email lain atau langsung masuk.';
         case 'invalid-email':
-          return 'Format alamat email tidak valid.';
+          return 'Format alamat email tidak valid. Pastikan format email sudah benar (contoh: nama@email.com).';
         case 'weak-password':
           return 'Kata sandi terlalu lemah. Gunakan minimal 6 karakter.';
         case 'user-disabled':
@@ -184,13 +396,30 @@ class FirebaseAuthService {
         case 'account-exists-with-different-credential':
           return 'Akun sudah terdaftar dengan metode masuk lain. Silakan masuk menggunakan metode yang sesuai.';
         case 'operation-not-allowed':
-          return 'Metode masuk ini (Google) belum diaktifkan di Firebase Console (Authentication > Sign-in method).';
+          return 'Metode masuk ini belum diaktifkan di Firebase Console.';
+        case 'channel-error':
+          return 'Harap masukkan data dengan lengkap dan benar.';
+        case 'invalid-action-code':
+          return 'Kode atau tautan verifikasi salah, tidak lengkap, atau sudah pernah digunakan. Silakan periksa kembali email Anda.';
+        case 'expired-action-code':
+          return 'Kode atau tautan verifikasi telah kedaluwarsa. Silakan kirim ulang email verifikasi.';
         default:
           return error.message ??
               'Terjadi kesalahan otentikasi. Silakan coba lagi.';
       }
     }
-    // pesannya ada disisni
+
+    if (error is FirebaseException) {
+      switch (error.code) {
+        case 'permission-denied':
+          return 'Izin akses database ditolak. Periksa aturan keamanan di Firebase Console.';
+        case 'unavailable':
+          return 'Layanan Firebase sedang tidak dapat diakses. Silakan coba lagi nanti.';
+        default:
+          return error.message ?? 'Terjadi kesalahan pada layanan Firebase.';
+      }
+    }
+
     final errStr = error.toString();
     if (errStr.contains('network_error') ||
         errStr.contains('ApiException: 7')) {
@@ -200,6 +429,21 @@ class FirebaseAuthService {
         errStr.contains('sign_in_failed')) {
       return 'Gagal masuk dengan Google (Error 12500). Pastikan Google provider aktif di Firebase Console dan Support Email sudah dipilih.';
     }
+    if (errStr.contains('invalid-email') ||
+        errStr.contains('badly formatted')) {
+      return 'Format alamat email tidak valid. Pastikan format email sudah benar (contoh: nama@email.com).';
+    }
+    if (errStr.contains('email-already-in-use')) {
+      return 'Email ini sudah terdaftar. Silakan gunakan email lain atau langsung masuk.';
+    }
+    if (errStr.contains('user-not-found')) {
+      return 'Akun dengan email tersebut tidak ditemukan.';
+    }
+    if (errStr.contains('wrong-password') ||
+        errStr.contains('invalid-credential')) {
+      return 'Email atau kata sandi yang Anda masukkan salah.';
+    }
+
     return error.toString();
   }
 }

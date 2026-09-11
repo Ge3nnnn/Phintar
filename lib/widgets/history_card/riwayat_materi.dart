@@ -62,7 +62,7 @@ Color getDurationColor(int seconds) {
 
 /// Embeddable section that shows the user's materi learning history.
 ///
-/// Fetches data from [DatabaseHelperMateri] and renders a list of
+/// Fetches data from [FirestoreMateriService] and renders a list of
 /// history cards. Supports continue-learning and delete actions.
 // WIDGET RIWAYAT MATERI (EMBEDDABLE PADA PROFILE PAGE)
 class RiwayatMateriSection extends StatefulWidget {

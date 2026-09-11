@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:phintar/constants/app_theme.dart';
 import 'package:phintar/constants/app_typografy.dart';
 import 'package:phintar/models/materi_model.dart';
-import 'package:phintar/models/preference_handler.dart';
+import 'package:phintar/services/firebase_auth_service.dart';
 import 'package:phintar/services/materi_service.dart';
 import 'package:phintar/views/6_materi/dynamic_materi_page.dart';
 import 'package:phintar/widgets/app_bar.dart';
@@ -179,7 +179,10 @@ class _HomePagePhintarState extends State<HomePagePhintar> {
 
   @override
   Widget build(BuildContext context) {
-    final displayName = widget.username ?? PreferenceHandler.userName;
+    final displayName =
+        widget.username ??
+        FirebaseAuthService().currentUser?.displayName ??
+        'Pengguna';
 
     return Scaffold(
       backgroundColor: AppTheme.backgroundPrimary,

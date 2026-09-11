@@ -1,23 +1,27 @@
-import 'package:phintar/widgets/app_button.dart';
-import 'package:phintar/widgets/app_textfield.dart';
-import 'package:phintar/constants/app_theme.dart';
-import 'package:phintar/constants/app_typografy.dart';
-import 'package:phintar/widgets/app_bar.dart';
-import 'package:phintar/services/firebase_auth_service.dart';
-import 'package:phintar/widgets/extention/navigator.dart';
-
-import 'package:phintar/views/1_loginpage/login_page_phintar.dart';
-
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:phintar/constants/app_theme.dart';
+import 'package:phintar/constants/app_typografy.dart';
+import 'package:phintar/services/email_otp_service.dart';
+import 'package:phintar/services/firebase_auth_service.dart';
+import 'package:phintar/views/1_loginpage/login_page_phintar.dart';
+import 'package:phintar/widgets/app_bar.dart';
+import 'package:phintar/widgets/app_button.dart';
+import 'package:phintar/widgets/app_textfield.dart';
+import 'package:phintar/widgets/extention/navigator.dart';
 
 class ResetPasswordPage2 extends StatefulWidget {
   final String email;
   final bool isFromSettings;
+  final bool isOtpVerified;
+  final String? resetCode;
+
   const ResetPasswordPage2({
     super.key,
     required this.email,
     this.isFromSettings = false,
+    this.isOtpVerified = false,
+    this.resetCode,
   });
 
   @override
@@ -29,14 +33,34 @@ class _ResetPasswordPage2State extends State<ResetPasswordPage2> {
   final TextEditingController confirmpasswordC = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  // Variabel untuk mengatur state loading saat mengecek database
   bool isLoading = false;
-
-  // Variabel untuk menyimpan pesan error password
   String? passwordError;
   String? confirmPasswordError;
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
+
+  @override
+  void initState() {
+    super.initState();
+    // Proteksi: cegah akses ke halaman ubah kata sandi jika belum diverifikasi via OTP
+    if (!widget.isFromSettings &&
+        !widget.isOtpVerified &&
+        !EmailOtpService().isEmailVerified(widget.email)) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: const Text(
+                'Akses ditolak: Silakan verifikasi kode OTP terlebih dahulu.',
+              ),
+              backgroundColor: AppTheme.merah,
+            ),
+          );
+          Navigator.of(context).pop();
+        }
+      });
+    }
+  }
 
   @override
   void dispose() {
@@ -90,7 +114,16 @@ class _ResetPasswordPage2State extends State<ResetPasswordPage2> {
       if (widget.isFromSettings) {
         await FirebaseAuthService().updatePassword(pass);
       } else {
-        await FirebaseAuthService().sendPasswordResetEmail(widget.email);
+        final code = widget.resetCode;
+        if (code != null && code.isNotEmpty) {
+          // Konfirmasi pembaruan kata sandi langsung ke Firebase Authentication
+          await FirebaseAuthService().confirmPasswordReset(
+            codeOrUrl: code,
+            newPassword: pass,
+          );
+        } else {
+          await FirebaseAuthService().sendPasswordResetEmail(widget.email);
+        }
       }
 
       if (!mounted) return;
@@ -100,21 +133,40 @@ class _ResetPasswordPage2State extends State<ResetPasswordPage2> {
         context: context,
         builder: (dialogContext) => AlertDialog(
           backgroundColor: AppTheme.backgroundSecondary,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+            side: const BorderSide(color: Color(0xFF334155)),
+          ),
           title: Text(
             "Kata Sandi Berhasil Diubah!!",
             textAlign: TextAlign.center,
-            style: AppTextStyle.normalText2,
+            style: AppTextStyle.dialogTitle,
           ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Lottie.asset("assets/Animations/succeed_change_pass.json"),
+              SizedBox(
+                height: 140,
+                child: Lottie.asset(
+                  "assets/Animations/succeed_change_pass.json",
+                  repeat: false,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                widget.isFromSettings
+                    ? "Kata sandi akun Anda telah berhasil diperbarui."
+                    : "Kata sandi untuk ${widget.email} telah berhasil diperbarui.\nSilakan masuk kembali dengan sandi baru Anda.",
+                textAlign: TextAlign.center,
+                style: AppTextStyle.normalText,
+              ),
             ],
           ),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.pop(dialogContext);
+                EmailOtpService().clear();
                 if (widget.isFromSettings) {
                   pageNavigator.pop();
                 } else {
@@ -124,7 +176,10 @@ class _ResetPasswordPage2State extends State<ResetPasswordPage2> {
                   );
                 }
               },
-              child: Text("Kembali", style: AppTextStyle.normalText2),
+              child: Text(
+                widget.isFromSettings ? "Kembali" : "Kembali ke Login",
+                style: AppTextStyle.normalText2,
+              ),
             ),
           ],
         ),
@@ -148,7 +203,7 @@ class _ResetPasswordPage2State extends State<ResetPasswordPage2> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: "Phintar"),
+      appBar: const CustomAppBar(title: "Phintar"),
       backgroundColor: AppTheme.backgroundPrimary,
       body: SafeArea(
         child: SingleChildScrollView(
@@ -164,7 +219,6 @@ class _ResetPasswordPage2State extends State<ResetPasswordPage2> {
               ),
               child: Padding(
                 padding: const EdgeInsets.all(30.0),
-                // Bungkus Column dengan Form
                 child: Form(
                   key: _formKey,
                   child: Column(
@@ -174,10 +228,9 @@ class _ResetPasswordPage2State extends State<ResetPasswordPage2> {
                         width: 80,
                         decoration: BoxDecoration(
                           color: AppTheme.backgroundPrimary,
-
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: Center(
+                        child: const Center(
                           child: Icon(
                             Icons.lock_reset,
                             size: 50,
@@ -185,18 +238,39 @@ class _ResetPasswordPage2State extends State<ResetPasswordPage2> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       Text(
                         "Atur Ulang Kata Sandi",
                         style: AppTextStyle.subsubjudul,
                       ),
-                      SizedBox(height: 5),
+                      const SizedBox(height: 5),
                       Text(
                         "Masukan Kata Sandi Baru Anda Dibawah Ini Untuk Mengamankan Akun.",
                         style: AppTextStyle.bottomText,
                         textAlign: TextAlign.center,
                       ),
-                      SizedBox(height: 13),
+                      if (widget.email.isNotEmpty) ...[
+                        const SizedBox(height: 8),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 5,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppTheme.backgroundSecondary,
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: AppTheme.borderColor),
+                          ),
+                          child: Text(
+                            widget.email,
+                            style: AppTextStyle.normalText2.copyWith(
+                              color: AppTheme.bottonColor,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
+                      const SizedBox(height: 13),
                       Row(
                         children: [
                           Text(
@@ -205,7 +279,7 @@ class _ResetPasswordPage2State extends State<ResetPasswordPage2> {
                           ),
                         ],
                       ),
-                      SizedBox(height: 5),
+                      const SizedBox(height: 5),
                       CustomTextFields(
                         controller: passwordC,
                         errorText: passwordError,
@@ -241,7 +315,7 @@ class _ResetPasswordPage2State extends State<ResetPasswordPage2> {
                           return null;
                         },
                       ),
-                      SizedBox(height: 5),
+                      const SizedBox(height: 10),
                       Row(
                         children: [
                           Text(
@@ -250,6 +324,7 @@ class _ResetPasswordPage2State extends State<ResetPasswordPage2> {
                           ),
                         ],
                       ),
+                      const SizedBox(height: 5),
                       CustomTextFields(
                         controller: confirmpasswordC,
                         errorText: confirmPasswordError,
@@ -286,17 +361,18 @@ class _ResetPasswordPage2State extends State<ResetPasswordPage2> {
                           return null;
                         },
                       ),
-                      SizedBox(height: 20), // Tambahan jarak
+                      const SizedBox(height: 20),
                       CustomElevatedButton(
                         onPressed: isLoading ? () {} : resetPassword,
                         width: double.infinity,
-                        text: "Ubah Kata Sandi",
+                        text: isLoading ? "Memproses..." : "Ubah Kata Sandi",
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       Divider(color: AppTheme.textColor),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       InkWell(
                         onTap: () {
+                          EmailOtpService().clear();
                           if (widget.isFromSettings) {
                             context.pop();
                           } else {
@@ -306,7 +382,7 @@ class _ResetPasswordPage2State extends State<ResetPasswordPage2> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(
+                            const Icon(
                               Icons.arrow_back_ios,
                               color: AppTheme.putih,
                               size: 15,

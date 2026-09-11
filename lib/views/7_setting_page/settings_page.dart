@@ -5,9 +5,8 @@ import 'package:phintar/constants/app_typografy.dart';
 import 'package:phintar/views/1_loginpage/login_page_phintar.dart';
 import 'package:phintar/views/4_edit_profile_page/edit_profile_phintar.dart';
 import 'package:phintar/views/3_reset_password_page/reset_password_page2.dart';
-import 'package:phintar/widgets/extention/navigator.dart';
-import 'package:phintar/models/preference_handler.dart';
 import 'package:phintar/widgets/app_bar.dart';
+import 'package:phintar/widgets/extention/navigator.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -25,7 +24,6 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Future<void> _handleLogout() async {
     await FirebaseAuthService().signOut();
-    await PreferenceHandler.logOut();
     if (!mounted) return;
     context.pushAndRemoveAll(const LoginPagePhintar());
   }
@@ -42,7 +40,7 @@ class _SettingsPageState extends State<SettingsPage> {
         title: 'Ubah Kata Sandi',
         onTap: () => _navigateTo(
           ResetPasswordPage2(
-            email: PreferenceHandler.userEmail,
+            email: FirebaseAuthService().currentUser?.email ?? '',
             isFromSettings: true,
           ),
         ),

@@ -78,4 +78,3 @@ class MateriHistoryModel {
   factory MateriHistoryModel.fromJson(String source) =>
       MateriHistoryModel.fromMap(json.decode(source) as Map<String, dynamic>);
 }
-

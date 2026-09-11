@@ -2,8 +2,8 @@ import 'package:phintar/constants/app_theme.dart';
 import 'package:phintar/constants/app_typografy.dart';
 import 'package:phintar/services/firestore_quiz_service.dart';
 import 'package:phintar/models/quiz_history_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:phintar/models/quiz_model.dart';
-import 'package:phintar/models/preference_handler.dart';
 import 'package:phintar/views/5_features/kuis_page/quiz_review_screen.dart';
 import 'package:phintar/widgets/app_bar.dart';
 import 'package:flutter/material.dart';
@@ -218,7 +218,7 @@ class _QuizScreenState extends State<QuizScreen> {
         .roundToDouble();
     await FirestoreQuizService.instance.insertHistoryModel(
       QuizHistoryModel(
-        userEmail: PreferenceHandler.userEmail,
+        userEmail: FirebaseAuth.instance.currentUser?.email ?? '',
         quizId: widget.quiz.id,
         score: percentage,
         createdAt: DateTime.now().toIso8601String(),

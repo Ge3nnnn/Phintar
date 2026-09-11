@@ -241,6 +241,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.9"
+  email_otp:
+    dependency: "direct main"
+    description:
+      name: email_otp
+      sha256: "74bb3b54a20573a12fea1c808dd0d5d9d08d4e8a2065acf2774b790d256ce168"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.2.0"
   fake_async:
     dependency: transitive
     description:
@@ -688,6 +696,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.5.1"
+  mailer:
+    dependency: transitive
+    description:
+      name: mailer
+      sha256: "9f7213f57272c2a047f13ae89e68652d492f929d84ded9a618424b38da328f97"
+      url: "https://pub.dev"
+    source: hosted
+    version: "7.2.0"
   matcher:
     dependency: transitive
     description:
@@ -856,6 +872,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.6.0"
+  punycoder:
+    dependency: transitive
+    description:
+      name: punycoder
+      sha256: "982734df864d9588eb13e28ac1c5a46b57e22117b3696032ac58739966cec190"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.0"
   record_use:
     dependency: transitive
     description:
@@ -1029,6 +1053,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.0"
+  unorm_dart:
+    dependency: transitive
+    description:
+      name: unorm_dart
+      sha256: "0c69186b03ca6addab0774bcc0f4f17b88d4ce78d9d4d8f0619e30a99ead58e7"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.2"
   url_launcher:
     dependency: transitive
     description:

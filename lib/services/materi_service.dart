@@ -68,7 +68,7 @@ class MateriService {
   }
 
   /// Mengambil materi berdasarkan [id], dengan fallback pencarian judul [title]
-  /// atau fallback ke data seed lokal jika Firestore belum siap/offline.
+  /// langsung dari Firebase Cloud Firestore atau cache in-memory.
   Future<MateriModel?> getMateriByIdOrTitle(int id, [String? title]) async {
     // 1. Cek cache in-memory
     if (_cachedMateri != null && _cachedMateri!.isNotEmpty) {
@@ -76,7 +76,7 @@ class MateriService {
       if (cachedMatch != null) return cachedMatch;
     }
 
-    // 2. Coba ambil dari Firestore
+    // 2. Ambil dari Firestore
     try {
       final doc = await _collection.doc(id.toString()).get();
       if (doc.exists && doc.data() != null) {
@@ -99,22 +99,8 @@ class MateriService {
         }
       }
     } catch (_) {
-      // offline / firestore error fallback
+      // offline / firestore error
     }
-
-    // 3. Fallback: muat dari assets seed JSON
-    try {
-      final jsonString = await rootBundle.loadString(
-        'assets/seed/materi_seed.json',
-      );
-      final List<dynamic> rawList = json.decode(jsonString);
-      final list = rawList
-          .map((e) => MateriModel.fromJson(Map<String, dynamic>.from(e as Map)))
-          .toList();
-      _cachedMateri = list;
-      final match = _findInList(list, id, title);
-      if (match != null) return match;
-    } catch (_) {}
 
     return null;
   }

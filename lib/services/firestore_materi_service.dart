@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:phintar/models/materi_history_model.dart';
-import 'package:phintar/models/preference_handler.dart';
 
 /// Layanan untuk mengelola riwayat durasi belajar materi pada Cloud Firestore (koleksi `materi_histories`).
 class FirestoreMateriService {
@@ -25,7 +24,7 @@ class FirestoreMateriService {
     if (authEmail != null && authEmail.isNotEmpty) {
       return authEmail;
     }
-    return PreferenceHandler.userEmail;
+    return '';
   }
 
   /// Menyimpan riwayat belajar materi pengguna (akumulasi durasi waktu belajar).
